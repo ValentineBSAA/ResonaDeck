@@ -96,7 +96,7 @@ It's designed around the Steam Deck controller, with colorful frosted-glass cont
 
 Bugs, feature suggestions, and compatibility reports are welcome in **[Issues](https://github.com/ValentineBSAA/ResonaDeck/issues)**. Include your SteamOS / Decky versions, the affected screen, and reproduction steps. **Please don't post Plex tokens, passwords, or private server links.**
 
-**[Official release page](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.0.0)** · **[Full screenshot gallery](SCREENSHOTS.md)** · **[1.0.0 Release Notes](RELEASE_NOTES_1.0.0.md)** · **[Support](SUPPORT.md)** · **[Credits and Third-Party Notices](THIRD-PARTY-NOTICES.md)**
+**[Official release page](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.0.0)** · **[Full screenshot gallery](SCREENSHOTS.md)** · **[1.0.0 Release Notes](RELEASE_NOTES_1.0.0.md)** · **[Support](SUPPORT.md)** · **[Source & Integrity](SOURCE.md)** · **[Credits and Third-Party Notices](THIRD-PARTY-NOTICES.md)**
 
 ---
 
