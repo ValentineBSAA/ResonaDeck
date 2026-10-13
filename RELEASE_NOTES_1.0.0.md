@@ -1,5 +1,10 @@
 # ResonaDeck 1.0.0 · First Stable Release
 
+**[⬇ Download ResonaDeck-1.0.0.zip](https://github.com/ValentineBSAA/ResonaDeck/releases/download/1.0.0/ResonaDeck-1.0.0.zip)** · **[View the published release](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.0.0)** · **[Screenshots](SCREENSHOTS.md)**
+
+Official upload SHA-256: `e09416573796a432ec2fc093f613108d79929134677dbad6cba5efb37675dd7a`.
+
+
 **Your Plex audio library, at home on Steam Deck.**
 
 ResonaDeck 1.0.0 is the first stable milestone of this independent Decky Loader plugin. It carries forward the user-tested **0.9.50** implementation without changing its playback and controller behavior.
@@ -18,7 +23,7 @@ ResonaDeck 1.0.0 is the first stable milestone of this independent Decky Loader 
 
 ## Install
 
-1. Download the **ResonaDeck-1.0.0.zip** asset from the GitHub Release when published.
+1. Download the **ResonaDeck-1.0.0.zip** asset from the GitHub Release from the official GitHub Release.
 2. On Steam Deck, open **Decky Loader → Settings → Developer → Install Plugin ZIP**.
 3. Install the archive, open ResonaDeck, and authorize your Plex account and reachable media server.
 
