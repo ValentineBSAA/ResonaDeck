@@ -1,0 +1,19 @@
+# OS and local metadata
+.DS_Store
+__MACOSX/
+Thumbs.db
+*.pyc
+__pycache__/
+.pytest_cache/
+node_modules/
+.env
+.env.*
+*.log
+*.tmp
+# Local Plex data and secrets
+*token*
+*credentials*
+*.db
+# Generated validation artifacts
+*test-output*/
+coverage/
