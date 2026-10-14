@@ -1,31 +1,39 @@
 # Source Code & Release Integrity
 
-**ResonaDeck 1.0.0** is distributed through a [verified GitHub release asset](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.0.0).
+**ResonaDeck 1.0.0 is open source, and its actual plugin code is browsable in this repository.**
 
-## Full source included in the installation ZIP
+## Browse the code
 
-The **[ResonaDeck-1.0.0.zip](https://github.com/ValentineBSAA/ResonaDeck/releases/download/1.0.0/ResonaDeck-1.0.0.zip)** contains the plugin installation files **and source**, including:
+- **[src/index.js](src/index.js):** original frontend source, including the controller-first Quick Menu and Full Manager.
+- **[dist/index.js](dist/index.js):** installable frontend bundled with Decky Loader. This matches the published frontend source byte-for-byte.
+- **[resonadeck_backend.py](resonadeck_backend.py):** Python Plex integration and playback backend.
+- **[main.py](main.py):** Decky Loader bootstrap.
+- **[package.json](package.json)** and **[plugin.json](plugin.json):** dependencies, version and plugin metadata.
+- **[assets/](assets/):** icon, fallback art and interface assets.
+- **[tests/](tests/):** automated regression tests.
+- **[mutagen/](mutagen/)** and **[third_party/](third_party/):** included metadata parser and accompanying third-party licensing material.
+- **[CHANGELOG.md](CHANGELOG.md)** and **[RELEASE_VALIDATION_1.0.0.md](RELEASE_VALIDATION_1.0.0.md):** development history and validation record.
 
-- `ResonaDeck/src/index.js` — frontend source
-- `ResonaDeck/dist/index.js` — installable frontend
-- `ResonaDeck/main.py` and `ResonaDeck/resonadeck_backend.py` — Python backend
-- `ResonaDeck/plugin.json` and `ResonaDeck/package.json` — metadata
-- `ResonaDeck/assets/`, `ResonaDeck/mutagen/`, bundled license files, and automated tests
+The code was imported directly from the exact public **ResonaDeck 1.0.0** installation archive after checking its SHA-256. The important GitHub blobs were cross-checked against the local original and match.
 
-**Important:** GitHub's automatically generated “Source code (zip)” archive currently includes the GitHub documentation, **not the full plugin code**. For the actual v1.0.0 implementation, use the **named ResonaDeck-1.0.0.zip release asset** linked above.
+## Install the plugin
 
-### Integrity check
+Download the named **[ResonaDeck-1.0.0.zip](https://github.com/ValentineBSAA/ResonaDeck/releases/download/1.0.0/ResonaDeck-1.0.0.zip)** release asset.
 
-Release file: `ResonaDeck-1.0.0.zip`
+For installation use the named plugin ZIP, **not** GitHub's automatically generated repository snapshots.
 
-SHA-256:
+> Historical note: the **1.0.0 Git tag** was created before the source tree was imported onto `main`. GitHub's automatically generated **Source code (zip/tar.gz)** archives for that particular tag reflect its earlier, documentation-only commit. The complete browsable source is now on `main`, and the named 1.0.0 release asset contains the exact corresponding plugin files. We have not rewritten the already-published tag.
+
+## Release integrity
+
+**Named release asset:** `ResonaDeck-1.0.0.zip`
+
+**SHA-256:**
 
 ```text
 e09416573796a432ec2fc093f613108d79929134677dbad6cba5efb37675dd7a
 ```
 
-The checksum has been compared to the original 1.0.0 package.
+See [the 1.0.0 release](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.0.0), [release notes](RELEASE_NOTES_1.0.0.md), [license](LICENSE), and [third-party notices](THIRD-PARTY-NOTICES.md).
 
-The release is a stability-focused promotion of the user-verified **0.9.50** baseline. See [release notes](RELEASE_NOTES_1.0.0.md), [third-party notices](THIRD-PARTY-NOTICES.md), and the [GPL-3.0 license](LICENSE).
-
-The plugin is independent of Plex, Valve, and Decky Loader.
+ResonaDeck is an independent project, not affiliated with Plex, Valve, Steam, or Decky Loader.
