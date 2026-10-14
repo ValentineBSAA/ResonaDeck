@@ -1,0 +1,9 @@
+QR Code generator library (Project Nayuki)
+Copyright (c) Project Nayuki
+SPDX-License-Identifier: MIT
+
+qrcode.react
+Copyright (c) Paul O'Shannessy
+SPDX-License-Identifier: ISC
+
+ResonaDeck includes the QR rendering implementation and preserves these upstream notices.

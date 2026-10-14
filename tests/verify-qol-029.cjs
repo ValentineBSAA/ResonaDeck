@@ -1,0 +1,30 @@
+const fs=require('fs'), assert=require('assert');
+const src=fs.readFileSync('src/index.js','utf8'),backend=fs.readFileSync('resonadeck_backend.py','utf8');
+assert(src.includes("const RD_VERSION = '1.0.0';"));
+assert(src.includes('rdRetainPagerFocusV929'));
+assert(src.includes('data-rd-qam-pager'));
+assert(src.includes('data-rd-v929-catalog-pager'));
+assert(src.includes('data-rd-v929-chapter-pager'));
+assert(src.includes('data-rd-v929-saved-pager'));
+assert(src.includes('data-rd-qam-detail-pager'));
+assert(src.includes("resonadeck:v929:music-section"));
+assert(src.includes('onDoneRef.current?.(recovered)'));
+assert(src.includes("await call('recover_connection')"));
+assert(backend.includes('server_connection'));
+assert(backend.includes('userFingerprint'));
+assert(backend.includes('sort_index'));
+const start=src.indexOf('function rdRetainPagerFocusV929('),end=src.indexOf('function PagedCatalogV5(',start);
+const focus=[];
+const fn=new Function('rdFocusElementV5',src.slice(start,end)+';return rdRetainPagerFocusV929;')(x=>{focus.push(x.id);});
+function root(last=false){const prev={id:'prev',disabled:false,getAttribute:()=>null};const next={id:'next',disabled:last,getAttribute:()=>null};return {ownerDocument:{activeElement:prev},querySelector(sel){return sel.includes('="1"]')?next:prev;}}}
+fn(root(false),'data-rd-qam-pager',1);assert.deepEqual(focus,['next']);
+fn(root(true),'data-rd-qam-pager',1);assert.deepEqual(focus,['next']); // already on previous; no redundant focus
+const qam=src.slice(src.indexOf('function QamBrowserV7('),src.indexOf('function StablePreviewArtV81('));
+assert(!qam.includes('root?.scrollIntoView'), 'QAM paging should never scroll to the start');
+assert(!qam.includes("querySelector?.('[data-rd-qam-card=\"0\"]')"),'QAM paging should not refocus first card');
+const page=src.slice(src.indexOf('function PagedCatalogV5('),src.indexOf('function BookDetailV75('));
+const change=page.match(/const changePage=next=>\{[^}]*\}/)[0];
+assert(!change.includes('setItems([])'));
+assert(!page.includes('scroller.scrollTop=0'));
+assert(src===fs.readFileSync('dist/index.js','utf8'));
+console.log('PASS 0.9.30 frontend: page focus, no forced jumps, multiple music sections, stable retry callback, identical dist build');

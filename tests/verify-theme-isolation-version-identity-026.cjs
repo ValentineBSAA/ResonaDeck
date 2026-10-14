@@ -1,0 +1,13 @@
+const fs=require('fs'),assert=require('assert');
+const src=fs.readFileSync('src/index.js','utf8'),dist=fs.readFileSync('dist/index.js','utf8');
+assert.strictEqual(src,dist,'src/dist mismatch');
+assert.ok(src.includes('function rdReleaseLabelV926()'),'shared release label missing');
+assert.ok(src.includes('function VersionBadgeV926'),'shared version badge missing');
+assert.ok(src.includes("h(VersionBadgeV926,{compact:true})"),'QAM version badge missing');
+assert.ok(src.includes("h(VersionBadgeV926)"),'Full Manager version badge missing');
+assert.ok(src.includes('Steam/CSS Loader themes are allowed to influence ResonaDeck'), 'theme isolation scope missing');
+assert.ok(src.includes('background-image:linear-gradient(180deg,#132640 0%,#0c192b 100%)!important'), 'isolated manager surface missing');
+assert.ok(src.includes('.rd-v924-manager .rd-v5-control::before'), 'native pseudo-element neutralization missing');
+assert.ok(src.includes('.rd-v924-manager .rd-profile-chip::before'), 'profile chip theme isolation missing');
+assert.ok(src.includes('.rd-v924-manager .rd-v924-nowcontrols .rd-v5-control:not(.primary)'), 'manager mini-player theme isolation missing');
+console.log('PASS: manager theme isolation CSS, shared version identity and manager-player control isolation are present.');

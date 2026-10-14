@@ -1,0 +1,17 @@
+const fs=require('fs'),assert=require('assert/strict');
+const src=fs.readFileSync('src/index.js','utf8');
+const dist=fs.readFileSync('dist/index.js','utf8');
+assert.equal(src,dist,'src/dist differ');
+assert(src.includes("const RD_VERSION = '1.0.0'"),'current frontend version missing');
+assert(src.includes("musicModes=['albums','artists','tracks']"),'QAM Music Albums/Artists/Tracks modes missing');
+assert(src.includes("call('get_artist_tracks'"),'Artist play-all RPC missing');
+assert(src.includes("section.view==='tracks'"),'QAM direct Track path missing');
+assert(src.includes('Refresh Music + Artwork'),'System Health Music refresh missing');
+assert(src.includes('Refresh Artwork Cache'),'manual artwork refresh missing');
+assert(src.includes("call('start_artwork_hydration',false,true)"),'soft artwork rescan contract missing');
+assert(src.includes("call('resolve_fresh_track'"),'stale Music track recovery missing');
+assert(src.includes('this.staleMediaRecoveryAttempts<1'),'bounded media-error recovery missing');
+assert(src.includes('this.kind!==\'music\''),'Music must bypass stale prepared transport plans');
+assert(src.includes('setInterval(check,45000)'),'automatic Plex Music revision polling missing');
+assert(src.includes('.rd-v7-manager{height:calc(100dvh - 52px)!important;margin-top:52px!important'),'Full Manager Steam-header safe area missing');
+console.log('PASS: 0.9.9 QAM Artist/Track playback, manual/automatic refresh, stale-track recovery hooks, and Full Manager safe area are present with src/dist synchronized.');

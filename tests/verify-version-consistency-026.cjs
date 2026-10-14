@@ -1,0 +1,17 @@
+const fs=require('fs');
+const assert=require('assert');
+const plugin=JSON.parse(fs.readFileSync('plugin.json','utf8'));
+const pkg=JSON.parse(fs.readFileSync('package.json','utf8'));
+const src=fs.readFileSync('src/index.js','utf8');
+const dist=fs.readFileSync('dist/index.js','utf8');
+const main=fs.readFileSync('main.py','utf8');
+const backend=fs.readFileSync('resonadeck_backend.py','utf8');
+assert.strictEqual(plugin.version,'1.0.0');
+assert.strictEqual(pkg.version,'1.0.0');
+assert.ok(src.includes("const RD_VERSION = '1.0.0';"));
+assert.ok(dist.includes("const RD_VERSION = '1.0.0';"));
+assert.ok(main.includes('"1.0.0"'));
+assert.ok(backend.includes('"1.0.0"'));
+assert.ok(backend.includes('"0.9.30-listening-experience"'));
+assert.strictEqual(src,dist);
+console.log('0.9.30 version consistency verification passed');

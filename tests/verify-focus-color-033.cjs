@@ -1,0 +1,14 @@
+const fs=require('fs'),assert=require('node:assert/strict'),vm=require('vm');
+const src=fs.readFileSync('src/index.js','utf8');
+const part=(a,b)=>{const i=src.indexOf(a),j=src.indexOf(b,i+a.length);assert(i>=0&&j>i,`missing ${a}`);return src.slice(i,j)};
+const block=part('function rdQamHasNativeFocusV934(root){','const RD_QAM_LAST_VOLUME_V80');
+const logs=[];let taken=false,blocked=false,consumed=0;
+const target={disabled:false,getAttribute:()=>null,getBoundingClientRect:()=>({width:100,height:50}),id:'play'};
+const root={querySelectorAll:()=>[target]};
+const context={DFL:{getGamepadNavigationTrees:()=>[{m_element:target,BTakeFocus:()=>{taken=true;return !blocked}}]},rdNativeTakeFocus:()=>{throw Error('DOM focus fallback should not be used')},rdDir:e=>e.detail.button,RD_DIR_UP:9,RD_DIR_DOWN:10,RD_DIR_LEFT:11,RD_DIR_RIGHT:12,rdQamRootV7:()=>root,rdQamSpatialTargetV92:()=>target,rdFocusIdV90A:t=>t?.id||'',rdFocusEvidenceV90A:(_e,_r,x)=>logs.push(x.event),rdQamRevealV92:()=>{},rdConsumeDirectionV80:()=>{consumed++},setTimeout:()=>{}};
+vm.createContext(context);vm.runInContext(block,context);
+const event=()=>({currentTarget:{matches:()=>false,closest:()=>null},detail:{button:10}});
+assert.equal(context.rdQamDirectionalV7(event()),true,'native focus request works');assert(taken);assert.equal(consumed,1);
+blocked=true;taken=false;assert.equal(context.rdQamDirectionalV7(event()),false,'rejected native focus yields to Steam');assert(taken);assert.equal(consumed,1,'failed transfer must not consume input');
+assert(logs.includes('native-direction-handoff'));
+console.log('PASS 0.9.34: native node focus only, failed transfers yield without claiming input');

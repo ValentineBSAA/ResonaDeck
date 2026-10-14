@@ -1,0 +1,14 @@
+const fs=require('fs'),assert=require('assert/strict'),path=require('path');
+const src=fs.readFileSync(path.join(__dirname,'../src/index.js'),'utf8');
+const dist=fs.readFileSync(path.join(__dirname,'../dist/index.js'),'utf8');
+assert.equal(src,dist,'src/dist differ');
+assert(src.includes("const RD_VERSION = '1.0.0'"));
+const render=src.slice(src.indexOf('const secondary=music?'),src.indexOf('const primary=music?',src.indexOf('const secondary=music?')));
+assert(render.includes("h(ControlV5,{'data-rd-qam-now-control':'1'"),'Shuffle must be a direct ControlV5 child');
+assert(render.includes("s.shuffle?'SHUFFLE · ON':'SHUFFLE · OFF'"),'Shuffle raw text missing');
+assert(!render.includes('rd-v921-shuffle-wrap'),'no Shuffle wrapper allowed');
+assert(!render.includes('QamShuffleBorderTraceV915'),'no SVG tracer component allowed');
+for(const token of ['offset-path:inset(-2px round 11px)','@keyframes rdV922ShuffleTrace','@supports not (offset-path:inset(0 round 1px))','browser?.HideCursorUntilMouseEvent?.()','idleTimer=win.setTimeout(hide,700)']) assert(src.includes(token),`missing 0.9.22 targeted hook: ${token}`);
+assert(!src.includes('SetMousePosition?.('),'coordinate parking must be absent');
+assert(!src.includes('rd-v921-qam-cursor-hidden'),'CSS cursor-hiding class must be absent');
+console.log('PASS: 0.9.22 uses native Shuffle text + CSS perimeter motion and Steam browser-native idle cursor hiding.');
