@@ -88,6 +88,10 @@ It's designed around the Steam Deck controller, with colorful frosted-glass cont
 
 **Full Manager:** A more spacious Plex audio library with shelves, artwork, track details, search, audiobook chapters, player settings, and library tools.
 
+## 🧩 Open source
+
+Browse the **[frontend source](src/index.js)**, **[Python Plex backend](resonadeck_backend.py)**, **[tests](tests/)**, and **[assets](assets/)** directly in this repository. The source matches the verified 1.0.0 installation ZIP; see **[Source & Integrity](SOURCE.md)** for the checksum and tag details.
+
 ## ℹ️ About 1.0.0
 
 **1.0.0 preserves the hardware-tested 0.9.50 baseline** rather than introducing another feature overhaul. Playback speed depends partly on Plex server availability, network conditions, and server transcoding. Steam and Decky updates may affect controller or theme behavior.
