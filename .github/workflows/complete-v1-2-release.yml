@@ -1,6 +1,6 @@
 name: Complete ResonaDeck 1.2.0 release page
 
-# Refresh the already-published release notes from the new versioned screenshot gallery and 1.2.0 feature comparison.
+# Refresh the published 1.2.0 release description to include the explicit 1.0.0-vs-1.2.0 feature comparison.
 on:
   push:
     branches: [main]
