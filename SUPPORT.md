@@ -14,6 +14,12 @@ Confirm Plex connectivity and select the appropriate Music / Audiobook / Podcast
 ### Playback is slow or buffers
 Check Plex server status, your network connection, and whether the server is transcoding the chosen media. A slow server can delay first playback.
 
+### Does ResonaDeck 1.2.0 support music crossfade?
+Yes. In Surprise Me settings, select Off, 3, 5, 8, or 10 seconds. Automatic eight-second crossfades were confirmed on the creator's Steam Deck. Different Plex formats and network conditions can affect buffering. The XFADE status shows whether the incoming stream is buffering, ready, fading, or unable to transition. Crossfade is a music feature and should not overlap audiobook/podcast speech.
+
+### How do I reopen or close Surprise Me settings?
+Focus the active album artwork or idle turntable and press X. Press X again to close the settings panel. The artwork and fallback cover remain selectable.
+
 ### Where is Quick Menu search?
 It was removed from v1.0.0 after testing showed the embedded controller search was too awkward. Use **Full Manager → Search**.
 
