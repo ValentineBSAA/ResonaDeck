@@ -1,39 +1,35 @@
 # Source Code & Release Integrity
 
-**ResonaDeck 1.0.0 is open source, and its actual plugin code is browsable in this repository.**
+**ResonaDeck 1.2.0 Stable is publicly released, with its runtime source synchronized to this repository from the exact published ZIP.**
 
-## Browse the code
+## Download the verified stable release
 
-- **[src/index.js](src/index.js):** original frontend source, including the controller-first Quick Menu and Full Manager.
-- **[dist/index.js](dist/index.js):** installable frontend bundled with Decky Loader. This matches the published frontend source byte-for-byte.
-- **[resonadeck_backend.py](resonadeck_backend.py):** Python Plex integration and playback backend.
-- **[main.py](main.py):** Decky Loader bootstrap.
-- **[package.json](package.json)** and **[plugin.json](plugin.json):** dependencies, version and plugin metadata.
-- **[assets/](assets/):** icon, fallback art and interface assets.
-- **[tests/](tests/):** automated regression tests.
-- **[mutagen/](mutagen/)** and **[third_party/](third_party/):** included metadata parser and accompanying third-party licensing material.
-- **[CHANGELOG.md](CHANGELOG.md)** and **[RELEASE_VALIDATION_1.0.0.md](RELEASE_VALIDATION_1.0.0.md):** development history and validation record.
+- **[ResonaDeck 1.2.0 Stable release](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.2.0)**
+- **[ResonaDeck-1.2.0-Stable.zip](https://github.com/ValentineBSAA/ResonaDeck/releases/download/1.2.0/ResonaDeck-1.2.0-Stable.zip)**
+- **SHA-256:** `66148bf5e02114282c964bf46f2d6f0f89934d6184e6eecd2ea8a4ac8d8b21f2`
 
-The code was imported directly from the exact public **ResonaDeck 1.0.0** installation archive after checking its SHA-256. The important GitHub blobs were cross-checked against the local original and match.
+The release ZIP contains a top-level `ResonaDeck/` plugin directory. Install this ZIP directly using Decky Loader.
 
-## Install the plugin
+## Browse the public implementation
 
-Download the named **[ResonaDeck-1.0.0.zip](https://github.com/ValentineBSAA/ResonaDeck/releases/download/1.0.0/ResonaDeck-1.0.0.zip)** release asset.
+- [Frontend source](src/index.js) and [installable compiled frontend](dist/index.js) are **byte-identical** in the verified stable ZIP.
+- [Plex backend](resonadeck_backend.py) and [Decky entrypoint](main.py).
+- [Manifest](plugin.json), [package dependencies](package.json) and [asset pack](assets/).
+- [Tests](tests/), [mutagen metadata parser](mutagen/) and [third-party notices](THIRD-PARTY-NOTICES.md).
+- [Changelog](CHANGELOG.md), [release notes](RELEASE_NOTES_1.2.0.md) and [feature verification](FEATURE_STATUS_1.2.0.md).
 
-For installation use the named plugin ZIP, **not** GitHub's automatically generated repository snapshots.
+The checked-in source was imported via [the checksum-verifying GitHub Actions workflow](.github/workflows/import-v1-2-source.yml), which downloads the previously published archive, verifies its SHA-256, checks frontend parity and manifest versions, and copies files without recompiling the working audio engine.
 
-> Historical note: the **1.0.0 Git tag** was created before the source tree was imported onto `main`. GitHub's automatically generated **Source code (zip/tar.gz)** archives for that particular tag reflect its earlier, documentation-only commit. The complete browsable source is now on `main`, and the named 1.0.0 release asset contains the exact corresponding plugin files. We have not rewritten the already-published tag.
+## Reproducible integrity checks
 
-## Release integrity
-
-**Named release asset:** `ResonaDeck-1.0.0.zip`
-
-**SHA-256:**
-
-```text
-e09416573796a432ec2fc093f613108d79929134677dbad6cba5efb37675dd7a
+```bash
+sha256sum ResonaDeck-1.2.0-Stable.zip
 ```
 
-See [the 1.0.0 release](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.0.0), [release notes](RELEASE_NOTES_1.0.0.md), [license](LICENSE), and [third-party notices](THIRD-PARTY-NOTICES.md).
+Expected value: `66148bf5e02114282c964bf46f2d6f0f89934d6184e6eecd2ea8a4ac8d8b21f2`.
 
-ResonaDeck is an independent project, not affiliated with Plex, Valve, Steam, or Decky Loader.
+## Hardware verification
+
+The project owner confirmed the **automatic eight-second crossfade**, native/fallback cover art, timed record-to-cover handoff, Surprise Me playback, Favorites browser, controller X toggles, and Keep Playing on Steam Deck. Other fade durations and edge cases need broader verification.
+
+Older [ResonaDeck 1.0.0](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.0.0) remains available for historical reference.
