@@ -2,7 +2,7 @@ const fs=require('fs'),assert=require('assert/strict');
 const src=fs.readFileSync('src/index.js','utf8');
 const dist=fs.readFileSync('dist/index.js','utf8');
 assert.equal(src,dist,'src/dist differ');
-assert(src.includes("const RD_VERSION = '1.0.0'"),'current frontend version missing');
+assert(src.includes("const RD_VERSION = '1.0.8'"),'current frontend version missing');
 assert(src.includes('function rdManagerSpatialTargetV910'),'Full Manager spatial targeting helper missing');
 assert(src.includes('function rdManagerDirectionalV910'),'Full Manager direction handler missing');
 assert(src.includes("onGamepadDirection:rdManagerDirectionalV910"),'manager controls are not wired to spatial navigation');

@@ -55,3 +55,9 @@ These are deterministic development checks. They do not replace Steam Deck hardw
 
 ## 0.9.22 targeted checks
 - `verify-native-shuffle-cursor-022.cjs`: direct native Shuffle button text, CSS rounded-perimeter motion tracer with fallback, Steam browser-native idle cursor hiding, and retirement of failed 0.9.21 wrapper/parking paths.
+
+## 1.1.6 focused tests
+- `node tests/verify-crossfade-v116.cjs`: two-player timing and independent pulse tests.
+- `node tests/verify-next-peek-v116.cjs`: correct temporary album preview, no focus stealing.
+- `node tests/verify-surprise-continuity-v116.cjs`: queue progression and persistent discovery.
+These are synthetic tests, not proof of Steam Deck audio output. Older version-pinned tests in this directory may fail their version assertion on a newer build.

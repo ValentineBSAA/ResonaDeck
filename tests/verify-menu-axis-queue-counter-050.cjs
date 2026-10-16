@@ -2,7 +2,7 @@ const fs=require('fs'),vm=require('vm'),assert=require('node:assert/strict');
 const src=fs.readFileSync('src/index.js','utf8');
 const dist=fs.readFileSync('dist/index.js','utf8');
 assert.equal(src,dist,'shipped frontend must match source');
-assert(src.includes("const RD_VERSION = '1.0.0'"));
+assert(src.includes("const RD_VERSION = '1.0.8'"));
 const take=(from,to)=>{const i=src.indexOf(from);assert(i!==-1,from);const j=src.indexOf(to,i+from.length);assert(j!==-1,to);return src.slice(i,j)};
 const h=(type,props,...children)=>({type,props:props||{},children:children.flat(Infinity).filter(x=>x!=null&&x!==false)});
 const nodes=n=>!n||typeof n!=='object'?[]:[n,...(n.children||[]).flatMap(nodes)];

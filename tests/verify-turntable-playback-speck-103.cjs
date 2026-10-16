@@ -1,0 +1,31 @@
+const fs=require('node:fs');
+const path=require('node:path');
+const assert=require('node:assert/strict');
+const root=path.resolve(__dirname,'..');
+const js=fs.readFileSync(path.join(root,'src/index.js'),'utf8');
+const dist=fs.readFileSync(path.join(root,'dist/index.js'),'utf8');
+const pack=JSON.parse(fs.readFileSync(path.join(root,'assets/idle-messages.json'),'utf8'));
+assert.equal(js,dist,'installed and source frontend must match');
+assert.equal(pack.messages.length,2048);
+assert.equal(new Set(pack.messages).size,2048);
+const qam=js.slice(js.indexOf('function QamNowV7(){'),js.indexOf('function QamDetailV7('));
+assert(qam.includes("rd-v105-turntable"),'larger vinyl platter is present');
+assert(qam.includes("className:'rd-v105-vinyl'"),'record is a dedicated rotating DOM element');
+assert(qam.includes("className:'rd-v105-tonearm'"),'turntable includes fixed tonearm');
+assert(qam.includes("className:'rd-v105-vinyl-label'"),'emblem is INSIDE rotating record');
+assert(/animation:rdV105Spin 3\.3s linear infinite!important/.test(js),'record speed should be 3.6 seconds');
+assert(/\.rd-v105-vinyl-label\{[^}]*animation:none!important/.test(js),'logo must follow record rotation rather than spinning separately');
+assert(js.includes('rdV105TurntableGlow'),'turntable glow should pulse');
+assert(js.includes('rd-v102-idle-paused .rd-v105-vinyl'),'hidden Quick Menu must pause animation');
+assert(js.includes('@media(prefers-reduced-motion:reduce)'),'accessibility motion protection retained');
+assert(qam.includes("h('div',{className:'rd-v80-now-eyebrow rd-v108-now-eyebrow'},h('span',null,kindLabel)"),'playback status is dot-free and now hosts compact STOP');
+assert(!qam.includes("h('div',{className:'rd-v80-now-eyebrow'},h('i')"),'legacy playback status dot is gone');
+assert(js.includes("h('div',{className:'rd-v924-now-eyebrow'},kind)"),'Full Manager playback status dot gone');
+assert(qam.includes("className:`rd-v91-viz ${music?"),'equalizer uses original working visualizer layout');
+assert(qam.includes("Array.from({length:18},(_,i)=>h('i',{key:i,style:"),'restored equalizer DOM must contain original animated bars');
+assert(!qam.includes('rd-v103-viz-bar'),'broken 1.0.3 equalizer selectors removed');
+assert(js.includes('.rd-v91-viz.playing i{animation:rdV91Wave'), 'restored original keyframe selector required');
+for(const retained of ['QamMusicQueueDrawerV912','rdQamQueueCountV950','rd-v949-action-menu','call(\'get_idle_messages\')','rdV940ShuffleGlassSnake']){
+ assert(js.includes(retained),`must preserve ${retained}`);
+}
+console.log('PASS 1.0.8 turntable with isolated centered label, restored animated visualizer, quotes & baseline controls');

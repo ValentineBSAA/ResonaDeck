@@ -3,8 +3,8 @@ const src=fs.readFileSync('src/index.js','utf8'),dist=fs.readFileSync('dist/inde
 const plugin=JSON.parse(fs.readFileSync('plugin.json','utf8'));
 const pkg=JSON.parse(fs.readFileSync('package.json','utf8'));
 assert.equal(src,dist,'Decky frontend must be the same as tested source');
-assert.equal(plugin.version,'1.0.0');assert.equal(pkg.version,'1.0.0');
-assert(src.includes("const RD_VERSION = '1.0.0'"));
+assert.equal(plugin.version,'1.0.8');assert.equal(pkg.version,'1.0.8');
+assert(src.includes("const RD_VERSION = '1.0.8'"));
 for(const role of ['music','audiobooks','podcasts','other']) {
  assert(src.includes(`.rd-root .rd-v940-role-${role}`),`${role} must have an independent color identity`);
  assert(src.includes(`rd-v940-role-`),'role-specific card/tab decoration missing');

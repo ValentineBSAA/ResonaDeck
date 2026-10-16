@@ -1,7 +1,7 @@
 const fs=require('fs'), vm=require('vm'), assert=require('node:assert/strict');
 const src=fs.readFileSync('src/index.js','utf8');
 const dist=fs.readFileSync('dist/index.js','utf8');
-assert.equal(src,dist);assert(src.includes("const RD_VERSION = '1.0.0'"));
+assert.equal(src,dist);assert(src.includes("const RD_VERSION = '1.0.8'"));
 const block=(a,b)=>{const i=src.indexOf(a),j=src.indexOf(b,i+a.length);assert(i>=0&&j>i,`missing ${a}`);return src.slice(i,j)};
 const h=(type,props,...children)=>({type,props:props||{},children:children.flat(Infinity).filter(x=>x!==undefined&&x!==null&&x!==false)});
 const walk=n=>!n||typeof n!=='object'?[]:[n,...(n.children||[]).flatMap(walk)];
@@ -33,7 +33,7 @@ card.props.onClick();assert.equal(playCount,1);
 card.props.onSecondaryButton();assert.equal(menuCount,1);assert.equal(previewCount,0);
 card.props.onOptionsButton();assert.equal(menuCount,2);
 card.props.onKeyDown({key:'x',repeat:false});assert.equal(menuCount,3);
-assert(src.includes("if(!cur)return h('div',{className:'rd-v7-qam-now rd-v80-qam-now rd-v80-now-empty rd-v949-idle'}"));
+assert(src.includes("if(!cur)return h('div',{className:`rd-v7-qam-now rd-v80-qam-now rd-v80-now-empty rd-v949-idle ${visible?"));
 assert(src.includes("if(!snap?.current)"));
 assert(src.includes("await audioEngine.setQueue(tracks,0,'music',next)"));
 assert(src.includes("const [actionItem,setActionItem]"));

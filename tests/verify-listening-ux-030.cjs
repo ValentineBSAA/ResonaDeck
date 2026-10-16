@@ -1,6 +1,6 @@
 const fs=require('fs'),assert=require('node:assert/strict'),vm=require('vm');
 const src=fs.readFileSync('src/index.js','utf8'),dist=fs.readFileSync('dist/index.js','utf8');
-assert.equal(src,dist);assert(src.includes("const RD_VERSION = '1.0.0';"));
+assert.equal(src,dist);assert(src.includes("const RD_VERSION = '1.0.8';"));
 const part=(begin,end)=>{const i=src.indexOf(begin),j=src.indexOf(end,i+begin.length);assert(i>=0&&j>i,`missing ${begin}`);return src.slice(i,j);};
 const pick=vm.runInNewContext(part('function rdPickContinueIndexV930(', 'async function rdQuickPlayCollectionV930(')+';rdPickContinueIndexV930');
 assert.equal(pick([{viewCount:1},{viewOffset:72000,durationMs:150000,lastViewedAt:123},{viewOffset:42000,durationMs:150000,lastViewedAt:200}]),2);

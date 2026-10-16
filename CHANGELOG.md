@@ -1,3 +1,105 @@
+## ResonaDeck 1.2.0 STABLE | 2026-10-16
+
+- Promoted the creator-confirmed 1.1.9 Deck test build without changing audio, artwork, or controller behavior.
+- Automatic eight-second crossfade and the incoming-vinyl → gold turntable → full-cover transition were both confirmed working by the creator in real Steam Deck playback.
+- Prepared stable version metadata, complete plugin ZIP, public documentation and evidence-based verification checklist.
+- Other duration/codec edge cases and minor transition polishing remain future validation.
+
+## ResonaDeck 1.1.8 TEST - Automatic Crossfade Trigger
+
+- Hardware finding: manual TEST Crossfade in 1.1.7 works for 8 seconds and two streams; automatic trigger is the defect.
+- Favor the actual HTML audio duration and retain Plex metadata as fallback to calculate the impending track end.
+- Rearm independent monitoring for every track after a successful audio crossfade.
+- Preserve all currently working artwork, Surprise Me settings, Favorites, turntable and vinyl-arrival visual.
+- Offline verified only; automatic crossfade on Steam Deck remains an open acceptance test.
+
+## 1.1.6 TEST | 2026-10-15
+- Independent crossfade scheduler and earlier Plex prebuffer; metadata-first duration checks; live player crossfade phase badge for diagnosis.
+- Small timed UP NEXT artwork preview, nonfocusable, clears at track change; existing art/turntable left alone.
+- Source-only and simulation-tested. **User-confirmed 1.1.5 crossfade failure remains unverified on hardware in 1.1.6.**
+
+## 1.1.4 TEST
+- Active artwork A/X settings toggle and native focus between artwork and Stop.
+- Close settings from a selected preference or Favorites browser with X.
+- Fill genuine/fallback music covers in the entire playing-artwork square; idle gold turntable untouched.
+- Prepare a silent second music stream ahead of music-only 3/5/8/10-second equal-power crossfade.
+- Preserve the 1.1.3 queue, artwork caching, contrast, and library behavior; hardware validation pending.
+
+## 1.1.4 TEST - surprise control toggle, square playback artwork, music crossfade prewarm
+
+- The active music artwork toggles Surprise Me options via X or A; focused settings/Favorites actions also support X close. Added direct Art/Stop focus lane.
+- Real/fallback playing music artwork fills a square; the owner's existing gold idle record and its backing are unchanged.
+- Music crossfade now plans and preloads the next Plex stream early using a separate audio element, followed by equal-power 3/5/8/10s overlapping playback. Stops and failure cleanup preserved; not verified on Steam Deck yet.
+- Carries forward 1.1.3 continuous queue, Favorites browser, dark text contrast and album metadata repair. Includes authoritative updated checklist and plan handoff.
+
+## 1.1.3 TEST - artwork focus, early queue refill and readable album details
+
+- Track refill begins with twelve queued tracks remaining; bounded history keeps an independent continuous-session position so progress does not jump backward after old tracks are trimmed.
+- Added focusable normal/fallback artwork when actively playing: A or X opens Surprise Me settings without stopping music. Gold focus, existing cover flow and original turntable remain.
+- Dark, high-contrast album Browse Details and X actions while retaining album-themed accent trim; preserve real album title if Plex metadata returns `Unknown collection`.
+- Based exclusively on the owner's tested 1.1.2 code. Offline verification passed; real Steam Deck verification remains pending. See `IMPLEMENTATION_CHECKLIST_1.1.3.md`.
+
+## 1.1.2 TEST - continuous listening, Favorites and immediate fallback artwork
+
+- Reworked timed Surprise Me to use actual listening clock (paused time excluded); queue refill now starts at five remaining tracks, supports a one-track Favorites set, album-mode recycling, urgent boundary retries and ignores canceled runs. When a timed goal is met, the active song is allowed to finish.
+- Made selected and unselected Surprise Me controls reliably colored within theme-owned glass; added gold selected dot and retained separate controller focus outlines. Replaced clipped CLOSE with icon-only X.
+- Added paginated, category-filtered Favorites browser reachable from Surprise Me X settings and integrated into Full Manager.
+- Immediately display bundled Music/Audiobook/Podcast fallback art while native art resolves; proactively warm five upcoming queue covers.
+- Kept 1.0.8 playback layout and 1.1.1 Plex backend unchanged. Device validation still required. See IMPLEMENTATION_CHECKLIST_1.1.2.md.
+
+## 1.1.1 TEST - Steam Deck discovery theme and continuous listening repair
+
+- New 30-minute, 1-hour, 2-hour, and Keep Playing Surprise Me modes; user-selected 10/20/40-track options are preserved.
+- Music duration modes refill upcoming queue in bounded batches until the requested listening duration is covered; no abrupt cutoff mid-song.
+- Keep Playing continues selecting songs, with recent-repeat protection and a bounded queue to reduce large-queue lag.
+- Source-level warm artwork seeding avoids clearing an already-cached cover between tracks.
+
+
+
+- Restored the exact gold vinyl idle housing as the focusable Surprise Me control, fixed card alignment.
+- Restyled Surprise Me and Full Manager discovery controls with CSS Loader resistant glass, and moved settings beneath the idle banner.
+- No playback engine changes; preserves white-dot fix, Stop and queue behavior.
+
+## 1.1.0 TEST — Discovery, Favorites, Sessions, Playlists, Crossfade
+- Clickable original gold turntable: A Surprise Me, X settings, scoped LB/RB category selection.
+- Defaults Music / Tracks / Favorites Off / 20 tracks. Categories Music, Audiobooks, Podcasts, More Audio, All.
+- Favorites, Shuffle Favorites, saved listening sessions, local playlists persisted per Plex profile in Decky settings.
+- Large-queue update optimization, with unchanged navigation and original Stop button.
+- Universal sleep timer and optional final 10-second fade.
+- Optional music-only 3/5/8/10-second dual-audio crossfade and existing sliding artwork; Off by default.
+- TEST build pending real Steam Deck hardware validation. White-dot fix from 1.0.7 kept intact.
+
+## 1.0.8 TEST — Quick Menu Stop Button
+- Added compact artwork-tinted STOP in the media label row; no changes to transport rows.
+- Uses existing engine stop behavior and controller focus navigation.
+- Preserved the 1.0.7 white dot fix and all playback animations.
+
+## 1.0.4 TEST · Full-size turntable and restored visualizer
+- The idle record now fills the turntable plate. The ResonaDeck logo occupies the center label, not the entire vinyl surface. Faster 3.6-second rotation with a fixed tonearm and pulsing light.
+- Restored the proven v1.0.2 audio visualizer DOM and animation selectors after v1.0.3 froze the keyframed transform.
+- The white speck is not yet identified. Do not claim it is fixed; no more speculative player element removal in this build.
+- The 2,048 idle messages, live Plex behavior and controller navigation remain unchanged.
+
+## 1.0.3 TEST · Turntable idle emblem and playback speck investigation
+- Replaced idle icon ornament with a four-and-a-half-second rotating vinyl deck: entire record and ResonaDeck label move together, illuminated grooves, fixed tonearm, warm pulsing aura.
+- Removed tiny decorative status bullet nodes that are rendered only when an active track exists, in the Quick Menu and Full Manager minibar.
+- Replaced theme-sensitive italic visualizer bars with explicitly sized spans to eliminate any collapsed single-pixel equalizer fragment while keeping a functioning wave.
+- Idle quote JSON pack and playback/controller systems unchanged. White-dot removal is still hardware-pending; user observations implicate active playback, but a photo cannot prove the precise drawing source.
+
+## 1.0.2 TEST · Whole-emblem animation and document-level idle cursor fallback
+- Confirmed 2,048 JSON idle messages seed automatically and remain editable without frontend rebuild.
+- Entire idle ResonaDeck icon now rotates with layered golden aura; respects visibility and reduced motion.
+- Extended cursor suppression to Steam document root and restored it on pointer movement and unmount; actual Steam hardware result remains unverified.
+- Player, queue, Full Manager, and 1.0.0 baseline functionality retained.
+
+## 1.0.1 TEST — Idle Listening Lounge (not published stable)
+
+- Quick Menu idle banner retains “Ready to listen” and the category instructions, and adds rotating listening prompts from a **2,048-message offline pack**.
+- A quiet gold orbit and subtle glow surround the icon only when playback is idle, with reduced-motion support.
+- Message pack is saved under Decky's persistent ResonaDeck settings and reread while idle; text changes do not require rebuilding the frontend.
+- Idle cursor fallback now hides stale pointer visuals when stationary and restores them on genuine mouse movement; the decorative eyebrow dot is removed in idle mode.
+- No modifications to Plex playback, queued tracks, controller handling, search, or Full Manager navigation.
+
 # Changelog
 
 ## 1.0.0 — First Public Release
@@ -271,3 +373,10 @@
 - Keeps a static themed border fallback if motion-path animation is unsupported.
 - Replaces CSS cursor hiding and coordinate parking with Steam browser-native `HideCursorUntilMouseEvent()`.
 - Leaves Repeat, queue semantics, Cover Flow, cover position, artwork, catalog, and controller behavior unchanged.
+
+## 1.0.5 TEST — Isolated idle turntable geometry
+- Replaced the idle turntable's legacy shared artwork/icon CSS classes with dedicated `rd-v105` markup and exact positioning rules.
+- Kept the vinyl and small ResonaDeck center label inside one rotating element, with a stationary tonearm reaching the outer grooves; 3.3-second rotation.
+- Turntable is dark charcoal with subtle gold accents and glow.
+- Restored 1.0.4 playback visualizer implementation is unchanged; no playback controls, Plex network paths, queue, or controller actions were modified.
+- **White playback dot still under investigation.** No speculative cursor or artwork changes in this release.

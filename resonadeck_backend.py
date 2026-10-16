@@ -76,7 +76,7 @@ except Exception:  # pragma: no cover
 logger = getattr(decky, "logger", logging.getLogger(__name__))
 logging.basicConfig(level=logging.INFO)
 
-PLUGIN_VERSION = getattr(decky, "DECKY_PLUGIN_VERSION", "1.0.0")
+PLUGIN_VERSION = getattr(decky, "DECKY_PLUGIN_VERSION", "1.1.1")
 PRODUCT = "ResonaDeck"
 ARTWORK_HYDRATION_GENERATION = "0.9.9-library-refresh-v1"
 CATALOG_CACHE_GENERATION = "0.9.9-refresh-v1"
@@ -396,6 +396,10 @@ class Plugin:
         self.legacy_db_path = self.runtime_dir / "resonadeck.sqlite3"
         self.db_path = self.settings_dir / "resonadeck.sqlite3"
         self.identity_path = self.settings_dir / "device-identity.json"
+        # Editable idle quotes live in persistent settings across plugin upgrades.
+        self.idle_messages_path = self.settings_dir / "idle-messages.json"
+        self._idle_messages_cached = None
+        self._idle_messages_stat = None
         self.auth_path = self.settings_dir / "plex-auth.json"
         # Keep the loopback identity in persistent settings. Reusing the same
         # token/port across upgrades keeps already-rendered localhost artwork URLs
@@ -500,6 +504,12 @@ class Plugin:
             except Exception as error:
                 self._record("startup-directory", error)
         self._migrate_persistent_cache()
+        # Seed the editable library once. Never overwrite a listener's changes.
+        try:
+            if not self.idle_messages_path.exists():
+                shutil.copy2(Path(__file__).resolve().parent / "assets" / "idle-messages.json", self.idle_messages_path)
+        except Exception as error:
+            self._record("idle-messages-seed", error)
         try:
             self.settings = JsonSettings(name="config", settings_directory=decky.DECKY_PLUGIN_SETTINGS_DIR)
         except Exception as error:
@@ -4674,6 +4684,120 @@ class Plugin:
     # ------------------------------------------------------------------
     # Settings / health / diagnostics
     # ------------------------------------------------------------------
+    async def get_idle_messages(self):
+        """Read user-editable idle quotes without touching Plex or audio playback.
+
+        Cached by file timestamp for efficiency. Invalid edits return a safe
+        fallback; no arbitrary code, HTML, or remote scripts are executed.
+        """
+        path = self.idle_messages_path
+        try:
+            stat = path.stat()
+            stamp = (stat.st_mtime_ns, stat.st_size)
+            if stat.st_size > 1024 * 1024:
+                raise ValueError("Idle message file exceeds the 1 MB limit")
+            if self._idle_messages_cached is not None and self._idle_messages_stat == stamp:
+                return self._idle_messages_cached
+            parsed = json.loads(path.read_text(encoding="utf-8"))
+            raw = parsed.get("messages") if isinstance(parsed, dict) else parsed
+            if not isinstance(raw, list):
+                raise ValueError("Expected a JSON messages array")
+            values = []
+            seen = set()
+            for value in raw[:4096]:
+                if not isinstance(value, str):
+                    continue
+                line = " ".join(value.split())[:150]
+                if not 12 <= len(line) <= 150 or line in seen:
+                    continue
+                seen.add(line)
+                values.append(line)
+            if not values:
+                raise ValueError("No valid idle messages")
+            result = {"ok": True, "messages": values, "count": len(values), "editableFile": str(path)}
+            self._idle_messages_cached = result
+            self._idle_messages_stat = stamp
+            return result
+        except Exception as error:
+            return {"ok": False, "count": 3, "messages": [
+                "There's always something wonderful waiting in your library.",
+                "Your next great listening adventure is one button away.",
+                "Take your time. The perfect soundtrack is worth finding."
+            ], "error": str(error)[:120]}
+
+    def _discovery_file_v11(self) -> Path:
+        # Use opaque account/server identity; never store Plex auth tokens.
+        try:
+            server_id, user_id = self._catalog_identity()
+            identity = f"{server_id}|{user_id}"
+        except Exception:
+            identity = "local-unconfigured"
+        digest = hashlib.sha256(identity.encode("utf-8")).hexdigest()[:24]
+        return self.settings_dir / f"discovery-{digest}.json"
+
+    async def get_discovery_state(self):
+        path = self._discovery_file_v11()
+        try:
+            value = json.loads(path.read_text(encoding="utf-8")) if path.is_file() else {}
+        except (ValueError, OSError):
+            value = {}
+        if not isinstance(value, dict):
+            value = {}
+        return {"success": True, "state": {
+            "preferences": value.get("preferences", {}) if isinstance(value.get("preferences"), dict) else {},
+            "favorites": value.get("favorites", []) if isinstance(value.get("favorites"), list) else [],
+            "sessions": value.get("sessions", []) if isinstance(value.get("sessions"), list) else [],
+            "playlists": value.get("playlists", []) if isinstance(value.get("playlists"), list) else [],
+            "recentIds": value.get("recentIds", []) if isinstance(value.get("recentIds"), list) else [],
+        }}
+
+    async def save_discovery_state(self, value: Any):
+        if not isinstance(value, dict):
+            return {"success": False, "message": "Invalid discovery state"}
+        # Allowlisted fields, bounded lists and track metadata, no stream URLs or credentials.
+        fields = ("ratingKey", "title", "artist", "album", "thumb", "parentThumb", "libraryRole", "duration", "type", "kind", "grandparentRatingKey", "parentRatingKey")
+        def item(row):
+            if not isinstance(row, dict):
+                return None
+            result = {key: row[key] for key in fields if key in row and isinstance(row[key], (str, int, float)) and len(str(row[key])) <= 1024}
+            return result if result.get("ratingKey") else None
+        prefs = value.get("preferences") if isinstance(value.get("preferences"), dict) else {}
+        safe_prefs = {
+            "category": str(prefs.get("category", "music")) if prefs.get("category") in ("music", "audiobooks", "podcasts", "other", "all") else "music",
+            "musicMode": str(prefs.get("musicMode", "tracks")) if prefs.get("musicMode") in ("tracks", "albums", "rediscover") else "tracks",
+            "favoritesOnly": bool(prefs.get("favoritesOnly", False)),
+            "count": int(prefs.get("count", 20)) if str(prefs.get("count", 20)) in ("10", "20", "40") else 20,
+            "sessionLength": str(prefs.get("sessionLength", prefs.get("count", 20))) if str(prefs.get("sessionLength", prefs.get("count", 20))) in ("10", "20", "40", "30m", "60m", "120m", "endless") else "20",
+            "crossfade": int(prefs.get("crossfade", 0)) if str(prefs.get("crossfade", 0)) in ("0", "3", "5", "8", "10") else 0,
+            "sleepFade": bool(prefs.get("sleepFade", False)),
+        }
+        def collection(key, cap):
+            result = []
+            for row in value.get(key, [])[:cap] if isinstance(value.get(key), list) else []:
+                if key == "favorites":
+                    clean = item(row)
+                else:
+                    clean = None
+                    if isinstance(row, dict):
+                        tracks = [x for x in (item(x) for x in (row.get("items") or [])[:500]) if x]
+                        if tracks:
+                            clean = {"id": str(row.get("id", ""))[:48], "name": str(row.get("name", "Untitled"))[:90],
+                                     "items": tracks, "index": min(max(0, int(row.get("index", 0))), len(tracks)-1),
+                                     "position": max(0, float(row.get("position", 0))),
+                                     "bookRatingKey": str(row.get("bookRatingKey", ""))[:100],
+                                     "globalPosition": max(0, float(row.get("globalPosition", 0))),
+                                     "shuffle": bool(row.get("shuffle", False)), "repeatMode": str(row.get("repeatMode", "off"))[:8]}
+                if clean: result.append(clean)
+            return result
+        clean = {"preferences": safe_prefs, "favorites": collection("favorites", 5000),
+                 "sessions": collection("sessions", 30), "playlists": collection("playlists", 100),
+                 "recentIds": [str(x)[:64] for x in (value.get("recentIds", []) or [])[-300:] if isinstance(x, (str, int))]}
+        try:
+            _safe_write(self._discovery_file_v11(), clean)
+            return {"success": True}
+        except OSError as error:
+            return {"success": False, "message": str(error)}
+
     async def get_preferences(self):
         defaults = {
             "notifyTrackChange": True,

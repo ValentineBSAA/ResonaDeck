@@ -11,6 +11,6 @@
     "description": "Browse and play your Plex Music, Audiobooks, Podcasts and Other Audio on Steam Deck. Artwork-tinted glass controls, quick queue, full library manager and controller navigation.",
     "image": "assets/resonadeck-icon.webp"
   },
-  "description": "ResonaDeck 1.0.0: premium Plex audio playback and library browsing for Steam Deck, with artwork-colored glass, controller navigation, queues, and audiobooks.",
-  "version": "1.0.0"
+  "description": "ResonaDeck 1.2.0: premium Plex audio playback and library browsing for Steam Deck, with artwork-colored glass, controller navigation, queues, and audiobooks.",
+  "version": "1.2.0"
 }

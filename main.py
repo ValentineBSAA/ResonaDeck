@@ -16,7 +16,7 @@ from typing import Any
 
 import decky
 
-PLUGIN_VERSION = getattr(decky, "DECKY_PLUGIN_VERSION", "1.0.0")
+PLUGIN_VERSION = getattr(decky, "DECKY_PLUGIN_VERSION", "1.2.0")
 logger = getattr(decky, "logger", logging.getLogger(__name__))
 
 _ROOT = str(Path(__file__).resolve().parent)
@@ -144,6 +144,9 @@ class Plugin:
     async def save_resume(self, rating_key: str, kind: str, position_ms: int, duration_ms: int, chapter_index: int = -1): return await self._forward("save_resume", rating_key, kind, position_ms, duration_ms, chapter_index)
     async def get_resume(self, rating_key: str): return await self._forward("get_resume", rating_key)
     async def report_progress(self, rating_key: str, state: str, position_ms: int, duration_ms: int, kind: str = "music", chapter_index: int = -1): return await self._forward("report_progress", rating_key, state, position_ms, duration_ms, kind, chapter_index)
+    async def get_idle_messages(self): return await self._forward("get_idle_messages")
+    async def get_discovery_state(self): return await self._forward("get_discovery_state")
+    async def save_discovery_state(self, value: Any): return await self._forward("save_discovery_state", value)
     async def get_preferences(self): return await self._forward("get_preferences")
     async def set_preference(self, key: str, value: Any): return await self._forward("set_preference", key, value)
     async def get_health(self, deep: bool = False): return await self._forward("get_health", deep)

@@ -1,7 +1,7 @@
 {
   "name": "resonadeck",
-  "version": "1.0.0",
-  "description": "ResonaDeck 1.0.0: premium Plex audio playback and library browsing for Steam Deck, with artwork-colored glass, controller navigation, queues, and audiobooks.",
+  "version": "1.2.0",
+  "description": "ResonaDeck 1.2.0: premium Plex audio playback and library browsing for Steam Deck, with artwork-colored glass, controller navigation, queues, and audiobooks.",
   "type": "module",
   "author": "Valentine",
   "license": "GPL-3.0-only",

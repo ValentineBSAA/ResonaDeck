@@ -2,7 +2,7 @@ const fs=require('fs'),vm=require('vm'),assert=require('node:assert/strict');
 const src=fs.readFileSync('src/index.js','utf8');
 const dist=fs.readFileSync('dist/index.js','utf8');
 assert.equal(src,dist);
-assert(src.includes("const RD_VERSION = '1.0.0'"));
+assert(src.includes("const RD_VERSION = '1.0.8'"));
 const style=src.slice(src.indexOf('/* 0.9.48: CSS Loader-safe QUEUE styling.'),src.indexOf('`;\nfunction Styles(){',src.indexOf('/* 0.9.48: CSS Loader-safe QUEUE styling.')));
 for(const token of ['--rd-art-control-top','--rd-art-control-bottom','--rd-art-accent','rd-v948-queue-skin','rd-v948-queue-drawer','rd-v948-queue-info','rd-v948-queue-action','gpfocus','rd-focus'])assert(style.includes(token),`queue glass missing ${token}`);
 const h=(type,props,...children)=>{

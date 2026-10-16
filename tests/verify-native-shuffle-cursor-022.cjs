@@ -2,7 +2,7 @@ const fs=require('fs'),assert=require('assert/strict'),path=require('path');
 const src=fs.readFileSync(path.join(__dirname,'../src/index.js'),'utf8');
 const dist=fs.readFileSync(path.join(__dirname,'../dist/index.js'),'utf8');
 assert.equal(src,dist,'src/dist differ');
-assert(src.includes("const RD_VERSION = '1.0.0'"));
+assert(src.includes("const RD_VERSION = '1.0.8'"));
 const render=src.slice(src.indexOf('const secondary=music?'),src.indexOf('const primary=music?',src.indexOf('const secondary=music?')));
 assert(render.includes("h(ControlV5,{'data-rd-qam-now-control':'1'"),'Shuffle must be a direct ControlV5 child');
 assert(render.includes("s.shuffle?'SHUFFLE · ON':'SHUFFLE · OFF'"),'Shuffle raw text missing');

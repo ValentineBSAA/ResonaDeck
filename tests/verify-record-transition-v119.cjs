@@ -1,0 +1,12 @@
+const assert=require('node:assert/strict');const fs=require('node:fs');
+const code=fs.readFileSync('src/index.js','utf8');
+assert.equal(code,fs.readFileSync('dist/index.js','utf8'));
+assert(code.includes("const RD_VERSION = '1.2.0'"));
+for(const feature of ['rd-v119-next-dock','rd-v119-mini-record','rd-v119-vinyl-scene','rd-v119-gold-deck','rd-v119-incoming-vinyl','rd-v119-new-cover','rd119VinylEnter','rd119NewCover','rd-v117-test-crossfade'])assert(code.includes(feature),feature);
+assert(code.includes('showNextCover')&&code.includes('crossfadeSceneV119')&&code.includes('s.transitionSerial'));
+assert(code.includes("const scene=fadePhase==='fading'?audioEngine.crossfadeSceneV119:null"));
+assert(code.includes('prefers-reduced-motion:reduce'));
+assert(code.includes('XFADE ${crossfadeSeconds}s · ${fadeStatusShort}'));
+assert(code.includes('pointer-events:none!important'));
+assert(!code.includes("h('span',{className:'rd-v116-next-peek',"));
+console.log('PASS: record-change scene is temporary, nonfocusable and hooked into existing artwork flow; idle turntable CSS stays intact');

@@ -2,7 +2,7 @@ const fs=require('fs'),assert=require('assert/strict'),path=require('path');
 const src=fs.readFileSync(path.join(__dirname,'../src/index.js'),'utf8');
 const dist=fs.readFileSync(path.join(__dirname,'../dist/index.js'),'utf8');
 assert.equal(src,dist,'src/dist differ');
-assert(src.includes("const RD_VERSION = '1.0.0'"),'current frontend version missing');
+assert(src.includes("const RD_VERSION = '1.0.8'"),'current frontend version missing');
 const viewport='.rd-root.rd-v7-qam .rd-v913-cover-viewport{position:absolute;inset:-12px -28px -12px -26px;';
 assert(src.includes(viewport),'expanded Cover Flow viewport changed unexpectedly');
 const card='.rd-root.rd-v7-qam .rd-v913-cover-stage .rd-v913-cover-card{position:absolute!important;left:28px!important;top:12px!important;width:100px!important;height:100px!important;';

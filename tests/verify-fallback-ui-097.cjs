@@ -1,7 +1,7 @@
 const fs=require('fs'),vm=require('vm'),assert=require('assert/strict'),path=require('path');
 const src=fs.readFileSync(path.join(__dirname,'../src/index.js'),'utf8');
 const dist=fs.readFileSync(path.join(__dirname,'../dist/index.js'),'utf8');
-assert(src.includes("const RD_VERSION = '1.0.0'"));
+assert(src.includes("const RD_VERSION = '1.0.8'"));
 for(const [name,file] of [['RD_FALLBACK_MUSIC_V97','fallback-music.webp'],['RD_FALLBACK_AUDIOBOOKS_V97','fallback-audiobooks.webp'],['RD_FALLBACK_PODCASTS_V97','fallback-podcasts.webp']]){
   const m=src.match(new RegExp(`const ${name} = '(data:image\/webp;base64,[A-Za-z0-9+/=]+)'`));
   assert(m && m[1].length>20000,`${name} missing/too small`);

@@ -3,7 +3,7 @@ const src=fs.readFileSync('src/index.js','utf8');
 const dist=fs.readFileSync('dist/index.js','utf8');
 const plugin=JSON.parse(fs.readFileSync('plugin.json','utf8'));
 const pkg=JSON.parse(fs.readFileSync('package.json','utf8'));
-assert.equal(plugin.version,'1.0.0');assert.equal(pkg.version,'1.0.0');assert(src.includes("const RD_VERSION = '1.0.0'"));assert.equal(src,dist);
+assert.equal(plugin.version,'1.0.8');assert.equal(pkg.version,'1.0.8');assert(src.includes("const RD_VERSION = '1.0.8'"));assert.equal(src,dist);
 for(const part of ['RD_RECONNECT_LINES_V930','useArtworkAccentV930','rdArtworkAccentV930','RD_PREVIEW_HOLD_MS_V930','QamHoldCardV930','rdPickContinueIndexV930','rdQuickPlayCollectionV930','rd-v930-queue-scroll','rd-v930-preview-open'])assert(src.includes(part),part);
 const start=src.indexOf('const RD_PREVIEW_HOLD_MS_V930='),end=src.indexOf('\nfunction QamBrowserV7(){',start);assert(start>0&&end>start);
 const functions=src.slice(start,end);

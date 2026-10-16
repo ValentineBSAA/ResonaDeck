@@ -1,6 +1,6 @@
 const fs=require('fs'), assert=require('assert');
 const src=fs.readFileSync('src/index.js','utf8'),backend=fs.readFileSync('resonadeck_backend.py','utf8');
-assert(src.includes("const RD_VERSION = '1.0.0';"));
+assert(src.includes("const RD_VERSION = '1.0.8';"));
 assert(src.includes('rdRetainPagerFocusV929'));
 assert(src.includes('data-rd-qam-pager'));
 assert(src.includes('data-rd-v929-catalog-pager'));
