@@ -108,3 +108,5 @@ jobs:
           echo "Move 1.2.0 source tag from $current to $target"
           git tag -f 1.2.0 "$target"
           git push --force origin refs/tags/1.2.0:refs/tags/1.2.0
+
+# Final audit: re-align the published tag after release-page completion.
