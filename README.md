@@ -13,7 +13,7 @@ Music · Audiobooks · Podcasts · More Audio
 
 *Artwork-colored playback controls, directly in your Quick Access Menu.*
 
-**[Download v1.2.0](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.2.0) · [View all screenshots](SCREENSHOTS.md) · [Report a problem](https://github.com/ValentineBSAA/ResonaDeck/issues)**
+**[Download v1.2.0](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.2.0) · [View all screenshots](SCREENSHOTS.md) · [Share feedback](https://github.com/ValentineBSAA/ResonaDeck/discussions/3) · [Report a problem](https://github.com/ValentineBSAA/ResonaDeck/issues)**
 
 </div>
 
@@ -135,9 +135,13 @@ Browse the **[frontend source](src/index.js)**, **[Python Plex backend](resonade
 
 **1.2.0 preserves the working 1.1.9 crossfade, discovery, and controller implementation.** The automatic eight-second crossfade and record handoff were confirmed in the creator's Steam Deck testing. Other fade durations, formats, network edge cases, and alternative themes may need additional compatibility testing. Playback speed depends partly on Plex server availability, network conditions, and server transcoding. Steam and Decky updates may affect controller or theme behavior.
 
-## 💬 Issues & feedback
+## 💬 Share your experience or report a problem
 
-Bugs, feature suggestions, and compatibility reports are welcome in **[Issues](https://github.com/ValentineBSAA/ResonaDeck/issues)**. Include your SteamOS / Decky versions, the affected screen, and reproduction steps. **Please don't post Plex tokens, passwords, or private server links.**
+**Already installed ResonaDeck 1.2.0? We'd love to hear how it went.** Whether Surprise Me picked the right songs, crossfade worked on your Plex setup, or you just want to say hello, you can leave a note in the **[1.2.0 release discussion](https://github.com/ValentineBSAA/ResonaDeck/discussions/3)**. Short impressions and questions are welcome. You don't need to write a full bug report.
+
+If something actually breaks, use **[GitHub Issues](https://github.com/ValentineBSAA/ResonaDeck/issues)** so it's easier to reproduce and track. Include SteamOS, Decky, and Plex server details where helpful, but **never post Plex tokens, passwords, or private server links**.
+
+
 
 **[Official release page](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.2.0)** · **[Full screenshot gallery](SCREENSHOTS.md)** · **[1.2.0 Release Notes](RELEASE_NOTES_1.2.0.md)** · **[Support](SUPPORT.md)** · **[Source & Integrity](SOURCE.md)** · **[Credits and Third-Party Notices](THIRD-PARTY-NOTICES.md)**
 
