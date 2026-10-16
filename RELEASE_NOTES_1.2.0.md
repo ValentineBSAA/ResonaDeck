@@ -23,6 +23,6 @@ The creator confirmed the core experience on real Steam Deck hardware. Edge case
 
 After the new release asset is uploaded, download **ResonaDeck-1.2.0-Stable.zip** from the 1.2.0 GitHub Release and install through **Decky Loader → Settings → Developer → Install Plugin ZIP**. Sign in to a reachable Plex server. Your own Plex media is required.
 
-**The ZIP should be uploaded before publishing these notes or changing the README's official download link.** The release asset SHA-256 should be `e65c10c0fccfa0f3e4128afd7ee0d846ef4df89a3049f83269005a0be32b1c37` (final local stable package).
+**The ZIP should be uploaded before publishing these notes or changing the README's official download link.** The release asset SHA-256 should be `66148bf5e02114282c964bf46f2d6f0f89934d6184e6eecd2ea8a4ac8d8b21f2` (final local stable package).
 
 Created by Valentine. Independent project; no affiliation with Plex, Valve, or Decky Loader.
