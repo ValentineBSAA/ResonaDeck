@@ -1,12 +1,41 @@
-# 📸 ResonaDeck · Screenshots
+# 📸 ResonaDeck · Screenshot Gallery
 
-Actual screenshots captured from the **ResonaDeck 1.0.0 Steam Deck** experience.
+**[← Back to ResonaDeck](README.md)** · **[Download 1.2.0 Stable](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.2.0)** · **[1.2.0 release notes](RELEASE_NOTES_1.2.0.md)**
 
-**[← Back to the main page](README.md)** · **[Download current 1.2.0 Stable](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.2.0)** · [1.2.0 features](FEATURE_STATUS_1.2.0.md)
+These **13 real Steam Deck captures** are intentionally organized by the release that introduced the interface being shown: **4 newer 1.2.0 screenshots** and **9 preserved 1.0.0 screenshots**. The original images are not obsolete simply because the audio engine gained features. Artwork, colors and CSS Loader accents depend on each person's Plex library and Steam theme.
 
-Each image opens at full resolution. Artwork and interface accents vary with the selected media, Plex libraries, and CSS Loader theme.
+## ✨ New in 1.2.0 · Surprise Me and crossfade
 
-## Quick Access Menu
+<table>
+<tr>
+<td align="center" width="50%"><a href="docs/screenshots/v1.2.0/01-player-crossfade-status.jpg"><img src="docs/screenshots/v1.2.0/01-player-crossfade-status.jpg" width="100%" alt="ResonaDeck 1.2.0 Now Playing screen with music art and XFADE indicator"></a><br><b>Now Playing + XFADE</b><br><sub>The active player, queue controls, and live XFADE countdown while music plays</sub></td>
+<td align="center" width="50%"><a href="docs/screenshots/v1.2.0/02-music-albums.jpg"><img src="docs/screenshots/v1.2.0/02-music-albums.jpg" width="100%" alt="ResonaDeck 1.2.0 Music Albums browsing view"></a><br><b>Music albums, still familiar</b><br><sub>The album browser remains controller-friendly; its layout did not need a redesign</sub></td>
+</tr>
+<tr>
+<td align="center" width="50%"><a href="docs/screenshots/v1.2.0/03-surprise-me-turntable.jpg"><img src="docs/screenshots/v1.2.0/03-surprise-me-turntable.jpg" width="100%" alt="ResonaDeck 1.2.0 Surprise Me idle gold turntable and ready-to-listen card"></a><br><b>Surprise Me turntable</b><br><sub>The gold record is selectable. Press A to start Surprise Me, or X to open preferences</sub></td>
+<td align="center" width="50%"><a href="docs/screenshots/v1.2.0/04-surprise-me-settings.jpg"><img src="docs/screenshots/v1.2.0/04-surprise-me-settings.jpg" width="100%" alt="ResonaDeck 1.2.0 Surprise Me settings showing category and music mode selectors"></a><br><b>Surprise Me settings</b><br><sub>Press X on the turntable or active cover to open or close the themed options</sub></td>
+</tr>
+</table>
+
+### The X button is contextual
+
+- **On the idle gold record:** highlight the Surprise Me turntable and press **A** to start a discovery session, or **X** to open or close **Surprise Me Settings**.
+- **While music is playing:** focus the active album artwork (including fallback art) and press **X** to open or close those same settings **without stopping playback**.
+- **In Albums / Artists / Tracks:** highlight a media item and press **X** for that item's actions, such as **Add to Queue**, **Play Next**, or **Browse Details**. This is a separate action menu, not Surprise Me settings.
+
+In Surprise Me, choose the category and music mode (Tracks, Albums or Rediscover), plus Favorites-only and listening options. Music sessions also offer configurable track amounts, timed listening or **Keep Playing**, and **crossfade Off / 3 / 5 / 8 / 10 seconds**. The **8-second automatic crossfade** and record-to-cover handoff have been confirmed on the creator's Steam Deck. A static screenshot cannot show the full motion or audio overlap.
+
+### Why some familiar screens were not recaptured
+
+1.2.0 adds discovery, continuously replenished playback, and crossfade, **not a wholesale redesign of every browsing screen**. Music categories, existing library shelves, Full Manager, audiobook navigation, search, and much of the artwork-colored glass styling still look familiar. The original screenshots below accurately illustrate those retained features. New screenshots were taken where users need to see the new behavior or controls.
+
+---
+
+## 🗂️ Preserved 1.0.0 screenshots · Still-relevant core interface
+
+These nine original screenshots remain intentionally available as historical release evidence and useful references for screens that have not fundamentally changed. They were captured on the creator's Steam Deck with their own library and CSS Loader theme.
+
+### Quick Access Menu
 
 <table>
 <tr>
@@ -16,7 +45,7 @@ Each image opens at full resolution. Artwork and interface accents vary with the
 </tr>
 </table>
 
-## Full ResonaDeck · Home and Music
+### Full ResonaDeck · Home and Music
 
 <table>
 <tr>
@@ -26,7 +55,7 @@ Each image opens at full resolution. Artwork and interface accents vary with the
 </tr>
 </table>
 
-## Audiobooks and Search
+### Audiobooks and Search
 
 <table>
 <tr>
@@ -36,22 +65,27 @@ Each image opens at full resolution. Artwork and interface accents vary with the
 </tr>
 </table>
 
+
 ---
 
-## Screenshot index
+## Screenshot index and release attribution
 
-| File | Screen |
-| :--- | :--- |
-| IMG_8925.JPG | Quick Menu dashboard |
-| IMG_8926.JPG | Music browsing |
-| IMG_8927.JPG | Artwork-reactive player |
-| IMG_8928.JPG | Recently played |
-| IMG_8929.JPG | New music |
-| IMG_8930.JPG | Full music library |
-| IMG_8931.JPG | Audiobooks |
-| IMG_8932.JPG | Search |
-| IMG_8933.JPG | Search results |
+| Version photographed | Image file | Screen |
+| :--- | :--- | :--- |
+| 1.2.0 | [01-player-crossfade-status.jpg](docs/screenshots/v1.2.0/01-player-crossfade-status.jpg) | Now Playing + XFADE |
+| 1.2.0 | [02-music-albums.jpg](docs/screenshots/v1.2.0/02-music-albums.jpg) | Music albums, still familiar |
+| 1.2.0 | [03-surprise-me-turntable.jpg](docs/screenshots/v1.2.0/03-surprise-me-turntable.jpg) | Surprise Me turntable |
+| 1.2.0 | [04-surprise-me-settings.jpg](docs/screenshots/v1.2.0/04-surprise-me-settings.jpg) | Surprise Me settings |
+| 1.0.0 | IMG_8925.JPG (original GitHub image) | Quick Menu dashboard |
+| 1.0.0 | IMG_8926.JPG (original GitHub image) | Music browsing |
+| 1.0.0 | IMG_8927.JPG (original GitHub image) | Artwork-reactive player |
+| 1.0.0 | IMG_8928.JPG (original GitHub image) | Recently played |
+| 1.0.0 | IMG_8929.JPG (original GitHub image) | New music |
+| 1.0.0 | IMG_8930.JPG (original GitHub image) | Full music library |
+| 1.0.0 | IMG_8931.JPG (original GitHub image) | Audiobooks |
+| 1.0.0 | IMG_8932.JPG (original GitHub image) | Search |
+| 1.0.0 | IMG_8933.JPG (original GitHub image) | Search results |
 
-> ResonaDeck plays content from your own Plex server. Screenshots feature one personal library and a customized Steam Deck theme, not bundled media.
+> The 1.2.0 images are committed individually under `docs/screenshots/v1.2.0/`. The nine 1.0.0 images remain linked to their existing original GitHub attachments. No screenshots ZIP is needed to browse the gallery. The media shown belongs to a personal Plex library; ResonaDeck does not distribute music or cover art.
 
-**[Install ResonaDeck 1.0.0](https://github.com/ValentineBSAA/ResonaDeck/releases/download/1.0.0/ResonaDeck-1.0.0.zip)**
+**[Download ResonaDeck 1.2.0 Stable](https://github.com/ValentineBSAA/ResonaDeck/releases/download/1.2.0/ResonaDeck-1.2.0-Stable.zip)**
