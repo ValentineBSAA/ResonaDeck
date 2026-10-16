@@ -90,3 +90,21 @@ jobs:
           fi
           git commit -m 'source: synchronize verified ResonaDeck 1.2.0 stable release'
           git push origin HEAD:main
+
+      - name: Align the published tag to the verified 1.2.0 source and docs
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main --quiet
+          git fetch --no-tags origin 'refs/tags/1.2.0:refs/tags/1.2.0'
+          current="$(git rev-parse 'refs/tags/1.2.0')"
+          target="$(git rev-parse 'refs/remotes/origin/main')"
+          if [ "$current" = "$target" ]; then
+            echo '1.2.0 tag already targets the verified stable source.'
+            exit 0
+          fi
+          test -f src/index.js
+          grep -q '"version": "1.2.0"' plugin.json
+          echo "Move 1.2.0 source tag from $current to $target"
+          git tag -f 1.2.0 "$target"
+          git push --force origin refs/tags/1.2.0:refs/tags/1.2.0
