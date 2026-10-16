@@ -53,22 +53,24 @@ The crossfade status shows when the next stream is preparing, when a fade is exp
 
 ## 📸 See ResonaDeck in action
 
+### New in 1.2.0 · Surprise Me and active playback
+
 <table>
 <tr>
-<td align="center" width="50%"><a href="https://github.com/user-attachments/assets/9db6c2f8-acd3-4bec-99d1-37e9622890fc"><img src="https://github.com/user-attachments/assets/9db6c2f8-acd3-4bec-99d1-37e9622890fc" width="100%" alt="ResonaDeck Music albums in the Steam Quick Menu"></a><br><b>Quick Menu · Music</b><br><sub>Browse your albums without leaving Steam.</sub></td>
-<td align="center" width="50%"><a href="https://github.com/user-attachments/assets/f4451eb8-b4fe-462d-8e83-6981046eca41"><img src="https://github.com/user-attachments/assets/f4451eb8-b4fe-462d-8e83-6981046eca41" width="100%" alt="ResonaDeck Full Manager Music category"></a><br><b>Full Manager · Music</b><br><sub>A cover-driven music library made for a controller.</sub></td>
+<td align="center" width="50%"><a href="docs/screenshots/v1.2.0/03-surprise-me-turntable.jpg"><img src="docs/screenshots/v1.2.0/03-surprise-me-turntable.jpg" width="100%" alt="Gold Surprise Me turntable and ready-to-listen screen"></a><br><b>Surprise Me</b><br><sub>Choose the gold record. A starts listening; X opens or closes settings.</sub></td>
+<td align="center" width="50%"><a href="docs/screenshots/v1.2.0/04-surprise-me-settings.jpg"><img src="docs/screenshots/v1.2.0/04-surprise-me-settings.jpg" width="100%" alt="ResonaDeck 1.2.0 Surprise Me Settings"></a><br><b>Surprise Me Settings</b><br><sub>Choose discovery mode, favorites, session length, and music crossfade.</sub></td>
 </tr>
 <tr>
-<td align="center" width="50%"><a href="https://github.com/user-attachments/assets/75712b32-0898-4b6e-9b0a-f5b8d347167d"><img src="https://github.com/user-attachments/assets/75712b32-0898-4b6e-9b0a-f5b8d347167d" width="100%" alt="ResonaDeck audiobook browsing"></a><br><b>Audiobooks</b><br><sub>Find and resume long-form audio.</sub></td>
-<td align="center" width="50%"><a href="https://github.com/user-attachments/assets/03a84d73-3308-4a83-bd39-cb628e59939a"><img src="https://github.com/user-attachments/assets/03a84d73-3308-4a83-bd39-cb628e59939a" width="100%" alt="ResonaDeck Full Manager Plex search results"></a><br><b>Full Manager · Search</b><br><sub>Find tracks across your connected Plex library.</sub></td>
+<td align="center" width="50%"><a href="docs/screenshots/v1.2.0/01-player-crossfade-status.jpg"><img src="docs/screenshots/v1.2.0/01-player-crossfade-status.jpg" width="100%" alt="Now Playing screen with XFADE status"></a><br><b>Now Playing + XFADE</b><br><sub>Live crossfade countdown and queue controls in the Quick Menu.</sub></td>
+<td align="center" width="50%"><a href="docs/screenshots/v1.2.0/02-music-albums.jpg"><img src="docs/screenshots/v1.2.0/02-music-albums.jpg" width="100%" alt="Music Albums browser in ResonaDeck 1.2.0"></a><br><b>Music albums</b><br><sub>Still familiar: album browsing keeps its controller-first layout.</sub></td>
 </tr>
 </table>
 
 <div align="center">
 
-**[Explore all 9 screenshots →](SCREENSHOTS.md)**
+**[Explore all 13 screenshots: 1.2.0 new features + 1.0.0 preserved interface →](SCREENSHOTS.md)**
 
-<sub>Gallery captured with the earlier 1.0.0 interface on a real Steam Deck; newer Surprise Me and crossfade features are described above. Your own Plex artwork and colors will vary.</sub>
+<sub>The nine original screenshots remain intentionally in the gallery. Most library browsing, Full Manager, audiobook and search screens have not undergone major redesigns; the 1.2.0 changes primarily expand listening and playback.</sub>
 
 </div>
 
@@ -82,13 +84,36 @@ The crossfade status shows when the next stream is preparing, when a fade is exp
 
 > **Requires:** Steam Deck, Decky Loader, and access to a Plex Media Server containing your audio. ResonaDeck supplies no media content.
 
+## 🎲 Surprise Me · Quick start
+
+1. Open ResonaDeck in the Steam Deck Quick Access Menu and locate the **gold Surprise Me turntable**.
+2. Focus the turntable. Press **X** for **Surprise Me Settings**, choosing your category, music mode (**Tracks, Albums, Rediscover**), and Favorites-only preference.
+3. Choose a track count or a timed session (**30 minutes, 1 hour or 2 hours**); select **Keep Playing** for continuously replenished music.
+4. For music, choose a **crossfade** setting (Off, 3, 5, 8 or 10 seconds). The automatic **8-second overlap** was tested on a real Steam Deck.
+5. Press **A** on Surprise Me to start listening. Once music starts, focus the **playing album cover** and press **X** to reopen or close the same settings without stopping the music.
+
+**X depends on what is focused.** On ordinary Albums / Artists / Tracks it still opens the familiar media actions menu, including **Add to Queue**, **Play Next**, and **Browse Details**. The new Surprise Me behavior does not replace those older controls.
+
+## 🆕 What changed since 1.0.0, and what didn't?
+
+| Introduced or substantially expanded in 1.2.0 | Kept from the established 1.0.0 experience |
+| :--- | :--- |
+| Surprise Me discovery, selectable gold turntable, themed settings | Music/Books/Podcasts/More categories and controller-first library browsing |
+| Tracks, Albums, Rediscover, Favorites-only discovery | Album art cards, queues, search and the Full Manager |
+| Keep Playing, refill-before-end, timed sessions, Favorites browser | Standard media actions: X → Add to Queue, Play Next, Browse Details |
+| Automatic music crossfade, XFADE countdown and diagnostic status | Artwork-reactive glass, library colors, and existing playback buttons |
+| Incoming vinyl → gold turntable → full-cover animated transition | Audiobook chapters/resume and podcast library navigation |
+| Refined artwork loading/fallback, personal listening tools | The original idle gold turntable and white backing |
+
+**Why older screenshots remain:** these longstanding screens still represent current functionality. We photographed the four new 1.2.0 views where the features visibly changed, rather than replacing accurate screenshots just to change their version label. [See the two release galleries](SCREENSHOTS.md).
+
 ## 🎮 Controller guide
 
 | Button | Action |
 | :--- | :--- |
 | **A** | Play or resume |
 | **Hold A** | Preview supported media |
-| **X** | Media actions or toggle Surprise Me settings from the active player artwork |
+| **X** | On Surprise Me turntable / active cover: open or close discovery settings. On a library item: open its normal media actions. |
 | **D-pad ← / →** | Move across action menu columns |
 | **D-pad ↑ / ↓** | Move between action menu rows |
 | **B** | Back / close the menu or queue |
