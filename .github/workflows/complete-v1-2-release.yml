@@ -1,0 +1,43 @@
+name: Complete ResonaDeck 1.2.0 release page
+
+# One-shot completion of the already-published release's user-facing notes.
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/complete-v1-2-release.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  finish-release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out verified source and release notes
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Verify this is the published 1.2.0 source
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q '"version": "1.2.0"' plugin.json
+          cmp src/index.js dist/index.js
+          test -s RELEASE_NOTES_1.2.0.md
+
+      - name: Update the already-published release description
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh release view 1.2.0 --repo '${{ github.repository }}' >/dev/null
+          gh release edit 1.2.0 \
+            --repo '${{ github.repository }}' \
+            --title 'ResonaDeck 1.2.0 Stable' \
+            --notes-file RELEASE_NOTES_1.2.0.md
+          gh release view 1.2.0 --repo '${{ github.repository }}' --json name,body,tagName
