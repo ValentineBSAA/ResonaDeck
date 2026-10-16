@@ -25,6 +25,12 @@ These **13 real Steam Deck captures** are intentionally organized by the release
 
 In Surprise Me, choose the category and music mode (Tracks, Albums or Rediscover), plus Favorites-only and listening options. Music sessions also offer configurable track amounts, timed listening or **Keep Playing**, and **crossfade Off / 3 / 5 / 8 / 10 seconds**. The **8-second automatic crossfade** and record-to-cover handoff have been confirmed on the creator's Steam Deck. A static screenshot cannot show the full motion or audio overlap.
 
+### What changed between 1.0.0 and 1.2.0?
+
+**New in 1.2.0:** Surprise Me with its **X-button** settings, configurable discovery and Favorites, Keep Playing, timed music sessions, automatic crossfade, live XFADE status and the incoming-record animation. **Retained from 1.0.0:** the main Plex category navigation, album/artist browsing, Full Manager, Search, audiobook navigation, normal queue/media actions and much of the artwork-tinted glass design.
+
+The four new screenshots show the new listening experience. The nine older screenshots still document working interfaces that were not significantly redesigned. See the [full 1.0.0 → 1.2.0 comparison](RELEASE_NOTES_1.2.0.md#what-changed-between-100-and-120).
+
 ### Why some familiar screens were not recaptured
 
 1.2.0 adds discovery, continuously replenished playback, and crossfade, **not a wholesale redesign of every browsing screen**. Music categories, existing library shelves, Full Manager, audiobook navigation, search, and much of the artwork-colored glass styling still look familiar. The original screenshots below accurately illustrate those retained features. New screenshots were taken where users need to see the new behavior or controls.
