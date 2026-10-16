@@ -9,7 +9,7 @@ This branch stages documentation only until the **complete 1.2.0 source** has be
 - [ ] Verify GitHub source exactly corresponds to the full 1.2.0 stable ZIP.
 - [ ] Create GitHub release/tag `1.2.0` pointing to the synchronized commit.
 - [ ] Upload `ResonaDeck-1.2.0-Stable.zip` as a **Release asset**, not merely an attachment in an issue.
-- [ ] Verify release asset SHA-256: `e65c10c0fccfa0f3e4128afd7ee0d846ef4df89a3049f83269005a0be32b1c37`.
+- [ ] Verify release asset SHA-256: `66148bf5e02114282c964bf46f2d6f0f89934d6184e6eecd2ea8a4ac8d8b21f2`.
 - [ ] Confirm public README install/download links work.
 - [ ] Keep 1.0.0 release intact; it is an independent previous release.
 
