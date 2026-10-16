@@ -31,3 +31,14 @@ Last updated: 2026-10-16. This document distinguishes hands-on Steam Deck eviden
 ## Next development candidates
 
 Small bug-fix 1.2.1 after wider user testing; optional record-animation polish; compatibility checks against more Plex versions/codecs and CSS Loader themes; optional diagnostics export. No large new feature is required for this 1.2.0 milestone.
+
+## Screenshot provenance and public documentation (2026-10-16)
+
+- [x] Preserve nine original 1.0.0 GitHub-hosted image links for browsing, Full Manager, audiobooks and search, which have not been substantially redesigned.
+- [x] Import four user-supplied 1.2.0 screenshots with descriptive names under `docs/screenshots/v1.2.0/`, sourced from the SHA-256 verified screenshot archive in the published GitHub release.
+- [x] Separate new and retained imagery in `SCREENSHOTS.md`; link both galleries from the README.
+- [x] Explain contextual X: Surprise Me turntable and active playback cover toggle discovery settings, while media tiles retain their existing actions.
+- [x] Document the distinction between new 1.2.0 features and functionality retained from 1.0.0.
+- [ ] Optional future screenshots: actual *in-motion* vinyl transition, additional settings further down the scrollable panel, and extended-time playback states. Not required for 1.2.0 Stable.
+
+The older screenshots are intentionally preserved, not out-of-date claims that the entire 1.2.0 interface looks unchanged.
