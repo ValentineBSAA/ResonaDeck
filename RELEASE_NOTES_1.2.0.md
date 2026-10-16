@@ -15,6 +15,27 @@ Your music library can now pick the soundtrack for you.
 
 **Important:** X is contextual. On an ordinary album, artist, or track in your library, X still opens **Add to Queue**, **Play Next**, **Browse Details**, and similar media actions. Those original functions have not been replaced.
 
+## 🔄 What changed between 1.0.0 and 1.2.0?
+
+1.0.0 introduced the core Plex experience. **1.2.0 builds on it** with music discovery, continuous listening, and smoother transitions. It is not a replacement of the entire interface.
+
+| Area | 1.0.0 Stable | 1.2.0 Stable |
+| :--- | :--- | :--- |
+| Finding something to play | Choose albums, artists, tracks and library sections manually | **Surprise Me** discovers music through Tracks, Albums, or Rediscover modes; optionally Favorites only |
+| Starting discovery | Normal library selection and playback | Focus the **gold turntable**; **A starts Surprise Me**, **X opens/closes its settings** |
+| Adjusting during playback | Standard playback and media actions | Focus the **playing cover or fallback art**; **X toggles Surprise Me settings** without stopping playback |
+| Playing continuously | Normal manually managed queue, shuffle and repeat | **Keep Playing** prepares more tracks before the queue ends, with repeat protection and bounded history |
+| Listening time | Standard track/queue playback | Choose **10 / 20 / 40 starting tracks**, **30 min / 1 hr / 2 hr** listening sessions, or Keep Playing |
+| Track-to-track audio | Ordinary song transitions | **Two-stream music crossfade** with Off / 3 / 5 / 8 / 10 seconds; 8 seconds was confirmed on Steam Deck |
+| Album artwork transitions | Artwork-reactive glass and the original gold turntable | Incoming record preview, record arrival and **vinyl-to-full-cover** transition, plus full-square fallback covers |
+| Discovering saved favorites | Original library/queue tools | Favorites browsing and optional Favorites-only discovery, plus listening tools |
+| Status visibility | Conventional playback/queue status | **Live XFADE** timing and states to show what the next transition is preparing to do |
+| General library interface | Music, Audiobooks, Podcasts, More Audio; Full Manager, Search, album art, queue actions | **Retained:** these established sections and much of their original layout remain recognizable |
+
+**X is contextual:** on the Surprise Me turntable or active playing cover it opens/closes discovery settings; on a normal library album, artist or track it still opens that item's action menu (**Add to Queue**, **Play Next**, **Browse Details**). No need to stop music to change Surprise Me settings.
+
+**Why the screenshot collection includes 1.0.0 images:** 1.2.0 changed listening behavior far more than it changed standard library screens. The **4 new 1.2.0 screenshots** show the updated player and XFADE, albums, Surprise Me turntable and settings. The **9 original 1.0.0 screenshots** remain useful for browsing, searching, audiobooks and the Full Manager. [See all 13 images grouped by release](SCREENSHOTS.md).
+
 ## ✨ Other new or substantially expanded listening features
 
 - **Keep Playing:** continuously replenishes the music queue before the end, avoids unwanted immediate repeats where possible, and maintains a bounded playback history.
