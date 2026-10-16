@@ -2,7 +2,7 @@
 
 Actual screenshots captured from the **ResonaDeck 1.0.0 Steam Deck** experience.
 
-**[← Back to the main page](README.md)** · **[Download ResonaDeck 1.0.0](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.0.0)**
+**[← Back to the main page](README.md)** · **[Download current 1.2.0 Stable](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.2.0)** · [1.2.0 features](FEATURE_STATUS_1.2.0.md)
 
 Each image opens at full resolution. Artwork and interface accents vary with the selected media, Plex libraries, and CSS Loader theme.
 
