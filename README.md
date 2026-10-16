@@ -94,7 +94,7 @@ The crossfade status shows when the next stream is preparing, when a fade is exp
 
 **X depends on what is focused.** On ordinary Albums / Artists / Tracks it still opens the familiar media actions menu, including **Add to Queue**, **Play Next**, and **Browse Details**. The new Surprise Me behavior does not replace those older controls.
 
-## 🆕 What changed since 1.0.0, and what didn't?
+## 🔄 What Changed Between 1.0.0 and 1.2.0?
 
 | Introduced or substantially expanded in 1.2.0 | Kept from the established 1.0.0 experience |
 | :--- | :--- |
