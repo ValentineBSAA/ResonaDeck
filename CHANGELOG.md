@@ -1,3 +1,11 @@
+## ResonaDeck 1.2.1 STABLE | 2026-10-18
+
+- Add canonical `ValentineBSAA/ResonaDeck` GitHub repository metadata to make Direct Updater source matching more reliable.
+- Preserve the single-folder Decky installation ZIP, stable release naming and synchronized `1.2.1` package/manifest/frontend/backend identity.
+- Document optional Direct Updater updates alongside manual ZIP installation. Add a focused offline archive verification test.
+- **No playback code redesign:** Plex, dual-stream crossfade, Surprise Me, Keep Playing, Favorites, controller actions, artwork transitions and saved settings logic are unchanged.
+- **Verification:** Published GitHub ZIP matches SHA-256 `165fbfe15e21d01ae6cf9ac7042d3efad8cb100bb89e1fc2cf18cc6fe71a4493`. A live Steam Deck Direct Updater update remains unverified.
+
 ## ResonaDeck 1.2.0 STABLE | 2026-10-16
 
 - Promoted the creator-confirmed 1.1.9 Deck test build without changing audio, artwork, or controller behavior.

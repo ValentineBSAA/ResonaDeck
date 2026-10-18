@@ -21,7 +21,9 @@ What should happen?
 What happened instead?
 
 ## Environment
-- ResonaDeck version: 1.0.0
+- ResonaDeck version (shown in plugin):
+- Installed using Direct Updater or manual ZIP?:
+- Fresh install or upgrade? Previous version:
 - SteamOS version:
 - Decky Loader version:
 - CSS Loader or Steam theme (if relevant):

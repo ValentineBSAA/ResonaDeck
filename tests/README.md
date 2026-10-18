@@ -61,3 +61,9 @@ These are deterministic development checks. They do not replace Steam Deck hardw
 - `node tests/verify-next-peek-v116.cjs`: correct temporary album preview, no focus stealing.
 - `node tests/verify-surprise-continuity-v116.cjs`: queue progression and persistent discovery.
 These are synthetic tests, not proof of Steam Deck audio output. Older version-pinned tests in this directory may fail their version assertion on a newer build.
+
+## 1.2.1 Direct Updater compatibility checks
+
+- Run `python3 tests/verify-direct-updater-v121.py ResonaDeck-1.2.1-Stable.zip` to validate a complete download before publication.
+- Checks archive paths and CRC, the single `ResonaDeck/` folder, required files, matching `1.2.1` version identifiers, and the canonical GitHub repository association.
+- **Offline archive checks do not establish that an actual Decky Direct Updater installation succeeds on Steam Deck.**
