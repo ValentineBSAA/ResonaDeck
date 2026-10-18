@@ -94,4 +94,4 @@ These nine original screenshots remain intentionally available as historical rel
 
 > The 1.2.0 images are committed individually under `docs/screenshots/v1.2.0/`. The nine 1.0.0 images remain linked to their existing original GitHub attachments. No screenshots ZIP is needed to browse the gallery. The media shown belongs to a personal Plex library; ResonaDeck does not distribute music or cover art.
 
-**[Download ResonaDeck 1.2.0 Stable](https://github.com/ValentineBSAA/ResonaDeck/releases/download/1.2.0/ResonaDeck-1.2.0-Stable.zip)**
+**[Download ResonaDeck 1.2.1 Stable](https://github.com/ValentineBSAA/ResonaDeck/releases/download/1.2.1/ResonaDeck-1.2.1-Stable.zip)**

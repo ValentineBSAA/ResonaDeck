@@ -22,6 +22,6 @@ The 1.2.1 ZIP introduces canonical GitHub repository metadata and synchronized v
 
 ## Historical 1.2.0 evidence
 
-The previous [1.2.0 Stable package](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.2.0) had SHA-256 `66148bf5e02114282c964bf46f2d6f0f89934d6184e6eecd2ea8a4ac8d8b21f2`. Its [hardware test record](FEATURE_STATUS_1.2.0.md) confirms automatic eight-second crossfade, Surprise Me, Keep Playing, Favorites and the vinyl handoff on Steam Deck. The earlier source-import process remains recorded in Git history.
+The previous [1.2.0 Stable release notes](RELEASE_NOTES_1.2.0.md) had SHA-256 `66148bf5e02114282c964bf46f2d6f0f89934d6184e6eecd2ea8a4ac8d8b21f2`. Its [hardware test record](FEATURE_STATUS_1.2.0.md) confirms automatic eight-second crossfade, Surprise Me, Keep Playing, Favorites and the vinyl handoff on Steam Deck. The earlier source-import process remains recorded in Git history.
 
 **Still unverified:** a real 1.2.0 → 1.2.1 update through Decky Direct Updater and persistence of settings after that update.

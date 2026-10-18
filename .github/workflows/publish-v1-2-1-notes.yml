@@ -1,0 +1,45 @@
+name: Publish ResonaDeck 1.2.1 Markdown release notes
+
+# Description-only sync: never replace the ZIP, move refs or alter playback code.
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/publish-v1-2-1-notes.yml
+      - RELEASE_NOTES_1.2.1.md
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify stable manifest and release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.loads(Path("plugin.json").read_text())
+          pkg=json.loads(Path("package.json").read_text())
+          assert p["version"]==pkg["version"]=="1.2.1"
+          assert pkg["repository"]["url"]=="https://github.com/ValentineBSAA/ResonaDeck.git"
+          assert Path("RELEASE_NOTES_1.2.1.md").read_text().startswith("# 🎧 ResonaDeck 1.2.1 Stable")
+          PY
+          gh release view 1.2.1 --repo "${{ github.repository }}" >/dev/null
+      - name: Set properly formatted GitHub release description
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh release edit 1.2.1 --repo "${{ github.repository }}" \
+            --title "ResonaDeck 1.2.1 Stable" \
+            --notes-file RELEASE_NOTES_1.2.1.md
