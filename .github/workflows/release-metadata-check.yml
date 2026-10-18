@@ -1,0 +1,50 @@
+name: ResonaDeck release metadata checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-release-identity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate release metadata and source parity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          import pathlib
+          import re
+
+          root = pathlib.Path(".")
+          plugin = json.loads((root / "plugin.json").read_text(encoding="utf-8"))
+          package = json.loads((root / "package.json").read_text(encoding="utf-8"))
+          version = package["version"]
+          assert plugin["name"] == "ResonaDeck"
+          assert package["name"] == "resonadeck"
+          assert plugin["version"] == version, "Manifest and package versions differ"
+          assert re.fullmatch(r"\d+\.\d+\.\d+", version), "Stable release must use major.minor.patch"
+          assert package["repository"]["url"] == "https://github.com/ValentineBSAA/ResonaDeck.git"
+          assert package["homepage"] == "https://github.com/ValentineBSAA/ResonaDeck"
+          assert package["bugs"]["url"] == "https://github.com/ValentineBSAA/ResonaDeck/issues"
+          src = (root / "src/index.js").read_bytes()
+          dist = (root / "dist/index.js").read_bytes()
+          assert src == dist and src, "Frontend source and installed bundle disagree"
+          assert f"const RD_VERSION = '{version}';".encode() in dist
+          readme = (root / "README.md").read_text(encoding="utf-8")
+          assert f"ResonaDeck-{version}-Stable.zip" in readme, "README download link version stale"
+          assert (root / f"RELEASE_NOTES_{version}.md").is_file()
+          print(f"PASS: ResonaDeck {version} GitHub release metadata")
+          PY
+          python3 -m py_compile main.py resonadeck_backend.py
+          node --check src/index.js
+          node --check dist/index.js
+          cmp src/index.js dist/index.js
