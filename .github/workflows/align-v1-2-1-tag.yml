@@ -1,0 +1,54 @@
+name: Align ResonaDeck 1.2.1 source tag
+
+# One-time, lease-guarded repair. The published ZIP asset is never changed.
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/align-v1-2-1-tag.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  align-release-tag:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Verify 1.2.1 manifests and the published release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          plugin=json.loads(Path('plugin.json').read_text())
+          package=json.loads(Path('package.json').read_text())
+          assert plugin['version']==package['version']=='1.2.1'
+          assert package['repository']['url']=='https://github.com/ValentineBSAA/ResonaDeck.git'
+          assert b"const RD_VERSION = '1.2.1';" in Path('src/index.js').read_bytes()
+          assert Path('src/index.js').read_bytes()==Path('dist/index.js').read_bytes()
+          PY
+          gh release view 1.2.1 --repo "${{ github.repository }}" > /dev/null
+      - name: Safely align outdated release tag with 1.2.1 source
+        run: |
+          set -euo pipefail
+          expected_old_tag="91aa83b4ece457b41fa6b6de559bc44cee04acb5"
+          current_tag="$(git ls-remote --tags origin refs/tags/1.2.1 | awk '{ print $1 }')"
+          if [ "$current_tag" = "$GITHUB_SHA" ]; then
+            echo "1.2.1 tag already points to this verified release source"
+            exit 0
+          fi
+          if [ "$current_tag" != "$expected_old_tag" ]; then
+            echo "The tag moved independently. Refusing to rewrite it."
+            exit 1
+          fi
+          git push --force-with-lease="refs/tags/1.2.1:$expected_old_tag" \
+            origin "$GITHUB_SHA:refs/tags/1.2.1"
+          echo "Release tag aligned, without changing the ZIP or release assets."
