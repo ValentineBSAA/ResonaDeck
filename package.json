@@ -1,7 +1,7 @@
 {
   "name": "resonadeck",
-  "version": "1.2.0",
-  "description": "ResonaDeck 1.2.0: premium Plex audio playback and library browsing for Steam Deck, with artwork-colored glass, controller navigation, queues, and audiobooks.",
+  "version": "1.2.1",
+  "description": "ResonaDeck 1.2.1: premium Plex audio playback and library browsing for Steam Deck, with artwork-colored glass, controller navigation, queues, and audiobooks.",
   "type": "module",
   "author": "Valentine",
   "license": "GPL-3.0-only",
@@ -20,5 +20,13 @@
     "@decky/ui": "^4.12.1",
     "react": "18.3.1",
     "react-dom": "18.3.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ValentineBSAA/ResonaDeck.git"
+  },
+  "homepage": "https://github.com/ValentineBSAA/ResonaDeck",
+  "bugs": {
+    "url": "https://github.com/ValentineBSAA/ResonaDeck/issues"
   }
 }

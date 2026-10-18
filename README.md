@@ -6,14 +6,14 @@
 **Premium, controller-first Plex audio for Steam Deck.**  
 Music · Audiobooks · Podcasts · More Audio
 
-[![Release](https://img.shields.io/badge/Download-ResonaDeck%201.2.0-2554a2?style=for-the-badge&logo=github)](https://github.com/ValentineBSAA/ResonaDeck/releases/download/1.2.0/ResonaDeck-1.2.0-Stable.zip)
+[![Latest release](https://img.shields.io/badge/Download-ResonaDeck%201.2.1-2554a2?style=for-the-badge&logo=github)](https://github.com/ValentineBSAA/ResonaDeck/releases/latest)
 [![Platform](https://img.shields.io/badge/Steam%20Deck-Decky%20Loader-183b59?style=for-the-badge)](https://github.com/SteamDeckHomebrew/decky-loader)
 
-<a href="https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.2.0"><img src="https://github.com/user-attachments/assets/304629b8-1b41-4ac8-b820-10b6e9f3e7a0" width="820" alt="ResonaDeck Quick Menu player with cover-art-tinted glass controls"></a>
+<a href="https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.2.1"><img src="https://github.com/user-attachments/assets/304629b8-1b41-4ac8-b820-10b6e9f3e7a0" width="820" alt="ResonaDeck Quick Menu player with cover-art-tinted glass controls"></a>
 
 *Artwork-colored playback controls, directly in your Quick Access Menu.*
 
-**[Download v1.2.0](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.2.0) · [View all screenshots](SCREENSHOTS.md) · [Share feedback](https://github.com/ValentineBSAA/ResonaDeck/discussions/3) · [Report a problem](https://github.com/ValentineBSAA/ResonaDeck/issues)**
+**[Download v1.2.1 Stable](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.2.1) · [View all screenshots](SCREENSHOTS.md) · [Share feedback](https://github.com/ValentineBSAA/ResonaDeck/discussions/3) · [Report a problem](https://github.com/ValentineBSAA/ResonaDeck/issues)**
 
 </div>
 
@@ -43,13 +43,15 @@ It's designed around the Steam Deck controller, with colorful frosted-glass cont
 | **Long-form listening** | Audiobook chapters, resume, podcast browsing, and relevant playback controls. |
 | **Designed for Steam themes** | Glass control layers that resist white-background CSS Loader overrides. |
 
-## 🎧 What's new in 1.2.0 Stable
+## 🆕 What's new in 1.2.1 Stable
 
-ResonaDeck 1.2.0 is the promotion of the **1.1.9 hardware-tested build**, bringing discovery and proper music transitions together without replacing the working player architecture. The creator confirmed **automatic eight-second crossfades** and the incoming-vinyl-to-album-cover sequence on a real Steam Deck.
+**Easier updates, same working player.** This release adds official GitHub repository metadata so [Decky Direct Updater](https://deckyup.nukeador.com/) can identify ResonaDeck and offer future published GitHub updates. The compatible ZIP remains a complete plugin installation.
 
-The crossfade status shows when the next stream is preparing, when a fade is expected, and when both tracks are actually playing. Music can continue through automatically replenished queues. The gold idle turntable, its white backing, focus navigation, and artwork-reactive glass remain intact.
+**Nothing about your music playback has been redesigned.** The eight-second automatic crossfade, Surprise Me, Keep Playing, Favorites, vinyl-to-cover animation and controller actions are carried forward from creator-tested 1.2.0 Stable.
 
-**[Read 1.2.0 release notes](RELEASE_NOTES_1.2.0.md) · [Feature verification checklist](FEATURE_STATUS_1.2.0.md)**
+**[1.2.1 release notes](RELEASE_NOTES_1.2.1.md) · [Current verification status](FEATURE_STATUS_1.2.1.md) · [Previous 1.2.0 feature release](RELEASE_NOTES_1.2.0.md)**
+
+Direct Updater is an optional independent Decky plugin. It requires confirmation before installing an update. The complete 1.2.1 update path on Steam Deck still needs hardware acceptance testing.
 
 ## 📸 See ResonaDeck in action
 
@@ -74,15 +76,26 @@ The crossfade status shows when the next stream is preparing, when a fade is exp
 
 </div>
 
-## 🚀 Install
+## 🚀 Install or update
 
-1. Install **[Decky Loader](https://github.com/SteamDeckHomebrew/decky-loader)** on your Steam Deck.
-2. **[Download ResonaDeck-1.2.0-Stable.zip](https://github.com/ValentineBSAA/ResonaDeck/releases/download/1.2.0/ResonaDeck-1.2.0-Stable.zip)** from the official GitHub release.
-3. Open Decky Loader → **Settings → Developer → Install Plugin ZIP**.
-4. Select the ZIP, open ResonaDeck from the Quick Access Menu, and sign in to your Plex account.
-5. Select a reachable Plex server and the audio libraries you want to browse.
+**You'll need:** A Steam Deck with [Decky Loader](https://github.com/SteamDeckHomebrew/decky-loader) and access to your Plex Media Server with audio libraries. ResonaDeck does not bundle copyrighted media.
 
-> **Requires:** Steam Deck, Decky Loader, and access to a Plex Media Server containing your audio. ResonaDeck supplies no media content.
+### Option A: Decky Direct Updater (optional)
+
+1. Install [Decky Direct Updater](https://deckyup.nukeador.com/) on your Steam Deck.
+2. Open its search icon (beside Refresh) and enter **`ValentineBSAA/ResonaDeck`**.
+3. Select the official repository, then **Install** or **Update**, and confirm the Decky prompt.
+4. If your existing 1.2.0 plugin asks you to confirm a GitHub source, select **`ValentineBSAA/ResonaDeck`**. Version 1.2.1 includes this association in its metadata to assist future updates.
+
+Direct Updater is separate from ResonaDeck and does **not** silently install updates. Real Steam Deck updater installation has not yet been independently confirmed.
+
+### Option B: Manual ZIP (always supported)
+
+1. Download **[ResonaDeck-1.2.1-Stable.zip](https://github.com/ValentineBSAA/ResonaDeck/releases/download/1.2.1/ResonaDeck-1.2.1-Stable.zip)**.
+2. Open Decky **Settings → General**, enable **Developer Mode**, then go to **Developer → Install Plugin from ZIP**.
+3. Select the entire ZIP, confirm the installation, and open ResonaDeck to authorize Plex and choose your libraries.
+
+This ZIP is the **full plugin, not a patch**. Back up important settings before trying a new update method. [Troubleshooting guide](SUPPORT.md).
 
 ## 🎲 Surprise Me · Quick start
 
@@ -127,23 +140,27 @@ The crossfade status shows when the next stream is preparing, when a fade is exp
 
 **Full Manager:** A more spacious Plex audio library with shelves, artwork, track details, search, audiobook chapters, player settings, and library tools.
 
-## 🧩 Open source
+## 🧩 Open source and package integrity
 
-Browse the **[frontend source](src/index.js)**, **[Python Plex backend](resonadeck_backend.py)**, **[tests](tests/)**, and **[assets](assets/)** directly in this repository. The runtime source has been synchronized from the checksum-verified 1.2.0 Stable ZIP; see **[Source & Integrity](SOURCE.md)** for the checksum and tag details.
+Browse the [frontend source](src/index.js), [installed frontend bundle](dist/index.js), [Plex backend](resonadeck_backend.py), [Decky entrypoint](main.py), [tests](tests/), and [assets](assets/). Version metadata and the displayed version were synchronized with the published 1.2.1 package. **The audio, artwork and controller logic was not changed for this maintenance release.**
 
-## ℹ️ About 1.2.0 Stable
+See [Source & Integrity](SOURCE.md) for the official ZIP's SHA-256 checksum, verification limits, and historical 1.2.0 source provenance.
 
-**1.2.0 preserves the working 1.1.9 crossfade, discovery, and controller implementation.** The automatic eight-second crossfade and record handoff were confirmed in the creator's Steam Deck testing. Other fade durations, formats, network edge cases, and alternative themes may need additional compatibility testing. Playback speed depends partly on Plex server availability, network conditions, and server transcoding. Steam and Decky updates may affect controller or theme behavior.
+## ℹ️ Verification and compatibility
+
+**Creator-confirmed on Steam Deck in 1.2.0:** Surprise Me, Keep Playing, Favorites, the automatic eight-second crossfade, the animated vinyl handoff, and contextual controller actions.
+
+**1.2.1 verified offline:** ZIP structure, release and metadata identities, and preservation of the functioning playback implementation. An actual Direct Updater install or update on Steam Deck still needs testing. Other crossfade durations, unusual codecs/networks and third-party themes need additional coverage. [Detailed checklist](FEATURE_STATUS_1.2.1.md).
 
 ## 💬 Share your experience or report a problem
 
-**Already installed ResonaDeck 1.2.0? We'd love to hear how it went.** Whether Surprise Me picked the right songs, crossfade worked on your Plex setup, or you just want to say hello, you can leave a note in the **[1.2.0 release discussion](https://github.com/ValentineBSAA/ResonaDeck/discussions/3)**. Short impressions and questions are welcome. You don't need to write a full bug report.
+**Already installed ResonaDeck 1.2.1? We'd love to hear how it went.** Whether Surprise Me picked the right songs, crossfade worked on your Plex setup, or you just want to say hello, you can leave a note in the **[1.2.0 release discussion](https://github.com/ValentineBSAA/ResonaDeck/discussions/3)**. Short impressions and questions are welcome. You don't need to write a full bug report.
 
 If something actually breaks, use **[GitHub Issues](https://github.com/ValentineBSAA/ResonaDeck/issues)** so it's easier to reproduce and track. Include SteamOS, Decky, and Plex server details where helpful, but **never post Plex tokens, passwords, or private server links**.
 
 
 
-**[Official release page](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.2.0)** · **[Full screenshot gallery](SCREENSHOTS.md)** · **[1.2.0 Release Notes](RELEASE_NOTES_1.2.0.md)** · **[Support](SUPPORT.md)** · **[Source & Integrity](SOURCE.md)** · **[Credits and Third-Party Notices](THIRD-PARTY-NOTICES.md)**
+**[Latest release](https://github.com/ValentineBSAA/ResonaDeck/releases/latest)** · **[Full screenshot gallery](SCREENSHOTS.md)** · **[1.2.1 Release Notes](RELEASE_NOTES_1.2.1.md)** · **[Support](SUPPORT.md)** · **[Source & Integrity](SOURCE.md)** · **[Credits and Third-Party Notices](THIRD-PARTY-NOTICES.md)**
 
 ---
 

@@ -16,7 +16,7 @@ from typing import Any
 
 import decky
 
-PLUGIN_VERSION = getattr(decky, "DECKY_PLUGIN_VERSION", "1.2.0")
+PLUGIN_VERSION = getattr(decky, "DECKY_PLUGIN_VERSION", "1.2.1")
 logger = getattr(decky, "logger", logging.getLogger(__name__))
 
 _ROOT = str(Path(__file__).resolve().parent)
