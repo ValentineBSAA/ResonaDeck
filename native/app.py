@@ -860,8 +860,11 @@ def main():
     def restore_existing():
         while server.hasPendingConnections():
             peer=server.nextPendingConnection()
-            peer.readyRead.connect(lambda sock=peer:(sock.readAll(),window.show_normal()))
-            peer.disconnected.connect(peer.deleteLater)
+            # The connection itself is enough: a second launch always means
+            # restore, even if its tiny "show" payload arrived before readyRead.
+            window.show_normal()
+            peer.disconnectFromServer()
+            peer.deleteLater()
     server.newConnection.connect(restore_existing)
     window.show()
     if os.environ.get("RESONADECK_NATIVE_SMOKE") == "1":

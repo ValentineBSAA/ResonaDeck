@@ -13,7 +13,7 @@ Stable release.
 ## Implemented in code
 
 - Rounded frameless resizable Mini Player (default 440 x 255), animated
-  gold vinyl/album art, hover resize grip, window dragging, right-click menu.
+  gold vinyl/album art, hover resize grip, drag the visible player surface, right-click menu.
 - Expanded Player (504 x 650), Full native Library (1120 x 760), with
   remembered separate window geometry and optional Always on Top.
 - Qt album grid with actual offset/total/hasMore pagination, load-more,
@@ -25,7 +25,7 @@ Stable release.
   art caching, local account preferences, Favorites and saved sessions.
 - Surprise Me / Keep Playing, 8-second default music crossfade, sleep timer,
   controller shoulder buttons, keyboard commands and tray controls.
-- Native autostart opt-in, close-to-tray opt-in, per-mode window positions,
+- Native autostart opt-in, single-instance restore, close-to-tray opt-in, per-mode window positions,
   reduce motion, audiobook/podcast speed and resume.
 
 ## Download and start
