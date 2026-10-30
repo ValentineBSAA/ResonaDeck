@@ -13,7 +13,8 @@ import sys
 from pathlib import Path
 
 from PySide6.QtCore import Qt, QSettings, QTimer, QUrl, QPoint, QByteArray, QSize, Signal
-from PySide6.QtGui import QAction, QDesktopServices, QIcon, QKeySequence, QShortcut
+from PySide6.QtGui import QAction, QDesktopServices, QIcon, QKeySequence, QShortcut, QColor
+from PySide6.QtNetwork import QLocalServer, QLocalSocket
 from PySide6.QtWidgets import (
     QApplication, QWidget, QFrame, QVBoxLayout, QHBoxLayout, QLabel,
     QPushButton, QStackedWidget, QSystemTrayIcon, QMenu, QMessageBox,
@@ -646,8 +647,23 @@ class NativeWindow(QWidget):
         recent.append(identity(track))
         self.discovery["recentIds"]=recent[-300:]
         self.save_discovery()
+        self.covers.for_item(track,lambda pix,key=identity(track):
+            self._reactive_accent(pix,key),mode="square")
         self._apply_session_end()
 
+    def _reactive_accent(self,pix,key):
+        if pix.isNull() or not self.audio.current() or identity(self.audio.current()) != key:
+            return
+        image=pix.scaled(1,1).toImage()
+        color=image.pixelColor(0,0)
+        # Raise dark covers to a readable glass-edge accent, without touching
+        # the existing gold focus or wine-red primary action color.
+        if color.lightness()<105:
+            color=color.lighter(220)
+        if color.lightness()>210:
+            color=color.darker(135)
+        self.shell.setStyleSheet("QFrame#Panel{border:1px solid "+color.name()+";}")
+        
     def _apply_session_end(self):
         import time
         if self._session_deadline and time.monotonic() >= self._session_deadline:
@@ -824,7 +840,29 @@ def main():
     app.setApplicationName("ResonaDeck Native")
     app.setOrganizationName("ValentineBSAA")
     app.setQuitOnLastWindowClosed(False)
+    # Named local-server lock is per Windows user data path, not a global lock:
+    # a second launch restores the existing floating player instead of
+    # opening two copies that could fight over the Plex SQLite database.
+    import hashlib
+    lockname="ResonaDeckNative_"+hashlib.sha256(
+        str(Path.home()).lower().encode("utf-8")).hexdigest()[:20]
+    probe=QLocalSocket()
+    probe.connectToServer(lockname)
+    if probe.waitForConnected(150):
+        probe.write(b"show")
+        probe.flush()
+        probe.waitForBytesWritten(100)
+        return 0
+    server=QLocalServer(app)
+    QLocalServer.removeServer(lockname)
+    server.listen(lockname)
     window=NativeWindow()
+    def restore_existing():
+        while server.hasPendingConnections():
+            peer=server.nextPendingConnection()
+            peer.readyRead.connect(lambda sock=peer:(sock.readAll(),window.show_normal()))
+            peer.disconnected.connect(peer.deleteLater)
+    server.newConnection.connect(restore_existing)
     window.show()
     if os.environ.get("RESONADECK_NATIVE_SMOKE") == "1":
         QTimer.singleShot(1800,app.quit)
