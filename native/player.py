@@ -92,13 +92,13 @@ class AudioEngine(QObject):
             self.outputs[self.active].setVolume(self.volume)
             self.outputs[1-self.active].setVolume(0)
 
-    def play_tracks(self, tracks, index=0):
+    def play_tracks(self, tracks, index=0, position_ms=0):
         self._checkpoint()
         if not self.queue.replace(tracks, index):
             self.status_changed.emit("Nothing playable in this selection")
             return
         self.queue_changed.emit()
-        self._start_current()
+        self._start_current(position_ms)
 
     def add_tracks(self, tracks, next_up=False):
         self.queue.enqueue(tracks, next_up=next_up)

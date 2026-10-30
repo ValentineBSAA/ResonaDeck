@@ -72,6 +72,8 @@ class PlayerPanel(QFrame):
         self.play = button("▶", "Play / Pause (Space)", "Transport")
         self.next = button("⏭", "Next track", "Transport")
         self.favorite = button("☆", "Favorite current track", "Transport")
+        self.options = button("⋯", "Windows player options", "Transport")
+        self.options.clicked.connect(self.options_requested)
         self.shuffle = button("⇄", "Shuffle", "Transport")
         self.repeat = button("↻", "Repeat", "Transport")
         self.queue = button("☷ Queue", "Open queue")
@@ -95,7 +97,7 @@ class PlayerPanel(QFrame):
             row = QHBoxLayout()
             row.setSpacing(4)
             row.setContentsMargins(0,0,0,0)
-            for widget in (self.prev,self.play,self.next,self.favorite):
+            for widget in (self.prev,self.play,self.next,self.favorite,self.options):
                 row.addWidget(widget)
             row.addStretch(1)
             return row
@@ -154,6 +156,15 @@ class PlayerPanel(QFrame):
         engine.crossfade_changed.connect(self.status.setText)
         engine.queue_changed.connect(self._update_modes)
         self._update_modes()
+
+    def mousePressEvent(self, event):
+        # The actual player is the draggable window: no mini title bar.
+        if event.button() == Qt.MouseButton.LeftButton:
+            handle = self.window().windowHandle()
+            if handle and handle.startSystemMove():
+                event.accept()
+                return
+        super().mousePressEvent(event)
 
     def on_track(self, track):
         if not isinstance(track,dict):

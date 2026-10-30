@@ -303,6 +303,7 @@ class NativeWindow(QWidget):
         for panel in (self.mini,self.expanded):
             panel.library_requested.connect(lambda:self.set_mode("library"))
             panel.favorite_requested.connect(lambda:self.favorite(self.audio.current()))
+            panel.options_requested.connect(lambda:self.open_menu(self.mapToGlobal(QPoint(self.width()-30,50))))
         self.bridge.ready.connect(self.plex_ready)
         self.bridge.failed.connect(self.show_error)
         self.bridge.stopped.connect(self.show_error)
@@ -332,6 +333,11 @@ class NativeWindow(QWidget):
             self.settings.setValue("geometry_"+self._mode,self.saveGeometry())
         self._mode=mode
         self.stack.setCurrentIndex({"mini":0,"expanded":1,"library":2}[mode])
+        # Only the actual player is visible in Mini mode, with no title strip.
+        self.header.setVisible(mode != "mini")
+        self.shell.setObjectName("ShellMini" if mode == "mini" else "Panel")
+        self.shell.style().unpolish(self.shell)
+        self.shell.style().polish(self.shell)
         bounds={"mini":(440,255,400,238),"expanded":(504,650,430,510),
                 "library":(1120,760,650,490)}
         w,h,mw,mh=bounds[mode]
@@ -408,6 +414,16 @@ class NativeWindow(QWidget):
         menu.addAction("★ Favorite Playing Track",lambda:self.favorite(self.audio.current()))
         menu.addAction("Save Queue as Playlist",self.save_playlist)
         menu.addAction("Save Listening Session",self.save_session)
+        playlist_menu=menu.addMenu("Saved Playlists")
+        for data in self.discovery["playlists"][-30:]:
+            playlist_menu.addAction(str(data.get("name") or "Playlist"),
+                lambda _,entry=data:self.audio.play_tracks(entry.get("items") or [],int(entry.get("index") or 0)))
+        session_menu=menu.addMenu("Saved Sessions")
+        for data in self.discovery["sessions"][-20:]:
+            session_menu.addAction(str(data.get("name") or "Listening Session"),
+                lambda _,entry=data:self.audio.play_tracks(
+                    entry.get("items") or [],int(entry.get("index") or 0),
+                    round(float(entry.get("position") or 0)*1000)))
         sleep=menu.addMenu("Sleep Timer")
         for minutes in (0,15,30,60,90,120):
             sleep.addAction("Off" if not minutes else f"{minutes} minutes",
