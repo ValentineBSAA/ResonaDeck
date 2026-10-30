@@ -41,7 +41,7 @@ jobs:
           --name ResonaDeckBackend
           --distpath windows/backend-dist
           --workpath windows/.pyinstaller-build
-          --specpath windows/.pyinstaller-build
+          --specpath .
           --hidden-import resonadeck_backend
           --collect-submodules mutagen
           --add-data "assets;assets"

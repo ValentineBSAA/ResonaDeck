@@ -144,7 +144,10 @@ function App({plugin}) {
       if (currentRoute === '/' && state.mode === 'full') publishRoute(expected);
       if (currentRoute !== '/' && state.mode === 'mini') publishRoute('/');
     });
-    window.resonaWindows.state().then(setNative).catch(console.error);
+    window.resonaWindows.state().then(state => {
+      setNative(state);
+      if (state.mode === 'full') publishRoute('/resonadeck-manager');
+    }).catch(console.error);
     return () => {routeListeners.delete(setRoute); unsubscribe();};
   }, []);
   React.useEffect(() => {

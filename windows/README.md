@@ -36,7 +36,7 @@ If Python is not available as \`python\`, set \`RESONADECK_PYTHON\` to the inter
 From repo root:
 
     python windows/scripts/build_icon.py
-    python -m PyInstaller --noconfirm --clean --onedir --name ResonaDeckBackend --distpath windows/backend-dist --workpath windows/.pyinstaller-build --specpath windows/.pyinstaller-build --hidden-import resonadeck_backend --collect-submodules mutagen --add-data "assets;assets" --paths . windows/bridge.py
+    python -m PyInstaller --noconfirm --clean --onedir --name ResonaDeckBackend --distpath windows/backend-dist --workpath windows/.pyinstaller-build --specpath . --hidden-import resonadeck_backend --collect-submodules mutagen --add-data "assets;assets" --paths . windows/bridge.py
     cd windows
     npm install
     npm run package:win

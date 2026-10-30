@@ -32,3 +32,8 @@ button{cursor:pointer}
 .rd-root .rd-win-button{font-family:inherit}
 .rd-win-loading-error{padding:25px;color:#ffe0d5}
 @media(max-width:600px){.rd-win-caption{display:none}.rd-win-toolbar{padding:0 4px;gap:4px}.rd-win-toolbar button{padding:0 6px}}
+
+.rd-win-settings{position:absolute;top:44px;right:8px;z-index:6000;display:flex;flex-direction:column;gap:10px;padding:14px;min-width:240px;color:#f0f6ff;background:#1b2c42;border:1px solid #8299b3;border-radius:0 0 10px 10px;box-shadow:0 10px 25px #0008}
+.rd-win-settings label{display:flex;align-items:center;gap:9px;cursor:pointer}
+.rd-win-settings input{accent-color:#d2a566}
+.rd-win-settings small{opacity:.75}

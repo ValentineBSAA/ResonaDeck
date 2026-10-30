@@ -4,3 +4,4 @@ renderer.bundle.js
 backend-dist/
 .pyinstaller-build/
 icon.ico
+*.spec
