@@ -22,6 +22,15 @@ if not getattr(sys, "frozen", False):
 DATA = Path(os.environ.get("RESONADECK_WINDOWS_DATA_DIR") or
             (Path.home() / "AppData" / "Local" / "ResonaDeck"))
 DATA.mkdir(parents=True, exist_ok=True)
+# Windows GUI/console executables may inherit cp1252 (or have no real console).
+# Protocol messages must never depend on the process locale. Source metadata
+# routinely contains combining accents, Japanese titles and emoji.
+for stream in (sys.stdout, sys.stderr):
+    if stream is not None and hasattr(stream, "reconfigure"):
+        try:
+            stream.reconfigure(encoding="utf-8", errors="backslashreplace")
+        except (ValueError, OSError):
+            pass
 logging.basicConfig(level=logging.INFO, stream=sys.stderr)
 
 # Reuse the production backend without importing or modifying Steam Deck itself.
@@ -49,7 +58,7 @@ PUBLIC_METHODS = {
 async def send(message):
     # All writes are JSON-encoded and serialized so concurrent responses cannot mix.
     async with LOCK:
-        sys.stdout.write(json.dumps(message, ensure_ascii=False, default=str) + "\n")
+        sys.stdout.write(json.dumps(message, ensure_ascii=True, default=str) + "\n")
         sys.stdout.flush()
 
 async def invoke(plugin, packet):

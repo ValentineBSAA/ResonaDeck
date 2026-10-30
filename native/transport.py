@@ -55,6 +55,7 @@ class PlexBridge(QObject):
         env = QProcessEnvironment.systemEnvironment()
         env.insert("RESONADECK_WINDOWS_DATA_DIR", str(user_data()))
         env.insert("PYTHONIOENCODING", "utf-8")
+        env.insert("PYTHONUTF8", "1")
         self.process.setProcessEnvironment(env)
         self.process.setWorkingDirectory(str(root if not getattr(sys, "frozen", False) else Path(program).parent))
         self.process.setProgram(program)
