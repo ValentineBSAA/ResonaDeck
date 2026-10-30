@@ -1,0 +1,84 @@
+name: ResonaDeck Native Windows Preview
+on:
+  push:
+    branches: [feature/windows-pyside6-native]
+    paths:
+      - "native/**"
+      - ".github/workflows/windows-native-preview.yml"
+      - "main.py"
+      - "resonadeck_backend.py"
+      - "assets/**"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native-windows:
+    runs-on: windows-latest
+    timeout-minutes: 45
+    env:
+      PYTHONIOENCODING: utf-8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Qt/Plex/packaging dependencies
+        run: python -m pip install -r native/requirements.txt
+      - name: Unit test album paging, queue and discovery
+        run: python -m unittest discover -s native/tests -p 'test_*.py' -v
+      - name: Compile native sources
+        run: python -m compileall -q native
+      - name: Test reused Plex backend bridge
+        run: python native/tests/backend-smoke.py
+      - name: Render actual native Qt interface offscreen
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: python native/tests/ui-smoke.py
+      - name: Build Windows icon
+        run: python native/build_icon.py
+      - name: Package Plex backend
+        run: >-
+          python -m PyInstaller --noconfirm --clean --onedir
+          --name ResonaDeckBackend
+          --distpath native/dist
+          --workpath native/build/backend
+          --specpath .
+          --hidden-import resonadeck_backend
+          --collect-submodules mutagen
+          --add-data "assets;assets"
+          --paths .
+          native/bridge.py
+      - name: Test frozen Plex executable
+        run: python native/tests/backend-smoke.py native/dist/ResonaDeckBackend/ResonaDeckBackend.exe
+      - name: Package native Qt application
+        run: >-
+          python -m PyInstaller --noconfirm --clean --onedir --windowed
+          --name ResonaDeckNative
+          --distpath native/dist
+          --workpath native/build/gui
+          --specpath .
+          --icon native/resonadeck.ico
+          --add-data "assets;assets"
+          --paths native
+          --collect-submodules PySide6.QtMultimedia
+          native/app.py
+      - name: Install backend beside Qt application
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path "native/dist/ResonaDeckNative/backend" | Out-Null
+          Copy-Item "native/dist/ResonaDeckBackend" "native/dist/ResonaDeckNative/backend/ResonaDeckBackend" -Recurse -Force
+          if (!(Test-Path "native/dist/ResonaDeckNative/backend/ResonaDeckBackend/ResonaDeckBackend.exe")) { throw "Missing Plex backend" }
+          if (!(Test-Path "native/dist/ResonaDeckNative/ResonaDeckNative.exe")) { throw "Missing native GUI" }
+      - name: Create portable ZIP Preview
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force native/release | Out-Null
+          Compress-Archive -Path "native/dist/ResonaDeckNative" -DestinationPath "native/release/ResonaDeckNative-0.2.0-Preview.zip" -CompressionLevel Optimal
+          if (!(Test-Path "native/release/ResonaDeckNative-0.2.0-Preview.zip")) { throw "ZIP packaging failed" }
+      - name: Upload native preview (not Stable)
+        uses: actions/upload-artifact@v4
+        with:
+          name: ResonaDeck-Native-Windows-0.2.0-Preview
+          path: native/release/ResonaDeckNative-0.2.0-Preview.zip
+          if-no-files-found: error
