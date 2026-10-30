@@ -1,0 +1,63 @@
+name: ResonaDeck Windows Preview
+on:
+  push:
+    branches:
+      - feature/windows-desktop-preview
+    paths:
+      - "windows/**"
+      - ".github/workflows/windows-preview.yml"
+      - "src/index.js"
+      - "main.py"
+      - "resonadeck_backend.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 35
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Python dependencies
+        run: python -m pip install -r windows/requirements.txt
+      - name: Build Windows icon
+        run: python windows/scripts/build_icon.py
+      - name: Validate Python bridge
+        run: python windows/tests/bridge-smoke.py
+      - name: Build Python backend
+        run: >-
+          python -m PyInstaller --noconfirm --clean --onedir
+          --name ResonaDeckBackend
+          --distpath windows/backend-dist
+          --workpath windows/.pyinstaller-build
+          --specpath windows/.pyinstaller-build
+          --hidden-import resonadeck_backend
+          --collect-submodules mutagen
+          --add-data "assets;assets"
+          --paths . windows/bridge.py
+      - name: Install renderer dependencies
+        working-directory: windows
+        run: npm install --no-audit --no-fund
+      - name: Structural adapter checks
+        working-directory: windows
+        run: npm run check
+      - name: Build preview installer
+        working-directory: windows
+        run: npm run package:win
+      - name: Upload preview installer (not a stable release)
+        uses: actions/upload-artifact@v4
+        with:
+          name: ResonaDeck-Windows-0.1-Preview
+          path: windows/release/*.exe
+          if-no-files-found: error

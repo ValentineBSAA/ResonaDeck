@@ -14,6 +14,11 @@ import sys
 import types
 from pathlib import Path
 
+if not getattr(sys, "frozen", False):
+    ROOT = Path(__file__).resolve().parent.parent
+    if str(ROOT) not in sys.path:
+        sys.path.insert(0, str(ROOT))
+
 DATA = Path(os.environ.get("RESONADECK_WINDOWS_DATA_DIR") or
             (Path.home() / "AppData" / "Local" / "ResonaDeck"))
 DATA.mkdir(parents=True, exist_ok=True)
