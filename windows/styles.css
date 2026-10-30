@@ -1,0 +1,34 @@
+:root{font-family:Inter,"Segoe UI",sans-serif;color:#e5efff;background:#101825;font-size:14px}
+*{box-sizing:border-box}
+html,body,#app{width:100%;height:100%;margin:0;overflow:hidden}
+body{background:radial-gradient(circle at top left,#233751,#101825 75%)}
+button,input{font:inherit}
+button{cursor:pointer}
+.rd-win-app{height:100%;display:flex;flex-direction:column;min-width:350px}
+.rd-win-toolbar{flex:none;display:flex;align-items:center;gap:5px;height:44px;padding:0 8px;background:linear-gradient(110deg,#263b59,#142135);border-bottom:1px solid #ffffff25;user-select:none}
+.rd-win-drag{-webkit-app-region:drag;flex:1;min-width:0;height:100%;display:flex;align-items:center;gap:8px;color:#ebf2ff}
+.rd-win-brand{font-size:13px;letter-spacing:.04em;font-weight:750;white-space:nowrap}
+.rd-win-caption{font-size:10px;opacity:.7;white-space:nowrap}
+.rd-win-toolbar button,.rd-win-toolbar label{-webkit-app-region:no-drag;border:1px solid #ffffff27;color:#e9f2ff;background:#ffffff12;border-radius:7px;min-width:32px;height:28px;display:inline-flex;justify-content:center;align-items:center;gap:6px;padding:0 8px}
+.rd-win-toolbar button:hover,.rd-win-toolbar label:hover{background:#ffffff26}
+.rd-win-toolbar button:focus-visible,.rd-win-toolbar label:focus-visible{outline:2px solid #fac883;outline-offset:2px}
+.rd-win-toolbar .pin.active{background:#755528;border-color:#eac07b}
+.rd-win-body{flex:1;min-height:0;overflow:auto;scrollbar-width:thin;scrollbar-color:#647c9e transparent}
+.rd-win-body>.rd-root{min-height:100%;width:100%;max-width:none}
+.rd-win-app.mini .rd-win-body{padding:4px 8px 14px}
+.rd-win-app.full .rd-win-body{padding:0;overflow:auto}
+.rd-win-app.mini .rd-v7-qam{max-width:none!important;width:100%!important;margin:0!important}
+.rd-win-app.full .rd-v7-manager{width:100%!important;max-width:none!important;min-height:100%}
+.rd-win-status{padding:10px 14px;background:#733b39;border-bottom:1px solid #ffb4a455;color:#fff2f0;font-size:12px}
+.rd-win-toast{position:fixed;z-index:5000;right:12px;bottom:12px;max-width:360px;background:#1c3350;border:1px solid #a6c2e86b;padding:12px;border-radius:10px;box-shadow:0 8px 30px #0009;pointer-events:none}
+.rd-loading{padding:28px;line-height:1.6}
+.rd-native-field{display:block;padding:8px 0;color:#e5efff}
+.rd-native-field>span{display:block;margin-bottom:6px}
+.rd-native-field>input{width:100%;min-width:0;padding:8px;background:#14243d;color:#f0f6ff;border:1px solid #7384a0;border-radius:6px}
+.rd-native-slider{display:flex;flex-direction:column;gap:5px;padding:8px 0}
+.rd-native-slider input{width:100%;accent-color:#b88b54}
+.rd-native-slider small{opacity:.7}
+.rd-root .rd-win-focusable{min-width:0}
+.rd-root .rd-win-button{font-family:inherit}
+.rd-win-loading-error{padding:25px;color:#ffe0d5}
+@media(max-width:600px){.rd-win-caption{display:none}.rd-win-toolbar{padding:0 4px;gap:4px}.rd-win-toolbar button{padding:0 6px}}
