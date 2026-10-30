@@ -826,6 +826,8 @@ def main():
     app.setQuitOnLastWindowClosed(False)
     window=NativeWindow()
     window.show()
+    if os.environ.get("RESONADECK_NATIVE_SMOKE") == "1":
+        QTimer.singleShot(1800,app.quit)
     result=app.exec()
     window.audio.shutdown()
     window.bridge.shutdown()

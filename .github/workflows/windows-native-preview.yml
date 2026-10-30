@@ -70,6 +70,14 @@ jobs:
           Copy-Item "native/dist/ResonaDeckBackend" "native/dist/ResonaDeckNative/backend/ResonaDeckBackend" -Recurse -Force
           if (!(Test-Path "native/dist/ResonaDeckNative/backend/ResonaDeckBackend/ResonaDeckBackend.exe")) { throw "Missing Plex backend" }
           if (!(Test-Path "native/dist/ResonaDeckNative/ResonaDeckNative.exe")) { throw "Missing native GUI" }
+      - name: Start packaged Qt executable headlessly
+        shell: pwsh
+        env:
+          QT_QPA_PLATFORM: offscreen
+          RESONADECK_NATIVE_SMOKE: "1"
+        run: |
+          $p = Start-Process -FilePath "native/dist/ResonaDeckNative/ResonaDeckNative.exe" -PassThru -Wait -NoNewWindow
+          if ($p.ExitCode -ne 0) { throw "Packaged native UI exited with code $($p.ExitCode)" }
       - name: Create portable ZIP Preview
         shell: pwsh
         run: |
