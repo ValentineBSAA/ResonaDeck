@@ -216,6 +216,7 @@ class LibraryPage(QFrame):
     favorite_requested = Signal(object)
     surprise_requested = Signal()
     plex_requested = Signal()
+    catalog_loaded = Signal(str, int, int)
 
     def __init__(self, backend, engine, covers, parent=None):
         super().__init__(parent)
@@ -427,7 +428,11 @@ class LibraryPage(QFrame):
         for row in self.pager.rows[old:]:
             self._add_row(row, row.get("type","album"))
         self.counter.setText(f"{self.pager.total:,} items · {len(self.pager.rows):,} loaded")
-        self.info.setText("Scroll for more. Double-click to play or open a collection.")
+        if not self.pager.rows and not self.pager.has_more:
+            self.info.setText("No items found in this category. Choose Plex > Manage Libraries to assign the correct category.")
+        else:
+            self.info.setText("Scroll for more. Double-click to play or open a collection.")
+        self.catalog_loaded.emit(self.pager.role,self.pager.total,len(self.pager.rows))
         self.load_more.setEnabled(self.pager.has_more)
         self.load_more.setVisible(self.pager.has_more)
 

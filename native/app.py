@@ -300,6 +300,7 @@ class NativeWindow(QWidget):
         self.close_btn.clicked.connect(self.close)
         self.library.back_requested.connect(lambda:self.set_mode("mini"))
         self.library.plex_requested.connect(self.plex_menu)
+        self.library.catalog_loaded.connect(self.catalog_status)
         self.library.surprise_requested.connect(lambda:DiscoveryDialog(self).exec())
         self.library.play_tracks.connect(self.audio.play_tracks)
         self.library.add_tracks.connect(self.audio.add_tracks)
@@ -464,6 +465,12 @@ class NativeWindow(QWidget):
             self.library.close_detail()
         else:
             self.set_mode("mini")
+
+    def catalog_status(self,role,total,loaded):
+        if total:
+            self.show_error(f"Plex ready · {total:,} {role} items · {loaded:,} loaded")
+        else:
+            self.show_error("Plex connected, but no items appear in this category. Open Plex > Manage Libraries.")
 
     def plex_ready(self):
         self.show_error("Checking your Plex account…")
