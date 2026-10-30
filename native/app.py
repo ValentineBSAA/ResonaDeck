@@ -180,7 +180,7 @@ class NativeWindow(QWidget):
         self._mode="mini"
         self._keep_playing=False
         self._discovery_busy=False
-        self._session_end_ms=0
+        self._session_deadline=0.0
         self._sleep_left=0
         self._sleep_original=1.0
         self._restore_tries=0
@@ -194,10 +194,14 @@ class NativeWindow(QWidget):
         self.bind()
         self.set_always_on_top(self.pin)
         self.set_mode("mini",first=True)
-        QTimer.singleShot(10,self.bridge.start)
+        if os.environ.get("RESONADECK_NATIVE_SMOKE") != "1":
+            QTimer.singleShot(10,self.bridge.start)
         self._sleep_timer=QTimer(self)
         self._sleep_timer.setInterval(1000)
         self._sleep_timer.timeout.connect(self._sleep_update)
+        self._session_timer=QTimer(self)
+        self._session_timer.setInterval(1000)
+        self._session_timer.timeout.connect(self._apply_session_end)
         self._auth_timer=QTimer(self)
         self._auth_timer.setInterval(1900)
         self._auth_timer.timeout.connect(self._poll_auth)
@@ -629,9 +633,13 @@ class NativeWindow(QWidget):
         self._apply_session_end()
 
     def _apply_session_end(self):
-        if self._session_end_ms and self.audio.players[self.audio.active].position() >= self._session_end_ms:
+        import time
+        if self._session_deadline and time.monotonic() >= self._session_deadline:
+            self._session_deadline=0
+            self._session_timer.stop()
+            self._keep_playing=False
             self.audio.pause()
-            self._session_end_ms=0
+            self.show_error("Listening session complete")
 
     def check_keep_playing(self):
         if not self._keep_playing or self._discovery_busy:
@@ -652,7 +660,11 @@ class NativeWindow(QWidget):
         self._keep_playing=prefs.get("sessionLength")=="endless"
         favorites=self.discovery["favorites"]
         role_favorites=[x for x in favorites if x.get("libraryRole","music")==category]
-        if prefs.get("favoritesOnly") and role_favorites:
+        if prefs.get("favoritesOnly"):
+            if not role_favorites:
+                self._discovery_busy=False
+                self.show_error("No saved favorites available for this category")
+                return
             self._surprise_done({"items":role_favorites},count,append)
             return
         view="albums" if category=="music" and prefs.get("musicMode")=="albums" else "tracks"
@@ -691,6 +703,14 @@ class NativeWindow(QWidget):
             self.audio.add_tracks(selected)
         else:
             self.audio.play_tracks(selected)
+            duration={"30m":30,"60m":60,"120m":120}.get(str(self.discovery["preferences"].get("sessionLength")))
+            if duration:
+                import time
+                self._session_deadline=time.monotonic()+duration*60
+                self._session_timer.start()
+            else:
+                self._session_deadline=0
+                self._session_timer.stop()
             self.set_mode("expanded")
         self.show_error(f"Surprise Me · {len(selected)} songs selected")
 

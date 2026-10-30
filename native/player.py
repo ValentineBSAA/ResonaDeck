@@ -46,6 +46,7 @@ class AudioEngine(QObject):
         self.pending_load = False
         self.prepared_index = None
         self.prepared_url = ""
+        self._fade_target = None
         self.play_request = 0
         self.preload_request = 0
         self.plan: dict[int, dict] = {}
@@ -114,6 +115,10 @@ class AudioEngine(QObject):
         self.preload_request += 1
         self.pending_load = False
         self.prepared_index = None
+        self.prepared_url = ""
+        self._fade_target = None
+        self._seek_restore_ms = 0
+        self.recovered.clear()
         self.fade_active = False
         self.players[0].stop()
         self.players[1].stop()
@@ -172,7 +177,8 @@ class AudioEngine(QObject):
             self.status_changed.emit("Choose music from the library or Surprise Me")
         elif player.playbackState() == QMediaPlayer.PlaybackState.PlayingState:
             if self.fade_active:
-                self.players[1-self.active].pause()
+                self._finish_fade()
+                player = self.players[self.active]
             player.pause()
             self._checkpoint()
         elif player.source().isEmpty():
@@ -184,9 +190,9 @@ class AudioEngine(QObject):
 
     def pause(self):
         if self.queue.current:
-            self.players[self.active].pause()
             if self.fade_active:
-                self.players[1-self.active].pause()
+                self._finish_fade()
+            self.players[self.active].pause()
             self._checkpoint()
 
     def stop(self):
@@ -195,6 +201,9 @@ class AudioEngine(QObject):
         self.players[1].stop()
         self.fade_active = False
         self.prepared_index = None
+        self.prepared_url = ""
+        self._fade_target = None
+        self.preload_request += 1
         self.status_changed.emit("Stopped")
 
     def next(self):
@@ -289,18 +298,7 @@ class AudioEngine(QObject):
             self._apply_volumes(progress)
             self.crossfade_changed.emit(f"Crossfade {round(progress*100)}%")
             if progress >= 1:
-                old = self.active
-                self.active = 1-old
-                self.players[old].stop()
-                self.fade_active = False
-                self._apply_volumes()
-                if self.queue.advance():
-                    self.queue_changed.emit()
-                    self.track_changed.emit(self.queue.current)
-                    self._session = str(uuid.uuid4())
-                self.prepared_index = None
-                self.plan[self.active] = self.plan.get(self.active, {})
-                self.playback_changed.emit(True)
+                self._finish_fade()
             return
         if self.crossfade <= 0 or media_kind(self.queue.current) != "music":
             return
@@ -308,7 +306,9 @@ class AudioEngine(QObject):
         if duration <= self.crossfade * 1000 + 2500 or position <= 0:
             return
         remaining = duration - position
-        candidate = self.queue.candidate()
+        # Preserve the preloaded item: shuffle must not select a different
+        # random track between preparation and the overlap itself.
+        candidate = self.prepared_index if self.prepared_index is not None else self.queue.candidate()
         if candidate is None or candidate == self.queue.index:
             return
         if remaining <= max(25000, self.crossfade*1000+11000) and self.prepared_index != candidate and not self.pending_load:
@@ -322,9 +322,9 @@ class AudioEngine(QObject):
                 fail=lambda error: self._prepare_failed(error, req))
         if remaining <= self.crossfade * 1000 and self.prepared_index == candidate and self.prepared_url:
             # Start both players together. Crossfade finalization is atomic.
-            import time
             from PySide6.QtCore import QElapsedTimer
             self.fade_active = True
+            self._fade_target = candidate
             self.fade_ms = self.crossfade * 1000
             self._clock = QElapsedTimer()
             self._clock.start()
@@ -333,11 +333,36 @@ class AudioEngine(QObject):
             self.players[standby].play()
             self.crossfade_changed.emit(f"Crossfading {self.crossfade}s")
 
+    def _finish_fade(self):
+        if not self.fade_active:
+            return
+        target = self._fade_target
+        old = self.active
+        self.active = 1-old
+        self.players[old].stop()
+        self.fade_active = False
+        self._apply_volumes()
+        if target is not None and 0 <= target < len(self.queue.tracks):
+            previous = self.queue.index
+            if previous >= 0 and target != previous:
+                self.queue.history.append(previous)
+            self.queue.index = target
+            self.track_changed.emit(self.queue.current)
+            self.queue_changed.emit()
+            self._session = str(uuid.uuid4())
+        self._fade_target = None
+        self.prepared_index = None
+        self.prepared_url = ""
+        self.playback_changed.emit(
+            self.players[self.active].playbackState() == QMediaPlayer.PlaybackState.PlayingState)
+
     def _prepared(self, plan, generation, index):
         if generation != self.preload_request:
             return
         self.pending_load = False
         if not isinstance(plan, dict) or not plan.get("success") or not plan.get("url"):
+            return
+        if not (0 <= index < len(self.queue.tracks)):
             return
         self.prepared_index = index
         self.prepared_url = plan["url"]
