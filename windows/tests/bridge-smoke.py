@@ -9,8 +9,10 @@ import tempfile
 repo = Path(__file__).resolve().parents[2]
 with tempfile.TemporaryDirectory(prefix="resonadeck-win-") as data:
     env = dict(os.environ, RESONADECK_WINDOWS_DATA_DIR=data)
+    command = [str(Path(sys.argv[1]).resolve())] if len(sys.argv) > 1 else [
+        sys.executable, "-u", str(repo / "windows" / "bridge.py")]
     process = subprocess.Popen(
-        [sys.executable, "-u", str(repo / "windows" / "bridge.py")],
+        command,
         cwd=repo, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
         text=True, env=env
     )

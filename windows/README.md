@@ -13,8 +13,9 @@ The actual Deck frontend source is bundled into the Electron renderer during the
 - Always on Top toggle in the title bar and system tray; Ctrl+Shift+P shortcut.
 - Close to tray, restoring from tray, independent windows for mini/full layouts.
 - Last window size, screen position and pin/tray preferences persisted.
-- Single instance, Windows user-data separation from your Steam Deck, mouse/text input, optional controller shoulder bridge.
+- Single instance, Windows user-data separation from your Steam Deck, mouse/text input, and shoulder navigation via controller or Ctrl+PageUp/PageDown.
 - Background throttling disabled so the active audio engine can run while minimized.
+- Windows Plex client identity, not the Steam Deck device label, while sharing the underlying backend.
 - App uses secure preload IPC: Node integration disabled, context isolation and sandbox enabled. The Python process owns all Plex tokens.
 
 ## Development launch on Windows
@@ -41,7 +42,7 @@ From repo root:
     npm install
     npm run package:win
 
-Installer output: \`windows/release/\`. Alternatively use the Windows Preview GitHub Actions workflow artifact. This is **not yet** a stable downloadable release. Do not label it 1.2.1 Stable for Windows.
+Installer output: \`windows/release/\`. The CI workflow also tests the packaged backend executable before building the installer. Alternatively use the Windows Preview GitHub Actions workflow artifact. This is **not yet** a stable downloadable release. Do not label it 1.2.1 Stable for Windows.
 
 ## Manual acceptance checklist
 

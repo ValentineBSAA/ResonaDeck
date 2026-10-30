@@ -33,6 +33,9 @@ decky.DECKY_PLUGIN_VERSION = "1.2.1"
 decky.logger = logging.getLogger("resonadeck.windows")
 sys.modules["decky"] = decky
 
+import resonadeck_backend as _backend  # noqa: E402
+_backend.PLATFORM = "Windows"
+_backend.DEVICE = "Windows PC"
 from main import Plugin  # noqa: E402
 
 LOCK = asyncio.Lock()

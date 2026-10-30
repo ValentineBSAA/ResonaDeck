@@ -46,6 +46,8 @@ jobs:
           --collect-submodules mutagen
           --add-data "assets;assets"
           --paths . windows/bridge.py
+      - name: Validate packaged backend process
+        run: python windows/tests/bridge-smoke.py windows/backend-dist/ResonaDeckBackend/ResonaDeckBackend.exe
       - name: Install renderer dependencies
         working-directory: windows
         run: npm install --no-audit --no-fund

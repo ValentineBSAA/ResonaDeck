@@ -43,7 +43,7 @@ const Focusable = React.forwardRef(function Focusable(props, ref) {
   const attrs = {...rest};
   delete attrs['flow-children'];
   delete attrs['onGamepadButtonDown'];
-  return <div {...attrs} ref={ref} className={'rd-win-focusable ' + className}
+  return <div {...attrs} ref={ref} tabIndex={attrs.tabIndex ?? -1} className={'rd-win-focusable ' + className}
     onKeyDown={event => {
       onKeyDown?.(event);
       if (!event.defaultPrevented && event.key === 'Escape') onCancel?.(event);
@@ -162,6 +162,14 @@ function App({plugin}) {
       }
       if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === 'p') {
         event.preventDefault(); void window.resonaWindows.command('togglePin');
+      }
+      if (event.ctrlKey && (event.key === 'PageUp' || event.key === 'PageDown')) {
+        event.preventDefault();
+        const button = event.key === 'PageUp' ? 30 : 31;
+        for (const listener of gamepadListeners) {
+          try {listener({controller: 0, button, pressed: true});} catch (_) {}
+          setTimeout(() => {try {listener({controller: 0, button, pressed: false});} catch (_) {}}, 25);
+        }
       }
       if (event.key === 'Escape' && currentRoute !== '/' && !event.defaultPrevented) back();
     };
