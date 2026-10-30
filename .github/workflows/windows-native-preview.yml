@@ -35,6 +35,10 @@ jobs:
         env:
           QT_QPA_PLATFORM: offscreen
         run: python native/tests/ui-smoke.py
+      - name: Exercise actual Qt library widgets with 156 fake Plex albums
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: python native/tests/ui-contract.py
       - name: Build Windows icon
         run: python native/build_icon.py
       - name: Package Plex backend

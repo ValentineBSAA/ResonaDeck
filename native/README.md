@@ -72,3 +72,9 @@ XInput A/B/Start/LB/RB work while the window has focus.
 The source is GPL-3.0-only as in the original repository. Qt/PySide6 is
 distributed subject to its applicable LGPL/commercial terms; bundle all
 necessary Qt license notices when publishing installers.
+
+## Important preview warning (2026-10-30)
+
+The first native preview failed a real Windows test with a Unicode `charmap` error, and reported a connected Plex server without helping the user assign library roles. Both issues have fixes on this branch: ASCII-safe JSON protocol, per-user Plex audio library mapping, selectable Music sections, and more explicit startup errors. **Source and CI tests are not proof that music plays on an actual Windows PC.**
+
+The generated portable EXE is unsigned. SmartScreen may show an unknown-publisher warning, but this does not establish whether a file is safe. Do not disable Windows Defender or override malware detections; investigate the exact event in Windows Security. Release signing, malware review, and Windows hardware testing are required before distribution as Stable.

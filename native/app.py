@@ -514,6 +514,9 @@ class NativeWindow(QWidget):
         self.library.browse()
 
     def manage_libraries(self,libraries=None):
+        # Qt QAction.triggered can pass a bool into this slot.
+        if not isinstance(libraries,list):
+            libraries=None
         if libraries is None:
             self.bridge.request("get_libraries",ok=self.manage_libraries,fail=self.show_error)
             return
