@@ -219,6 +219,7 @@ class LibraryPage(QFrame):
         self._loading = False
         self._search_generation = 0
         self._all_libraries = []
+        self._selected_sections=[]
 
         outer = QVBoxLayout(self)
         outer.setContentsMargins(16,15,16,14)
@@ -239,6 +240,9 @@ class LibraryPage(QFrame):
         self.roles = QComboBox()
         for title,role in (("Music","music"),("Audiobooks","audiobooks"),("Podcasts","podcasts"),("More Audio","other")):
             self.roles.addItem(title,role)
+        self.sections=QComboBox()
+        self.sections.setToolTip("Choose a Plex Music library, including multiple Music sections")
+        self.sections.setVisible(False)
         self.view = QComboBox()
         for title,view in (("Albums","albums"),("Artists","artists"),("Tracks","tracks")):
             self.view.addItem(title,view)
@@ -251,6 +255,7 @@ class LibraryPage(QFrame):
         self.favorites_button = button("★ Favorites")
         self.playlists_button = button("▤ Playlists")
         filters.addWidget(self.roles)
+        filters.addWidget(self.sections)
         filters.addWidget(self.view)
         filters.addWidget(self.search,1)
         filters.addWidget(self.refresh)
@@ -323,7 +328,8 @@ class LibraryPage(QFrame):
         self.back.clicked.connect(self.back_requested)
         self.plex.clicked.connect(self.plex_requested)
         self.surprise.clicked.connect(self.surprise_requested)
-        self.roles.currentIndexChanged.connect(lambda: self.browse(reset=True))
+        self.roles.currentIndexChanged.connect(self._role_changed)
+        self.sections.currentIndexChanged.connect(lambda: self.browse(reset=True))
         self.view.currentIndexChanged.connect(lambda: self.browse(reset=True))
         self.refresh.clicked.connect(lambda: self.browse(reset=True,refresh=True))
         self.load_more.clicked.connect(self._load_next)
@@ -344,6 +350,26 @@ class LibraryPage(QFrame):
 
     def current_view(self):
         return str(self.view.currentData() or "albums")
+
+    def _role_changed(self):
+        self.update_sections(self._all_libraries)
+        self.browse(reset=True)
+
+    def update_sections(self,libraries):
+        self._all_libraries=list(libraries)
+        chosen=self.sections.currentData()
+        role=self.current_role()
+        self.sections.blockSignals(True)
+        self.sections.clear()
+        choices=[lib for lib in self._all_libraries if
+                 lib.get("role")==role or (lib.get("role")=="unassigned" and lib.get("suggestedRole")==role)]
+        for lib in choices:
+            self.sections.addItem(str(lib.get("title") or "Plex Library"),str(lib.get("key") or ""))
+        i=self.sections.findData(chosen)
+        if i>=0:
+            self.sections.setCurrentIndex(i)
+        self.sections.setVisible(role=="music" and len(choices)>1)
+        self.sections.blockSignals(False)
 
     def browse(self,reset=True,refresh=False):
         if not self.backend.online:
@@ -369,7 +395,8 @@ class LibraryPage(QFrame):
         self.load_more.setEnabled(False)
         self.counter.setText("Loading Plex catalog…")
         self.backend.request("browse_cached",
-            [self.pager.role,self.pager.view,offset,self.pager.page_size,"title",refresh],
+            [self.pager.role,self.pager.view,offset,self.pager.page_size,"title",refresh,
+             str(self.sections.currentData() or "") if self.pager.role=="music" else ""],
             ok=lambda payload,gen=generation:self._received(gen,payload),
             fail=lambda error,gen=generation:self._browse_error(gen,error))
 
@@ -377,8 +404,8 @@ class LibraryPage(QFrame):
         if generation!=self.pager.generation:
             return
         self.pager.busy=False
-        self.counter.setText("Unable to load albums")
-        self.info.setText(str(error)[:180])
+        self.counter.setText("Unable to load Plex catalog")
+        self.info.setText(str(error)[:180] + " · Check Plex > Manage Libraries")
         self.load_more.setEnabled(True)
 
     def _received(self,generation,payload):

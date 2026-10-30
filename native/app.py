@@ -22,6 +22,7 @@ from PySide6.QtWidgets import (
     QInputDialog, QLineEdit, QSizeGrip
 )
 
+from library_setup import LibrarySetupDialog
 from artwork import ArtworkStore
 from core import AUDIO_ROLES, identity, media_kind, pick_surprise, clean_discovery
 from player import AudioEngine
@@ -185,6 +186,8 @@ class NativeWindow(QWidget):
         self._sleep_left=0
         self._sleep_original=1.0
         self._restore_tries=0
+        self._library_setup_open=False
+        self._library_setup_in_progress=False
         self.discovery={"preferences":clean_discovery(),"favorites":[],"sessions":[],
                         "playlists":[],"recentIds":[]}
         self.bridge=PlexBridge(self)
@@ -431,6 +434,7 @@ class NativeWindow(QWidget):
                 lambda _,m=minutes:self.sleep_timer(m))
         menu.addSeparator()
         menu.addAction("Plex Account and Servers",self.plex_menu)
+        menu.addAction("Manage Plex Libraries",self.manage_libraries)
         menu.addAction("Windows Settings",lambda:PreferencesDialog(self).exec())
         menu.addSeparator()
         menu.addAction("Hide to Tray",self.hide)
@@ -483,17 +487,74 @@ class NativeWindow(QWidget):
         self._restore_tries=0
         self.show_error("Plex connected · Ready to listen")
         self.library.browse()
-        self.bridge.request("get_libraries",ok=self._libraries,fail=lambda error:None)
+        self.bridge.request("get_libraries",ok=self._libraries,
+                            fail=lambda error:self.show_error("Plex library discovery failed: "+str(error)))
 
     def _libraries(self,result):
-        self.library._all_libraries=result.get("libraries",[]) if isinstance(result,dict) else []
+        if not isinstance(result,dict) or not result.get("success",True):
+            self.show_error("Plex is connected, but its libraries could not be read: "+
+                            str((result or {}).get("message","Unknown error")))
+            return
+        libraries=list(result.get("libraries") or [])
+        self.library._all_libraries=libraries
+        self.library.update_sections(libraries)
+        if not libraries:
+            self.show_error("Plex connected, but this user has no music-style libraries. Check Plex permissions.")
+            return
+        confirmed=[lib for lib in libraries if lib.get("role") in ("music","audiobooks","podcasts","other")]
+        if not confirmed and not self._library_setup_in_progress and not self._library_setup_open:
+            self._library_setup_open=True
+            self.set_mode("library")
+            self.show_error("One-time setup: assign each Plex library to its audio category.")
+            QTimer.singleShot(50,lambda:self.manage_libraries(libraries))
+            return
         self.bridge.request("refresh_music_state",[False],fail=lambda error:None)
+        self.library.browse()
+
+    def manage_libraries(self,libraries=None):
+        if libraries is None:
+            self.bridge.request("get_libraries",ok=self.manage_libraries,fail=self.show_error)
+            return
+        self._library_setup_open=True
+        dialog=LibrarySetupDialog(libraries,self)
+        accepted=dialog.exec()==QDialog.DialogCode.Accepted
+        self._library_setup_open=False
+        if not accepted:
+            self.show_error("Choose Plex library categories from Plex > Manage Libraries to enable browsing.")
+            return
+        assignments=dialog.assignments()
+        if not assignments:
+            self.show_error("Plex reported no audio libraries to assign.")
+            return
+        self._library_setup_in_progress=True
+        self._assign_library_roles(assignments)
+
+    def _assign_library_roles(self,remaining):
+        if not remaining:
+            self._library_setup_in_progress=False
+            self.bridge.request("get_libraries",ok=self._libraries,fail=self.show_error)
+            return
+        key,title,role=remaining[0]
+        self.bridge.request("set_library_role",[key,title,role],
+            ok=lambda result:self._assigned_one(result,remaining),
+            fail=lambda error:self._assignment_failed(error))
+
+    def _assigned_one(self,result,remaining):
+        if not isinstance(result,dict) or not result.get("success"):
+            self._assignment_failed(str((result or {}).get("message","Role assignment rejected")))
+            return
+        self._assign_library_roles(remaining[1:])
+
+    def _assignment_failed(self,error):
+        self._library_setup_in_progress=False
+        self.show_error("Could not save Plex library setup: "+str(error))
 
     def plex_menu(self):
         menu=QMenu(self)
         menu.addAction("Sign in to Plex",self.sign_in)
         menu.addAction("Choose Plex Home User",self.home_users)
         menu.addAction("Discover Plex Servers",self.choose_server)
+        menu.addAction("Manage Music / Book / Podcast Libraries",self.manage_libraries)
         menu.addAction("Refresh Connection",lambda:self.bridge.request("recover_connection",
             ok=lambda response:self.restore_plex()))
         menu.addSeparator()
