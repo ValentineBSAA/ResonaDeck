@@ -30,7 +30,7 @@ from theme import STYLE
 from transport import PlexBridge, resources
 from views import LibraryPage, PlayerPanel, button
 
-APP_VERSION = "0.2.0-native-preview"
+APP_VERSION = "0.2.1-native-preview"
 
 
 class DragBar(QFrame):

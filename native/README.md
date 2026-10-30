@@ -1,6 +1,6 @@
-# ResonaDeck Native for Windows 11 | 0.2.0 Preview
+# ResonaDeck Native for Windows 11 | 0.2.1 Development Preview
 
-This is a complete **new native Windows application**, not Electron and not
+This is an **experimental native Windows application**, not Electron and not
 a clone of the Steam Deck quick access menu. Built using PySide6 Qt Widgets
 and Qt Multimedia, with the existing ResonaDeck 1.2.1 Plex backend. It has
 a transparent frameless top-level window whose visible surface is the player.
@@ -31,7 +31,7 @@ Stable release.
 ## Download and start
 
 Open GitHub Actions > ResonaDeck Native Windows Preview > latest successful
-run. Under Artifacts download ResonaDeck-Native-Windows-0.2.0-Preview.
+run. Under Artifacts download ResonaDeck-Native-Windows-0.2.1-Preview.
 Unzip both layers and run ResonaDeckNative/ResonaDeckNative.exe. Keep the
 whole directory intact, particularly its backend and Qt libraries.
 This is a *portable ZIP Preview*, not a signed Windows installer.

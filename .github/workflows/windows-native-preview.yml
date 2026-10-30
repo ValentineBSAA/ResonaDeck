@@ -86,11 +86,11 @@ jobs:
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force native/release | Out-Null
-          Compress-Archive -Path "native/dist/ResonaDeckNative" -DestinationPath "native/release/ResonaDeckNative-0.2.0-Preview.zip" -CompressionLevel Optimal
-          if (!(Test-Path "native/release/ResonaDeckNative-0.2.0-Preview.zip")) { throw "ZIP packaging failed" }
+          Compress-Archive -Path "native/dist/ResonaDeckNative" -DestinationPath "native/release/ResonaDeckNative-0.2.1-Preview.zip" -CompressionLevel Optimal
+          if (!(Test-Path "native/release/ResonaDeckNative-0.2.1-Preview.zip")) { throw "ZIP packaging failed" }
       - name: Upload native preview (not Stable)
         uses: actions/upload-artifact@v4
         with:
-          name: ResonaDeck-Native-Windows-0.2.0-Preview
-          path: native/release/ResonaDeckNative-0.2.0-Preview.zip
+          name: ResonaDeck-Native-Windows-0.2.1-Preview
+          path: native/release/ResonaDeckNative-0.2.1-Preview.zip
           if-no-files-found: error
