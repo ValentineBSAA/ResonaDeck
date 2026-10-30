@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import math
+import sys
+from pathlib import Path
 from collections import OrderedDict
 from PySide6.QtCore import QObject, QTimer, QRect, QRectF, Qt, Signal, QUrl
 from PySide6.QtGui import QColor, QBrush, QConicalGradient, QFont, QLinearGradient, QPainter, QPainterPath, QPen, QPixmap
@@ -84,6 +86,8 @@ class VinylArt(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.art = QPixmap()
+        assets=Path(getattr(sys,"_MEIPASS",Path(__file__).resolve().parents[1]))/"assets"
+        self.brand_art=QPixmap(str(assets/"resonadeck-glyph.webp"))
         self.angle = 0.0
         self.transition = 1.0
         self.playing = False
@@ -148,6 +152,26 @@ class VinylArt(QWidget):
         painter.drawEllipse(QRectF(-r*.13,-r*.13,r*.26,r*.26))
         painter.setBrush(QColor("#111927"))
         painter.drawEllipse(QRectF(-3,-3,6,6))
+        painter.restore()
+        # The actual ResonaDeck emblem from the Deck version replaces a generic
+        # dot at the heart of the record without changing the native rendering.
+        if not self.brand_art.isNull():
+            emblem=r*.30
+            painter.drawPixmap(QRectF(cx-emblem/2,cy-emblem/2,emblem,emblem).toRect(),
+                               self.brand_art,
+                               QRect(0,0,self.brand_art.width(),self.brand_art.height()))
+        # Floating tonearm: lightweight native painter strokes, no fake waveform.
+        painter.save()
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing,True)
+        x0=box.right()-r*.15
+        y0=box.top()+r*.25
+        painter.setPen(QPen(QColor("#2b3543"),max(3.0,r*.052)))
+        painter.drawLine(int(x0),int(y0),int(cx+r*.50),int(cy-r*.32))
+        painter.setPen(QPen(QColor("#e8b968"),max(1.5,r*.024)))
+        painter.drawLine(int(x0),int(y0),int(cx+r*.50),int(cy-r*.32))
+        painter.setBrush(QColor("#111825"))
+        painter.setPen(QPen(QColor("#d1a459"),1.5))
+        painter.drawEllipse(QRectF(x0-r*.075,y0-r*.075,r*.15,r*.15))
         painter.restore()
         if not self.art.isNull():
             # On track changes the artwork grows over the gold disc.

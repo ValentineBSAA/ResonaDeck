@@ -44,6 +44,7 @@ class PlayerPanel(QFrame):
     full_requested = Signal()
     library_requested = Signal()
     options_requested = Signal()
+    surprise_requested = Signal()
     favorite_requested = Signal()
     stop_requested = Signal()
 
@@ -60,7 +61,7 @@ class PlayerPanel(QFrame):
         self.artist = QLabel("Your Plex library. Your listening room.")
         self.artist.setObjectName("SubTitle")
         self.artist.setWordWrap(True)
-        self.eyebrow = QLabel("RESONADECK · PLEX AUDIO")
+        self.eyebrow = QLabel("RESONADECK   /   PLEX AUDIO")
         self.eyebrow.setObjectName("Eyebrow")
         self.position = QLabel("0:00")
         self.duration = QLabel("0:00")
@@ -68,15 +69,21 @@ class PlayerPanel(QFrame):
         self.seek.setRange(0,1000)
         self.seek.setTracking(False)
         self.seek.sliderReleased.connect(lambda: self.engine.seek(self.seek.value()))
-        self.prev = button("⏮", "Previous track", "Transport")
-        self.play = button("▶", "Play / Pause (Space)", "Transport")
-        self.next = button("⏭", "Next track", "Transport")
-        self.favorite = button("☆", "Favorite current track", "Transport")
-        self.options = button("⋯", "Windows player options", "Transport")
+        # Use reliable Segoe UI/ASCII labels instead of the Steam glyphs that
+        # rendered as tiny replacement squares on the creator's Windows PC.
+        self.prev = button("PREV", "Previous track", "Transport")
+        self.play = button("PLAY", "Play / Pause (Space)", "Transport")
+        self.next = button("NEXT", "Next track", "Transport")
+        self.favorite = button("FAV", "Favorite current track", "Transport")
+        self.options = button("MORE", "Player options", "Transport")
         self.options.clicked.connect(self.options_requested)
-        self.shuffle = button("⇄", "Shuffle", "Transport")
-        self.repeat = button("↻", "Repeat", "Transport")
-        self.queue = button("☷ Queue", "Open queue")
+        self.shuffle = button("SHUFFLE", "Shuffle", "Transport")
+        self.repeat = button("REPEAT", "Repeat", "Transport")
+        self.queue = button("QUEUE", "Open queue")
+        self.browse = button("Browse Music", "Open your Plex library", "Primary")
+        self.surprise = button("Surprise Me", "Play something unexpected", "Primary")
+        self.browse.clicked.connect(self.library_requested)
+        self.surprise.clicked.connect(self.surprise_requested)
         self.vol = QSlider(Qt.Orientation.Horizontal)
         self.vol.setRange(0,100)
         self.vol.setValue(round(engine.volume*100))
@@ -89,7 +96,7 @@ class PlayerPanel(QFrame):
         self.shuffle.clicked.connect(engine.toggle_shuffle)
         self.repeat.clicked.connect(engine.cycle_repeat)
         self.queue.clicked.connect(self.library_requested)
-        self.status = QLabel("Connect Plex to begin")
+        self.status = QLabel("Connect Plex to begin. Use Browse Music or More > Plex Account.")
         self.status.setObjectName("Status")
         self.status.setWordWrap(True)
 
@@ -133,7 +140,7 @@ class PlayerPanel(QFrame):
         else:
             main.setContentsMargins(19,16,19,15)
             main.addWidget(self.eyebrow)
-            self.art.setFixedSize(300,300)
+            self.art.setFixedSize(224,224)
             main.addWidget(self.art,0,Qt.AlignmentFlag.AlignHCenter)
             main.addWidget(self.title)
             main.addWidget(self.artist)
@@ -147,6 +154,10 @@ class PlayerPanel(QFrame):
             extras.addWidget(QLabel("VOL"))
             extras.addWidget(self.vol)
             main.addLayout(extras)
+            discovery = QHBoxLayout()
+            discovery.addWidget(self.browse, 1)
+            discovery.addWidget(self.surprise, 1)
+            main.addLayout(discovery)
             main.addWidget(self.status)
             main.addStretch(1)
         engine.track_changed.connect(self.on_track)
@@ -188,13 +199,13 @@ class PlayerPanel(QFrame):
         self.duration.setText(readable_time(duration))
 
     def on_playing(self, playing):
-        self.play.setText("⏸" if playing else "▶")
+        self.play.setText("PAUSE" if playing else "PLAY")
         self.art.set_playing(playing)
 
     def _update_modes(self):
-        self.shuffle.setText("⇄ ON" if self.engine.queue.shuffle else "⇄ OFF")
-        self.repeat.setText("↻ " + self.engine.queue.repeat.upper())
-        self.queue.setText(f"☷ Queue · {len(self.engine.queue.tracks)}")
+        self.shuffle.setText("SHUFFLE ON" if self.engine.queue.shuffle else "SHUFFLE OFF")
+        self.repeat.setText("REPEAT " + self.engine.queue.repeat.upper())
+        self.queue.setText(f"QUEUE {len(self.engine.queue.tracks)}")
 
 
 class LibraryPage(QFrame):

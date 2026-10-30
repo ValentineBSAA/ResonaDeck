@@ -11,10 +11,11 @@ PALETTE = {
 
 STYLE = """
 QWidget{color:#f3f1f7;font-family:'Segoe UI',Arial,sans-serif;font-size:13px}
-QFrame#Panel{background:#172338;border:1px solid #52718b;border-radius:18px}
+QFrame#Panel{background:qlineargradient(x1:0,y1:0,x2:1,y2:1,stop:0 #253c58,stop:.45 #1a293d,stop:1 #121b2a);border:1px solid #60728b;border-radius:18px}
+QFrame#ShellMini{background:transparent;border:0}
 QFrame#LibraryPanel{background:#101927;border:1px solid #36485f;border-radius:16px}
 QFrame#Toolbar{background:transparent;border:none}
-QLabel#Title{font-size:19px;font-weight:750;color:#faf5fc}
+QLabel#Title{font-size:20px;font-weight:700;color:#fff6f0}
 QLabel#SubTitle{font-size:12px;color:#b5c3d5}
 QLabel#Eyebrow{font-size:10px;letter-spacing:2px;font-weight:bold;color:#e5b868}
 QLabel#Status{font-size:11px;color:#9eb6cf}
@@ -23,12 +24,12 @@ QPushButton{background:#25364d;border:1px solid #516881;border-radius:9px;
 QPushButton:hover{background:#344e67;border-color:#e9b96c}
 QPushButton:pressed{background:#785265}
 QPushButton:disabled{color:#788294;background:#152335}
-QPushButton#Primary{background:#83415c;border:1px solid #dbac7f;font-weight:bold}
+QPushButton#Primary{background:qlineargradient(x1:0,y1:0,x2:1,y2:1,stop:0 #764a60,stop:1 #7f3e58);border:1px solid #dbac7f;font-weight:700}
 QPushButton#Primary:hover{background:#a15270}
 QPushButton#Chrome{background:transparent;border:none;padding:3px;font-size:16px}
 QPushButton#Chrome:hover{background:#ffffff26;border-radius:7px}
-QPushButton#Transport{font-size:19px;background:transparent;border:0;padding:3px 8px}
-QPushButton#Transport:hover{color:#eab867}
+QPushButton#Transport{font-size:11px;font-weight:700;letter-spacing:.4px;background:#293c52;border:1px solid #405870;border-radius:10px;padding:7px 7px}
+QPushButton#Transport:hover{color:#eab867;background:#3a4d61;border-color:#eab867}
 QPushButton#Tab:checked{background:#67384f;border:1px solid #e7b978}
 QSlider::groove:horizontal{background:#41576d;border-radius:3px;height:5px}
 QSlider::handle:horizontal{background:#e7b96c;border-radius:8px;width:15px;margin:-5px 0}

@@ -236,13 +236,13 @@ class NativeWindow(QWidget):
         self.brand.setStyleSheet("font-size:12px;font-weight:700;color:#eac587")
         header_layout.addWidget(self.brand)
         header_layout.addStretch(1)
-        self.pin_btn=button("♢","Always on Top","Chrome")
-        self.size_btn=button("⛶","Expand / collapse (Ctrl+M)","Chrome")
-        self.library_btn=button("▦","Open full library (Ctrl+L)","Chrome")
-        self.menu_btn=button("⋯","Options (right-click)","Chrome")
-        self.close_btn=button("×","Close to tray or exit","Chrome")
+        self.pin_btn=button("PIN","Always on Top","Chrome")
+        self.size_btn=button("SIZE","Expand / collapse (Ctrl+M)","Chrome")
+        self.library_btn=button("LIB","Open full library (Ctrl+L)","Chrome")
+        self.menu_btn=button("MORE","Options (right-click)","Chrome")
+        self.close_btn=button("X","Close to tray or exit","Chrome")
         for control in (self.pin_btn,self.size_btn,self.library_btn,self.menu_btn,self.close_btn):
-            control.setFixedSize(27,27)
+            control.setFixedSize(48,27)
             header_layout.addWidget(control)
         shell_layout.addWidget(self.header)
         self.stack=QStackedWidget()
@@ -308,6 +308,7 @@ class NativeWindow(QWidget):
             panel.library_requested.connect(lambda:self.set_mode("library"))
             panel.favorite_requested.connect(lambda:self.favorite(self.audio.current()))
             panel.options_requested.connect(lambda:self.open_menu(self.mapToGlobal(QPoint(self.width()-30,50))))
+            panel.surprise_requested.connect(lambda:DiscoveryDialog(self).exec())
         self.bridge.ready.connect(self.plex_ready)
         self.bridge.failed.connect(self.show_error)
         self.bridge.stopped.connect(self.show_error)
@@ -337,12 +338,13 @@ class NativeWindow(QWidget):
             self.settings.setValue("geometry_"+self._mode,self.saveGeometry())
         self._mode=mode
         self.stack.setCurrentIndex({"mini":0,"expanded":1,"library":2}[mode])
-        # Only the actual player is visible in Mini mode, with no title strip.
-        self.header.setVisible(mode != "mini")
+        # Mini and Expanded have no desktop title bar; the player IS the window.
+        # The full Library is the only view with additional navigation chrome.
+        self.header.setVisible(mode == "library")
         self.shell.setObjectName("ShellMini" if mode == "mini" else "Panel")
         self.shell.style().unpolish(self.shell)
         self.shell.style().polish(self.shell)
-        bounds={"mini":(440,255,400,238),"expanded":(504,650,430,510),
+        bounds={"mini":(440,255,400,238),"expanded":(504,545,430,510),
                 "library":(1120,760,650,490)}
         w,h,mw,mh=bounds[mode]
         self.setMinimumSize(mw,mh)
@@ -356,7 +358,7 @@ class NativeWindow(QWidget):
                 from PySide6.QtGui import QGuiApplication
                 area=QGuiApplication.primaryScreen().availableGeometry()
                 self.move(area.right()-self.width()-45,area.bottom()-self.height()-75)
-        self.size_btn.setText("⛶" if mode=="mini" else "◱")
+        self.size_btn.setText("FULL" if mode=="mini" else "MINI")
         self.library_btn.setVisible(mode!="library")
         self.brand.setText("◈  ResonaDeck" if mode!="library" else "◈  ResonaDeck   ·   Library")
         if mode=="library" and self.bridge.online and self.library.grid.count()==0:
@@ -383,7 +385,7 @@ class NativeWindow(QWidget):
         self.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint,self.pin)
         if visible:
             self.show()
-        self.pin_btn.setText("📌" if self.pin else "♢")
+        self.pin_btn.setText("PIN ON" if self.pin else "PIN")
         if hasattr(self,"tray_pin"):
             self.tray_pin.setChecked(self.pin)
         self.settings.setValue("pin",self.pin)
