@@ -16,7 +16,7 @@ from typing import Any
 
 import decky
 
-PLUGIN_VERSION = getattr(decky, "DECKY_PLUGIN_VERSION", "1.2.1")
+PLUGIN_VERSION = getattr(decky, "DECKY_PLUGIN_VERSION", "1.4.1")
 logger = getattr(decky, "logger", logging.getLogger(__name__))
 
 _ROOT = str(Path(__file__).resolve().parent)
@@ -92,10 +92,15 @@ class Plugin:
     async def begin_plex_auth(self): return await self._forward("begin_plex_auth")
     async def poll_plex_auth(self): return await self._forward("poll_plex_auth")
     async def sign_out(self): return await self._forward("sign_out")
+    async def get_power_state(self): return await self._forward("get_power_state")
     async def get_auth_state(self): return await self._forward("get_auth_state")
+    async def select_media_provider(self, provider: str): return await self._forward("select_media_provider", provider)
+    async def connect_jellyfin(self, url: str, username: str, password: str): return await self._forward("connect_jellyfin", url, username, password)
+    async def disconnect_jellyfin(self): return await self._forward("disconnect_jellyfin")
     async def get_home_users(self): return await self._forward("get_home_users")
     async def switch_home_user(self, user_id: str, pin: str = ""): return await self._forward("switch_home_user", user_id, pin)
     async def discover_servers(self): return await self._forward("discover_servers")
+    async def discover_jellyfin_servers(self): return await self._forward("discover_jellyfin_servers")
     async def select_server(self, machine_id: str): return await self._forward("select_server", machine_id)
     async def recover_connection(self): return await self._forward("recover_connection")
     async def get_libraries(self): return await self._forward("get_libraries")
@@ -147,6 +152,7 @@ class Plugin:
     async def get_idle_messages(self): return await self._forward("get_idle_messages")
     async def get_discovery_state(self): return await self._forward("get_discovery_state")
     async def save_discovery_state(self, value: Any): return await self._forward("save_discovery_state", value)
+    async def save_discovery_choice(self, key: str, value: Any): return await self._forward("save_discovery_choice", key, value)
     async def get_preferences(self): return await self._forward("get_preferences")
     async def set_preference(self, key: str, value: Any): return await self._forward("set_preference", key, value)
     async def get_health(self, deep: bool = False): return await self._forward("get_health", deep)

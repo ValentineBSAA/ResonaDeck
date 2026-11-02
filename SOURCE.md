@@ -1,29 +1,21 @@
-# Source Code & Release Integrity
+# ResonaDeck 1.4.1 • Source and integrity
 
-**Beta preparation status (2026-11-02):** The maintainer has verified the packaged **ResonaDeck 1.4.1** on Steam Deck. [Release notes](RELEASE_NOTES_1.4.1.md), [hardware validation](FEATURE_STATUS_1.4.1.md), and [installer SHA-256](RELEASE_MANIFEST_1.4.1.md) refer to the 1.4.1 ZIP. **Important:** The repository's tracked compiled frontend and backend are still the published 1.2.1 source snapshot; the exact 1.4.1 runtime code has not yet been synchronized here. The GitHub-generated source ZIP is not the Decky installer. The maintainer will upload the named beta ZIP asset separately.
+**Next maintainer-tested beta:** 1.4.1. **Last published stable:** [1.2.1](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.2.1). The beta asset will be uploaded and published separately.
 
-**Current stable release:** [ResonaDeck 1.2.1](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.2.1). The published release's SHA-256 matches the package built for this maintenance update.
+GitHub's main-branch installed runtime files were synchronized from the **exact ResonaDeck-1.4.1.zip**:
+- [Compiled frontend](dist/index.js) and [matching JS source snapshot](src/index.js)
+- [Decky entrypoint](main.py), [Plex backend](resonadeck_backend.py), [Jellyfin provider](jellyfin_provider.py), [Jellyfin discovery](jellyfin_discovery.py)
+- [Package metadata](package.json), [Decky manifest](plugin.json) and [1.4.1 regression tests](tests/).
 
-## Official download and checksum
+Selected Git blob hashes (verified against ZIP bytes):
+- dist/index.js and src/index.js: `c93a2b09f53bdcede9cbf63ebff9d44366f2c085`
+- resonadeck_backend.py: `2fbe984219179bccfff91888bfd714ab92d0c1a6`
+- main.py: `2b8f7513aa47497b2ba1593435423b5649fddc4b`
+- package.json: `5837312dd15ad9b1a7c0ec7eb8978c22dab4da05`
+- plugin.json: `1bd319545bfcc7b19ebf48527c424f49a949c516`
 
-- [ResonaDeck-1.2.1-Stable.zip](https://github.com/ValentineBSAA/ResonaDeck/releases/download/1.2.1/ResonaDeck-1.2.1-Stable.zip)
-- **SHA-256:** `165fbfe15e21d01ae6cf9ac7042d3efad8cb100bb89e1fc2cf18cc6fe71a4493`
-- **Layout:** one `ResonaDeck/` folder with `plugin.json`, `package.json`, `dist/index.js`, `main.py` and other runtime assets.
+**Installable ZIP SHA-256:** `f865f9a8dcc5c167b0e15eb785492428a135c313abdd1a2c491254acb051500d` (6,350,824 bytes).
 
-You can verify a downloaded file with `sha256sum ResonaDeck-1.2.1-Stable.zip` or a graphical checksum checker.
+Historical [1.2.1 release](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.2.1) remains available. GitHub's automatically generated “Source code” ZIP is **not** an installable Decky plugin. Download the named release asset after the maintainer uploads it.
 
-## Source and compatibility
-
-- [Frontend](src/index.js) / [installed compiled bundle](dist/index.js)
-- [Plex backend](resonadeck_backend.py) / [Decky entrypoint](main.py)
-- [Package and GitHub source metadata](package.json) / [Decky manifest](plugin.json)
-- [Tests](tests/) / [artwork assets](assets/) / [third-party notices](THIRD-PARTY-NOTICES.md)
-- [1.2.1 release notes](RELEASE_NOTES_1.2.1.md) / [verification status](FEATURE_STATUS_1.2.1.md)
-
-The 1.2.1 ZIP introduces canonical GitHub repository metadata and synchronized version identifiers. The only compiled frontend change is its displayed version; the Plex backend and existing audio, animation, and controller logic are unchanged.
-
-## Historical 1.2.0 evidence
-
-The previous [1.2.0 Stable release notes](RELEASE_NOTES_1.2.0.md) had SHA-256 `66148bf5e02114282c964bf46f2d6f0f89934d6184e6eecd2ea8a4ac8d8b21f2`. Its [hardware test record](FEATURE_STATUS_1.2.0.md) confirms automatic eight-second crossfade, Surprise Me, Keep Playing, Favorites and the vinyl handoff on Steam Deck. The earlier source-import process remains recorded in Git history.
-
-**Still unverified:** a real 1.2.0 → 1.2.1 update through Decky Direct Updater and persistence of settings after that update.
+The repository includes a compiled frontend snapshot, not the original fully reproducible TypeScript/React source project. License: [GPL-3.0-only](LICENSE) and third-party [notices](THIRD-PARTY-NOTICES.md).

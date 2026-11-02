@@ -54,6 +54,8 @@ try:
 except Exception:  # Decky/SteamOS may already provide a system CA store
     certifi = None
 import decky
+from jellyfin_provider import JellyfinBridge
+from jellyfin_discovery import discover_jellyfin_servers as discover_jellyfin_on_lan
 
 try:
     from cryptography.hazmat.primitives import serialization
@@ -76,7 +78,7 @@ except Exception:  # pragma: no cover
 logger = getattr(decky, "logger", logging.getLogger(__name__))
 logging.basicConfig(level=logging.INFO)
 
-PLUGIN_VERSION = getattr(decky, "DECKY_PLUGIN_VERSION", "1.1.1")
+PLUGIN_VERSION = getattr(decky, "DECKY_PLUGIN_VERSION", "1.3.6")
 PRODUCT = "ResonaDeck"
 ARTWORK_HYDRATION_GENERATION = "0.9.9-library-refresh-v1"
 CATALOG_CACHE_GENERATION = "0.9.9-refresh-v1"
@@ -385,6 +387,13 @@ def _make_ssl_context() -> ssl.SSLContext:
 
 class Plugin:
     def __init__(self):
+        self._power_seq_v140 = 0
+        self._power_sleeping_v140 = False
+        self._power_monitoring_v140 = False
+        self._power_last_wake_v140 = 0.0
+        self._power_offset_v140 = self._power_offset_read_v140()
+        self._power_task_v140 = None
+        self._power_proc_v140 = None
         self.ssl_context = _make_ssl_context()
         self.settings: JsonSettings | None = None
         self.runtime_dir = Path(decky.DECKY_PLUGIN_RUNTIME_DIR)
@@ -401,6 +410,9 @@ class Plugin:
         self._idle_messages_cached = None
         self._idle_messages_stat = None
         self.auth_path = self.settings_dir / "plex-auth.json"
+        self.jellyfin_auth_path = self.settings_dir / "jellyfin-auth.json"
+        self._jellyfin_auth: dict[str, Any] = {}
+        self._media_provider = "plex"
         # Keep the loopback identity in persistent settings. Reusing the same
         # token/port across upgrades keeps already-rendered localhost artwork URLs
         # valid whenever the port can be rebound after a backend restart.
@@ -492,6 +504,78 @@ class Plugin:
         except Exception as error:
             self._record("cache-migrate-loopback", error)
 
+    @staticmethod
+    def _power_offset_read_v140():
+        try:
+            return time.clock_gettime(time.CLOCK_BOOTTIME) - time.monotonic()
+        except (AttributeError, OSError, ValueError):
+            return None
+
+    async def get_power_state(self):
+        # Monotonic is suspended, BOOTTIME continues; detect missed wake.
+        offset = self._power_offset_read_v140()
+        if offset is not None:
+            previous = self._power_offset_v140
+            self._power_offset_v140 = offset
+            if previous is not None and offset - previous > 2.0:
+                self._power_sleeping_v140 = False
+                if time.monotonic() - self._power_last_wake_v140 > 2:
+                    self._power_seq_v140 += 1
+                    with contextlib.suppress(Exception):
+                        await decky.emit('resonadeck_power_v140', {
+                            'seq': self._power_seq_v140, 'sleeping': False,
+                            'monitoring': self._power_monitoring_v140})
+                self._power_last_wake_v140 = time.monotonic()
+        return {'seq': self._power_seq_v140,
+                'sleeping': self._power_sleeping_v140,
+                'monitoring': self._power_monitoring_v140}
+
+    async def _monitor_power_v140(self):
+        binary = shutil.which('dbus-monitor')
+        if not binary:
+            logger.warning('ResonaDeck power monitor unavailable, using suspend-clock fallback')
+            return
+        while True:
+            proc = None
+            try:
+                proc = await asyncio.create_subprocess_exec(
+                    binary, '--system',
+                    "type='signal',interface='org.freedesktop.login1.Manager',member='PrepareForSleep'",
+                    stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.DEVNULL)
+                self._power_proc_v140 = proc
+                self._power_monitoring_v140 = True
+                awaiting = False
+                while True:
+                    line = await proc.stdout.readline()
+                    if not line:
+                        break
+                    value = line.decode('utf-8', 'replace').strip()
+                    if value.startswith('signal '):
+                        awaiting = 'member=PrepareForSleep' in value
+                    elif awaiting and value.startswith('boolean '):
+                        awaiting = False
+                        sleeping = value.split()[-1] == 'true'
+                        self._power_sleeping_v140 = sleeping
+                        self._power_seq_v140 += 1
+                        if not sleeping:
+                            self._power_last_wake_v140 = time.monotonic()
+                        with contextlib.suppress(Exception):
+                            await decky.emit('resonadeck_power_v140', {
+                                'seq': self._power_seq_v140,
+                                'sleeping': sleeping, 'monitoring': True})
+            except asyncio.CancelledError:
+                raise
+            except Exception as exc:
+                logger.warning('ResonaDeck power monitor retry: %s', exc)
+            finally:
+                self._power_monitoring_v140 = False
+                self._power_proc_v140 = None
+                if proc and proc.returncode is None:
+                    with contextlib.suppress(Exception):
+                        proc.terminate()
+                        await asyncio.wait_for(proc.wait(), timeout=2)
+            await asyncio.sleep(5)
+
     async def _main(self):
         logger.info("Starting ResonaDeck %s", PLUGIN_VERSION)
         # Critical 0.1.2 rule: _main must return quickly. Decky does not need to
@@ -527,6 +611,8 @@ class Plugin:
             self._session = None
             self._record("startup-http", error)
         self._startup_task = asyncio.create_task(self._finish_startup())
+        if sys.platform.startswith('linux'):
+            self._power_task_v140 = asyncio.create_task(self._monitor_power_v140())
         logger.info("ResonaDeck RPC backend registered; background startup scheduled")
 
     async def _finish_startup(self):
@@ -536,7 +622,8 @@ class Plugin:
             except Exception as error:
                 self._record("startup-loopback", error)
             try:
-                await asyncio.wait_for(self._refresh_jwt_if_needed(), timeout=6.0)
+                if self._media_provider == 'plex':
+                    await asyncio.wait_for(self._refresh_jwt_if_needed(), timeout=6.0)
             except Exception as error:
                 self._record("startup-jwt", error)
             try:
@@ -563,6 +650,11 @@ class Plugin:
         }
 
     async def _unload(self):
+        if self._power_task_v140:
+            self._power_task_v140.cancel()
+            with contextlib.suppress(asyncio.CancelledError):
+                await self._power_task_v140
+            self._power_task_v140 = None
         if self._startup_task and not self._startup_task.done():
             self._startup_task.cancel()
             with contextlib.suppress(asyncio.CancelledError, Exception):
@@ -608,6 +700,9 @@ class Plugin:
             text = text.replace(self._active_user_token, "<redacted-user-token>")
         if self._server.access_token:
             text = text.replace(self._server.access_token, "<redacted-server-token>")
+        jf_token = str(self._jellyfin_auth.get('token') or '')
+        if jf_token:
+            text = text.replace(jf_token, "<redacted-jellyfin-token>")
         if self._loop_token:
             text = text.replace(self._loop_token, "<redacted-loop-token>")
         return text
@@ -669,6 +764,11 @@ class Plugin:
             raw = {}
         self._account_token = str(raw.get("account_token") or "")
         self._active_user_token = str(raw.get("active_user_token") or self._account_token)
+        self._media_provider = "jellyfin" if self._settings_get("media_provider") == "jellyfin" else "plex"
+        try:
+            self._jellyfin_auth = json.loads(self.jellyfin_auth_path.read_text("utf-8"))
+        except (ValueError, OSError):
+            self._jellyfin_auth = {}
         self._auth_pending = dict(raw.get("pending") or {})
         self._last_server_connection = dict(raw.get("server_connection") or {})
 
@@ -776,6 +876,17 @@ class Plugin:
     # HTTP helpers / Plex headers
     # ------------------------------------------------------------------
     def _plex_headers(self, token: str = "", json_accept: bool = True) -> dict[str, str]:
+        if self._media_provider == "jellyfin":
+            # Jellyfin 12 disables legacy authentication by default. This is the
+            # supported current MediaBrowser authorization style, not API keys
+            # placed in stream URLs or user-facing JavaScript.
+            identity = str(self._client_id or "resonadeck").replace('"', '')
+            auth = f'MediaBrowser Client="ResonaDeck", Device="Steam Deck", DeviceId="{identity}", Version="{PLUGIN_VERSION}"'
+            headers = {"Authorization": auth, "Accept": "application/json" if json_accept else "*/*"}
+            if token:
+                safe = urllib.parse.quote(str(token), safe='')
+                headers["Authorization"] += f', Token="{safe}"'
+            return headers
         h = {
             "X-Plex-Product": PRODUCT,
             "X-Plex-Version": str(PLUGIN_VERSION),
@@ -937,6 +1048,8 @@ class Plugin:
             return {"success": False, "pending": True, "message": self._sanitize(str(error))}
 
     async def sign_out(self):
+        if self._media_provider == 'jellyfin':
+            return await self.disconnect_jellyfin()
         self._account_token = ""
         self._active_user_token = ""
         self._auth_pending = {}
@@ -949,7 +1062,19 @@ class Plugin:
         return {"success": True}
 
     async def get_auth_state(self):
+        if self._media_provider == "jellyfin":
+            info = self._jellyfin_auth
+            user = {"id": str(info.get("userId") or ""), "uuid": str(info.get("userId") or ""),
+                    "title": str(info.get("username") or "Jellyfin User")}
+            return {"authenticated": bool(info.get("token") and info.get("userId")),
+                    "pending": False, "authMode": "jellyfin", "clientId": self._client_id,
+                    "activeUser": user, "server": self._server_public(),
+                    "mediaProvider": "jellyfin", "plexConfigured": bool(self._account_token),
+                    "jellyfinConfigured": bool(info.get("token")), "jellyfinUrl": str(info.get("url") or ""), "serverRestoring": not self._startup_complete,
+                    "serverRestoreState": self._restore_state}
         return {
+            "mediaProvider": "plex", "plexConfigured": bool(self._account_token),
+            "jellyfinConfigured": bool(self._jellyfin_auth.get("token")),
             "authenticated": bool(self._account_token),
             "pending": bool(self._auth_pending),
             "authMode": "jwt" if self._account_token.count(".") == 2 else ("legacy" if self._account_token else "none"),
@@ -959,6 +1084,118 @@ class Plugin:
             "serverRestoring": bool(self._active_user_token and not self._startup_complete and not self._server.base_url),
             "serverRestoreState": self._restore_state,
         }
+
+    # ------------------------------------------------------------------
+    # Dual media provider accounts (Plex remains in plex-auth.json)
+    # ------------------------------------------------------------------
+    async def select_media_provider(self, provider: str):
+        if provider not in ('plex','jellyfin'):
+            return {"success":False,"message":"Unsupported media provider"}
+        # Cancel active library hydration before changing the provider identity.
+        pending = list(self._sync_tasks.values()) + list(self._art_prefetch_tasks.values())
+        if self._art_hydration_task: pending.append(self._art_hydration_task)
+        for task in pending:
+            if task and not task.done(): task.cancel()
+        if pending: await asyncio.gather(*pending, return_exceptions=True)
+        self._sync_tasks.clear(); self._art_prefetch_tasks.clear()
+        self._art_hydration_task = None
+        self._art_registry.clear()
+        self._art_registry_revision += 1
+        self._media_provider = provider
+        self._settings_set('media_provider', provider)
+        self._server = ServerState()
+        self._media_source_cache.clear()
+        self._proxy_sources.clear()
+        self._art_sources.clear()
+        self._art_identity_cache.clear()
+        self._art_candidate_cache.clear()
+        try:
+            async with self._server_restore_lock:
+                connected = await self._restore_server()
+            return {"success":True,"connected":bool(connected),"auth":await self.get_auth_state()}
+        except Exception as exc:
+            self._record('provider-switch',exc)
+            return {"success":True,"connected":False,"auth":await self.get_auth_state()}
+
+    async def connect_jellyfin(self, url: str, username: str, password: str):
+        """Use a password once for authentication; persist only Jellyfin's token."""
+        base = str(url or '').strip().rstrip('/')
+        parsed = urllib.parse.urlsplit(base)
+        if parsed.scheme not in ('http','https') or not parsed.netloc or parsed.username or parsed.password or parsed.query or parsed.fragment:
+            return {"success":False,"message":"Enter a valid Jellyfin URL, such as http://192.168.1.5:8096"}
+        if not username.strip():
+            return {"success":False,"message":"Enter your Jellyfin username"}
+        if not self._session:
+            return {"success":False,"message":"ResonaDeck network backend is starting"}
+        try:
+            # Explicit login on the selected user-provided server. The device
+            # authorization header is not a third-party Plex cloud request.
+            auth = f'MediaBrowser Client="ResonaDeck", Device="Steam Deck", DeviceId="{self._client_id}", Version="{PLUGIN_VERSION}"'
+            async with self._session.post(base+'/Users/AuthenticateByName',
+                    json={"Username":str(username),"Pw":str(password)},
+                    headers={"Authorization":auth, "Content-Type":"application/json"},
+                    ssl=self.ssl_context, timeout=aiohttp.ClientTimeout(total=10)) as r:
+                if r.status >= 400:
+                    return {"success":False,"message":f"Jellyfin refused sign-in (HTTP {r.status}). Check username and password."}
+                result = await r.json()
+            token = str(result.get('AccessToken') or '')
+            user = result.get('User') or {}
+            user_id = str(user.get('Id') or '')
+            if not token or not user_id:
+                return {"success":False,"message":"Jellyfin did not return a user and access token"}
+            # Verify token against the server before storing it.
+            old_provider = self._media_provider
+            self._media_provider = 'jellyfin'
+            self._server = ServerState(base_url=base, access_token=token)
+            try:
+                info = await self._json('GET',base+'/System/Info/Public',token=token)
+            except Exception:
+                self._media_provider = old_provider
+                self._server = ServerState()
+                raise
+            self._jellyfin_auth = {'url':base,'token':token,'userId':user_id,
+                                  'username':str(user.get('Name') or username),
+                                  'serverId':str(info.get('Id') or base),
+                                  'serverName':str(info.get('ServerName') or 'Jellyfin')}
+            _safe_write(self.jellyfin_auth_path,self._jellyfin_auth)
+            self._art_registry.clear();self._art_identity_cache.clear();self._art_candidate_cache.clear()
+            self._media_source_cache.clear();self._art_sources.clear()
+            self._settings_set('media_provider','jellyfin')
+            self._server = ServerState()
+            connected = await self._restore_jellyfin()
+            return {'success':bool(connected),'auth':await self.get_auth_state(),
+                    'message':'Connected to Jellyfin' if connected else 'Saved Jellyfin login, but server cannot be reached'}
+        except Exception as exc:
+            self._record('jellyfin-login',exc)
+            return {'success':False,'message':self._sanitize(str(exc))}
+
+    async def _restore_jellyfin(self):
+        credentials = self._jellyfin_auth
+        base, token = str(credentials.get('url') or ''), str(credentials.get('token') or '')
+        if not (base and token and credentials.get('userId')):
+            self._server = ServerState(); self._restore_state='signed-out'; return False
+        try:
+            info = await self._json('GET',base.rstrip('/')+'/System/Info/Public',token=token)
+            user = await self._json('GET',base.rstrip('/')+'/Users/Me',token=token)
+            if str(user.get('Id') or '') != str(credentials.get('userId')):
+                raise RuntimeError('Jellyfin saved user token is no longer valid')
+            self._server = ServerState(machine_id='jellyfin:' + str(info.get('Id') or credentials.get('serverId') or base),
+                name=str(info.get('ServerName') or credentials.get('serverName') or 'Jellyfin'),
+                base_url=base.rstrip('/'),access_token=token,source='jellyfin',
+                local=urllib.parse.urlsplit(base).hostname in ('localhost','127.0.0.1') or
+                      str(urllib.parse.urlsplit(base).hostname or '').startswith(('192.168.','10.','172.')),
+                secure=base.startswith('https'))
+            self._restore_state='connected'
+            return True
+        except Exception as exc:
+            self._server = ServerState(); self._restore_state='offline'
+            self._restore_last_error=self._sanitize(str(exc)); return False
+
+    async def disconnect_jellyfin(self):
+        self._jellyfin_auth = {}
+        self.jellyfin_auth_path.unlink(missing_ok=True)
+        if self._media_provider == 'jellyfin': self._server=ServerState()
+        return {'success':True}
 
     # ------------------------------------------------------------------
     # Plex Home users
@@ -1089,6 +1326,18 @@ class Plugin:
             sock.close()
         return list(found.values())
 
+    async def discover_jellyfin_servers(self):
+        """Find Jellyfin LAN servers without credentials or cloud services."""
+        try:
+            servers = await asyncio.to_thread(discover_jellyfin_on_lan)
+            return {"success": True, "servers": servers,
+                    "message": "Found Jellyfin servers" if servers else
+                    "No Jellyfin servers answered. Check that both devices are on the same network and UDP 7359 is allowed."}
+        except Exception as error:
+            self._record("jellyfin-discovery", error)
+            return {"success": False, "servers": [],
+                    "message": "Automatic discovery is unavailable on this network. You can enter the server address manually."}
+
     async def discover_servers(self):
         resources: list[dict[str, Any]] = []
         if self._active_user_token:
@@ -1166,6 +1415,8 @@ class Plugin:
         return True
 
     async def _restore_server(self, force: bool = False):
+        if self._media_provider == "jellyfin":
+            return await self._restore_jellyfin()
         if not self._active_user_token:
             self._restore_state = "signed-out"
             return False
@@ -1264,7 +1515,7 @@ class Plugin:
 
     def _server_public(self) -> dict[str, Any]:
         s = self._server
-        return {"machineId": s.machine_id, "name": s.name, "url": s.base_url, "source": s.source,
+        return {"provider": self._media_provider, "machineId": s.machine_id, "name": s.name, "url": s.base_url, "source": s.source,
                 "local": s.local, "relay": s.relay, "secure": s.secure, "latencyMs": s.latency_ms,
                 "connected": bool(s.base_url and s.access_token), "restoreState": self._restore_state}
 
@@ -1272,6 +1523,12 @@ class Plugin:
     # Library / metadata helpers
     # ------------------------------------------------------------------
     async def _pms_xml(self, path: str, *, params: dict[str, Any] | None = None) -> _PlexElement:
+        if self._media_provider == "jellyfin":
+            if not self._server.base_url:
+                async with self._server_restore_lock:
+                    if not self._server.base_url and not await self._restore_jellyfin():
+                        raise RuntimeError("Jellyfin server is offline. Check its address and connection.")
+            return await JellyfinBridge(self, _PlexElement).plex_xml(path, params)
         if not self._server.base_url or not self._server.access_token:
             async with self._server_restore_lock:
                 if not self._server.base_url or not self._server.access_token:
@@ -1330,7 +1587,15 @@ class Plugin:
                         # Plex exposes many spoken/ambient libraries through the same
                         # music-style hierarchy. Keep them playable without pretending
                         # they are albums or books. The user can always override this.
-                        lib["suggestedRole"] = "other"
+                        lib["suggestedRole"] = "music" if self._media_provider == "jellyfin" else "other"
+                if self._media_provider == "jellyfin" and lib["role"] == "unassigned":
+                    # Jellyfin has explicit audio-only views; remove the Plex
+                    # manual role-setup chore on first connection.
+                    lib["role"] = lib.get("suggestedRole", "music")
+                    if self._db and self._server.machine_id:
+                        self._db.execute("INSERT OR REPLACE INTO library_roles(server_id,section_key,title,role,updated_at) VALUES(?,?,?,?,?)",
+                                         (self._server.machine_id, lib["key"], lib["title"], lib["role"], time.time()))
+                        self._db.commit()
             return {"success": True, "libraries": libraries}
         except Exception as error:
             self._record("libraries", error)
@@ -2477,6 +2742,17 @@ class Plugin:
             return {"success": False, "tracks": [], "message": self._sanitize(str(error))}
 
     async def get_playlists(self):
+        if self._media_provider == "jellyfin":
+            try:
+                uid = str(self._jellyfin_auth.get('userId') or '')
+                result = await JellyfinBridge(self,_PlexElement).get('Items', {'UserId':uid,'IncludeItemTypes':'Playlist','Recursive':'true','Limit':200})
+                return {'success':True,'playlists':[{'ratingKey':str(x.get('Id') or ''), 'title':str(x.get('Name') or 'Playlist'),
+                      'thumb':'/Items/'+urllib.parse.quote(str(x.get('Id') or ''),safe='')+'/Images/Primary' if (x.get('ImageTags') or {}).get('Primary') else '',
+                      'leafCount':int(x.get('ChildCount') or 0),'duration':int(x.get('RunTimeTicks') or 0)/10000000}
+                      for x in result.get('Items',[])]}
+            except Exception as error:
+                self._record('jellyfin-playlists', error)
+                return {'success':False,'playlists':[],'message':self._sanitize(str(error))}
         try:
             root = await self._pms_xml("/playlists", params={"playlistType": "audio", "X-Plex-Container-Size": 200})
             out = []
@@ -2491,6 +2767,15 @@ class Plugin:
             return {"success": False, "playlists": [], "message": self._sanitize(str(error))}
 
     async def get_playlist_items(self, rating_key: str):
+        if self._media_provider == "jellyfin":
+            try:
+                data = await JellyfinBridge(self,_PlexElement).get('Playlists/'+urllib.parse.quote(str(rating_key),safe='')+'/Items',
+                          {'UserId':str(self._jellyfin_auth.get('userId') or ''),'Limit':2000})
+                from jellyfin_provider import to_plex
+                return {'success':True,'tracks':[self._track(to_plex(x,_PlexElement)) for x in data.get('Items',[]) if x.get('Type')=='Audio']}
+            except Exception as error:
+                self._record('jellyfin-playlist-items',error)
+                return {'success':False,'tracks':[],'message':self._sanitize(str(error))}
         try:
             root = await self._pms_xml(f"/playlists/{urllib.parse.quote(str(rating_key))}/items", params={"X-Plex-Container-Size": 2000})
             return {"success": True, "tracks": [self._track(n) for n in root.findall(".//Track")]}
@@ -2781,6 +3066,33 @@ class Plugin:
         return last_url, last_session, 100, False, False, last_note
 
     async def get_stream_url(self, rating_key: str, capabilities: dict[str, Any] | None = None, force_transcode: bool = False, offset_seconds: float = 0.0, kind: str = ""):
+        if self._media_provider == "jellyfin":
+            try:
+                source = await self._media_source(rating_key, refresh=True)
+                direct_ok, reason = self._browser_can_direct_play(source, capabilities)
+                chosen_direct = bool(direct_ok and not force_transcode)
+                direct = self._register_proxy("media", source["url"], source["token"], allow_range=True)
+                transcode_url = (self._server.base_url.rstrip('/') + '/Audio/' +
+                                 urllib.parse.quote(str(rating_key), safe='') + '/universal?' +
+                                 urllib.parse.urlencode({"UserId": str(self._jellyfin_auth.get('userId') or ''),
+                                    "DeviceId": self._client_id, "Container": "mp3", "AudioCodec": "mp3",
+                                    "MaxStreamingBitrate": 320000}))
+                recovery = self._register_proxy("media", transcode_url, source["token"], "audio/mpeg", allow_range=False)
+                return {"success":True,"url":direct if chosen_direct else recovery,
+                        "fallbackUrl":recovery if chosen_direct else (direct if direct_ok else ""),
+                        "fallbackDirectPlay":not chosen_direct and direct_ok,
+                        "fallbackSelected":"transcode" if chosen_direct else "direct",
+                        "directPlay":chosen_direct, "transcoded":not chosen_direct,
+                        "selected":"direct" if chosen_direct else "transcode",
+                        "decisionReason":reason if chosen_direct else "Jellyfin MP3 compatible stream",
+                        "audioBoostPercent":100,"normalizeLoudness":False,"transcodeDecisionReady":False,
+                        "transcodeDecisionNote":"Jellyfin audio stream", "outputMime":"" if chosen_direct else "audio/mpeg",
+                        "fallbackCodec":"mp3", "fallbackBitrate":320,
+                        "offsetSeconds":0, "container":source.get('container',''),"codec":source.get('codec',''),
+                        "bitrate":source.get('bitrate',0),"size":source.get('size',0)}
+            except Exception as exc:
+                self._record('jellyfin-stream',exc)
+                return {"success":False,"message":self._sanitize(str(exc))}
         """Return a resilient transport plan.
 
         0.8.3 restores the hardware-proven rule: if Steam Chromium can Direct
@@ -2897,6 +3209,8 @@ class Plugin:
         this as the primary card/detail source and keeps the original only as a
         fallback.
         """
+        if self._media_provider == "jellyfin":
+            return self._art_source_url(path, mode)
         base = self._server.base_url.rstrip("/")
         raw = str(path or "")
         if not base or not raw:
@@ -3493,6 +3807,24 @@ class Plugin:
         return sorted(order, key=lambda x: (-counts.get(x, 0), order.index(x)))
 
     async def _resolve_art_candidates(self, path: str = "", rating_key: str = "", role: str = "", repair: bool = False) -> list[str]:
+        if self._media_provider == "jellyfin":
+            supplied = str(path or '').strip()
+            candidates = []
+            if supplied.startswith('/Items/') and '/Images/' in supplied:
+                candidates.append(supplied)
+            if rating_key:
+                try:
+                    meta = await self.get_metadata(rating_key)
+                    row = meta.get('item') or {}
+                    for candidate in (row.get('selfThumb'), row.get('parentThumb'), row.get('thumb')):
+                        if candidate and candidate.startswith('/Items/') and candidate not in candidates:
+                            candidates.append(candidate)
+                except Exception:
+                    pass
+            # An untagged endpoint is a last fallback only, not an image claim.
+            if rating_key and not candidates:
+                candidates.append('/Items/' + urllib.parse.quote(str(rating_key), safe='') + '/Images/Primary')
+            return candidates
         supplied = str(path or "").strip()
         rating_key = str(rating_key or "").strip()
         role = str(role or "").lower()
@@ -4109,6 +4441,8 @@ class Plugin:
     # Audiobooks / chapters / progress
     # ------------------------------------------------------------------
     def _user_key(self) -> str:
+        if self._media_provider == 'jellyfin':
+            return str(self._jellyfin_auth.get('userId') or 'jellyfin-unknown')
         u = self._settings_get("active_home_user", {}) or {}
         return str(u.get("id") or u.get("uuid") or u.get("title") or "default")
 
@@ -4735,6 +5069,45 @@ class Plugin:
         digest = hashlib.sha256(identity.encode("utf-8")).hexdigest()[:24]
         return self.settings_dir / f"discovery-{digest}.json"
 
+    # 1.4.1: Small globally persistent Surprise Me controls. They survive
+    # Decky restart and Plex account reconfiguration, and cannot be lost when
+    # the larger per-server discovery history is replaced or written later.
+    def _discovery_choices_path_v141(self) -> Path:
+        return self.settings_dir / "discovery-ui-choices.json"
+
+    def _discovery_choices_v141(self) -> dict:
+        try:
+            raw = json.loads(self._discovery_choices_path_v141().read_text(encoding="utf-8"))
+            if not isinstance(raw, dict):
+                return {}
+        except (ValueError, OSError):
+            return {}
+        result = {}
+        if str(raw.get("sessionLength")) in ("10", "20", "40", "30m", "60m", "120m", "endless"):
+            result["sessionLength"] = str(raw["sessionLength"])
+        if str(raw.get("crossfade")) in ("0", "3", "5", "8", "10"):
+            result["crossfade"] = int(raw["crossfade"])
+        return result
+
+    async def save_discovery_choice(self, key: str, value: Any):
+        key = str(key)
+        allowed = {
+            "sessionLength": ("10", "20", "40", "30m", "60m", "120m", "endless"),
+            "crossfade": ("0", "3", "5", "8", "10"),
+        }
+        if key not in allowed or str(value) not in allowed[key]:
+            return {"success": False, "message": "Unsupported Surprise Me setting"}
+        data = self._discovery_choices_v141()
+        data[key] = int(value) if key == "crossfade" else str(value)
+        try:
+            _safe_write(self._discovery_choices_path_v141(), data)
+            reread = self._discovery_choices_v141()
+            if reread.get(key) != data[key]:
+                return {"success": False, "message": "Preference read-back did not match"}
+            return {"success": True, "key": key, "value": data[key]}
+        except OSError as error:
+            return {"success": False, "message": str(error)}
+
     async def get_discovery_state(self):
         path = self._discovery_file_v11()
         try:
@@ -4743,8 +5116,12 @@ class Plugin:
             value = {}
         if not isinstance(value, dict):
             value = {}
+        # Dedicated controls override any stale values in a previous full-state
+        # save. On first upgrade, preserve already-stored user preferences.
+        persisted = value.get("preferences", {}) if isinstance(value.get("preferences"), dict) else {}
+        persisted = {**persisted, **self._discovery_choices_v141()}
         return {"success": True, "state": {
-            "preferences": value.get("preferences", {}) if isinstance(value.get("preferences"), dict) else {},
+            "preferences": persisted,
             "favorites": value.get("favorites", []) if isinstance(value.get("favorites"), list) else [],
             "sessions": value.get("sessions", []) if isinstance(value.get("sessions"), list) else [],
             "playlists": value.get("playlists", []) if isinstance(value.get("playlists"), list) else [],
@@ -4771,6 +5148,7 @@ class Plugin:
             "crossfade": int(prefs.get("crossfade", 0)) if str(prefs.get("crossfade", 0)) in ("0", "3", "5", "8", "10") else 0,
             "sleepFade": bool(prefs.get("sleepFade", False)),
         }
+        safe_prefs.update(self._discovery_choices_v141())
         def collection(key, cap):
             result = []
             for row in value.get(key, [])[:cap] if isinstance(value.get(key), list) else []:
@@ -4815,6 +5193,8 @@ class Plugin:
             "artCacheMaxMb": 384,
             "catalogPageSize": 36,
             "preferDirectPlay": True,
+            "sleepWakeAutoResume": True,
+            "sleepWakeDelaySeconds": 12,
         }
         saved = self._settings_get("preferences", {}) or {}
         # Only expose current standalone preferences. This intentionally drops
@@ -4825,6 +5205,11 @@ class Plugin:
         prefs = await self.get_preferences()
         if key not in prefs:
             return {"success": False, "message": "Unknown preference"}
+        if key == 'sleepWakeAutoResume':
+            value = bool(value)
+        if key == 'sleepWakeDelaySeconds':
+            try: value = max(5, min(60, int(value)))
+            except (TypeError, ValueError): value = 12
         prefs[key] = value
         self._settings_set("preferences", prefs)
         return {"success": True, "preferences": prefs}

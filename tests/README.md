@@ -1,80 +1,32 @@
-# ResonaDeck focused tests
+# ResonaDeck regression tests
 
-## 1.4.1 beta candidate: current test scope
+Legacy focused tests for artwork, Quick Access controls, queues, Surprise Me, crossfade and metadata remain in this directory. **Some historical tests intentionally pin an older release** and are not automatically valid for 1.4.1.
 
-- **Steam Deck hardware verified:** ResonaDeck resumes an active Plex music session after sleep/wake; Keep Playing selection survives a full restart. The earlier quick GTM visualizer control and crossfade were also accepted during private iterations.
-- **Not verified:** automatic Plex resume after a full system reboot, exact wake timing across all SteamOS revisions, a continuous 130-track physical marathon, and every Jellyfin server type.
-- **Automated regressions during packaging:** Keep Playing beyond 130 tracks with simulated discovery failures, preferences save/restore including Crossfade, on-demand queue refill, sleep/watchdog recovery, Web Audio fallback and GTM 4.1.2 handoff.
-- **Check official asset:** `python3 tests/verify-beta-1.4.1.py ResonaDeck-1.4.1.zip` (after maintainer attaches the beta). [Hardware validation](../FEATURE_STATUS_1.4.1.md) · [Release notes](../RELEASE_NOTES_1.4.1.md).
-- **Source caveat:** archived regression files under this repository are still primarily from published 1.2.1; the complete 1.4.1 development handoff is separate and the source needs synchronization.
+## New 1.4.1 tests
+The following 1.4.1 tests were run successfully with the final source, after replacing developer-specific absolute paths with repository-relative paths:
 
-Historical test guidance follows.
+| Test | Coverage |
+| --- | --- |
+| `test_resonadeck_141_persistence.py` | Choice migration, durable read-back, late writes, invalid values and reconnect. |
+| `test_resonadeck_141_ui.cjs` | Keep Playing immediate queue refill, active Crossfade controls, async settings load. |
+| `test_resonadeck_141_queue.cjs` | Rolling queue continuity and refill boundary logic. |
+| `test_resonadeck_141_crossfade.cjs` | Prebuffered eight-second crossfade and interruption safeguards. |
+| `test_resonadeck_141_sleep.cjs` | Sleep/wake, delayed resume and manual Pause precedence. |
+| `test_resonadeck_141_power.py` | Suspend-aware Linux clock fallback. |
+| `test_resonadeck_141_pcm.cjs` | Web Audio fallback and captured frequency telemetry. |
+| `test_resonadeck_141_gtm_bridge.cjs` | Real GTM 4.1.2 bridge handshake, immediate visualizer OFF/ON; requires both repository trees. |
 
-
-These are deterministic development checks. They do not replace Steam Deck hardware testing.
-
-- `verify-artwork-queue.cjs` — frontend artwork queue, retries, revision/cursor behavior and cache identity.
-- `verify-artwork-worker.py` — backend hydration generation/status/cache-reuse behavior.
-- `verify-music-artwork-activation.py` — 0.9.4 real Music candidate ordering and migration fixtures.
-- `verify-targeted-qam.cjs` — controller spatial routing, Decky top-boundary handoff and targeted QAM regressions.
-- `verify-mini-player.cjs` — mini-player component/layout checks. Set `RD_SKIP_BROWSER=1` when Playwright is unavailable.
-
-## 0.9.7 targeted checks
-
-- `verify-fallback-artwork-097.py` — terminal Plex 404 fallback classification, Music source-folder ghost detection, per-record revision preservation, and persisted fallback restore.
-- `verify-fallback-assets-097.py` — validates the locked Music/Audiobook/Podcast fallback PNGs and 512px WebP runtime copies.
-- `verify-fallback-ui-097.cjs` — verifies the approved runtime WebPs are embedded byte-for-byte, fallback state renders, mounted artwork polling is kicked by backend revision changes, retry query strings never corrupt `data:` assets, and `src/dist` stay identical.
-
-## 0.9.12 targeted checks
-- `verify-music-queue-coverflow-012.cjs`: Repeat Off/All/One, Play Next/Add Queue, persisted mode hooks, Up Next drawer/navigation hooks, persistent Shuffle glow, and directional two-cover transitions.
-- Existing 0.9.6–0.9.11 regression tests remain required before packaging.
-
-## 0.9.13 targeted checks
-- `verify-qam-motion-active-013.cjs`: masked spatial cover handoff, coordinated copy/visualizer motion, living amber Shuffle radiance, Repeat active styling, reduced-motion protection, and no animation on mode toggles.
-
-
-## 0.9.14 targeted checks
-- `verify-qam-motion-active-013.cjs`: widened Cover Flow motion, theme-aware Shuffle tracer, reduced-motion protection, and no animation on mode toggles.
-
-
-## 0.9.15 targeted checks
-- `verify-shuffle-border-tracer-015.cjs`: true rounded-rectangle SVG border path, themed head/mid/tail dash motion, no conic spinner, no breathing aura, reduced-motion behavior, and preservation of the 0.9.14 strong Cover Flow.
-
-
-## 0.9.16 targeted checks
-- `verify-cover-rest-position-016.cjs`: verifies viewport-inset compensation, corrected resting artwork anchor, preserved large Cover Flow travel, and preserved 0.9.15 border tracer.
-
-## 0.9.17 targeted checks
-- `verify-repeat-boundary-shuffle-label-017.cjs`: visible themed Shuffle label, explicit Repeat OFF/ALL/ONE labels, no-wrap Repeat Off, Repeat All boundary wrapping, Repeat One natural-only repeat, and native audio loop disabled.
-
-
-## 0.9.18 targeted checks
-- `verify-shuffle-contrast-label-018.cjs`: explicit OFF/ON labels, forced readable foreground, neutral active button surface, contrast-corrected theme accent tracer, and retained Repeat/Cover Flow/cover-position repairs.
-
-
-## 0.9.19 targeted checks
-- `verify-qam-idle-cursor-019.cjs`: QAM-only idle pointer suppression, pointer reveal/re-arm hooks, cleanup, and preservation of Shuffle/Repeat/Cover Flow repairs.
-
-
-## 0.9.20 targeted checks
-- `verify-hardware-truth-repair-020.cjs`: Decky-native Shuffle OFF/ON label path, separate border tracer overlay, document-level transparent idle cursor suppression, and preservation of Repeat/Cover Flow/cover position.
-
-
-## 0.9.21 targeted checks
-- `verify-shuffle-cursor-021.cjs`: confirms the failed 0.9.21 sibling-label/cursor-parking approach stays retired while locked player behavior remains.
-
-
-## 0.9.22 targeted checks
-- `verify-native-shuffle-cursor-022.cjs`: direct native Shuffle button text, CSS rounded-perimeter motion tracer with fallback, Steam browser-native idle cursor hiding, and retirement of failed 0.9.21 wrapper/parking paths.
-
-## 1.1.6 focused tests
-- `node tests/verify-crossfade-v116.cjs`: two-player timing and independent pulse tests.
-- `node tests/verify-next-peek-v116.cjs`: correct temporary album preview, no focus stealing.
-- `node tests/verify-surprise-continuity-v116.cjs`: queue progression and persistent discovery.
-These are synthetic tests, not proof of Steam Deck audio output. Older version-pinned tests in this directory may fail their version assertion on a newer build.
-
-## 1.2.1 Direct Updater compatibility checks
-
-- Run `python3 tests/verify-direct-updater-v121.py ResonaDeck-1.2.1-Stable.zip` to validate a complete download before publication.
-- Checks archive paths and CRC, the single `ResonaDeck/` folder, required files, matching `1.2.1` version identifiers, and the canonical GitHub repository association.
-- **Offline archive checks do not establish that an actual Decky Direct Updater installation succeeds on Steam Deck.**
+From repository root:
+```bash
+node --check dist/index.js
+python3 -m py_compile main.py resonadeck_backend.py jellyfin_provider.py jellyfin_discovery.py
+node tests/test_resonadeck_141_crossfade.cjs
+node tests/test_resonadeck_141_pcm.cjs
+node tests/test_resonadeck_141_queue.cjs
+node tests/test_resonadeck_141_ui.cjs
+node tests/test_resonadeck_141_sleep.cjs
+python3 tests/test_resonadeck_141_persistence.py
+python3 tests/test_resonadeck_141_power.py
+node tests/test_resonadeck_141_gtm_bridge.cjs ../Game-Theme-Music .
+```
+The bridge test assumes the GTM checkout is `../Game-Theme-Music` and may be supplied an explicit alternative path. Separate hardware acceptance is documented in [FEATURE_STATUS_1.4.1.md](../FEATURE_STATUS_1.4.1.md). Automated success does not guarantee every SteamOS update, codec or Jellyfin server combination.
