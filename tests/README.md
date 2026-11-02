@@ -1,5 +1,16 @@
 # ResonaDeck focused tests
 
+## 1.4.1 beta candidate: current test scope
+
+- **Steam Deck hardware verified:** ResonaDeck resumes an active Plex music session after sleep/wake; Keep Playing selection survives a full restart. The earlier quick GTM visualizer control and crossfade were also accepted during private iterations.
+- **Not verified:** automatic Plex resume after a full system reboot, exact wake timing across all SteamOS revisions, a continuous 130-track physical marathon, and every Jellyfin server type.
+- **Automated regressions during packaging:** Keep Playing beyond 130 tracks with simulated discovery failures, preferences save/restore including Crossfade, on-demand queue refill, sleep/watchdog recovery, Web Audio fallback and GTM 4.1.2 handoff.
+- **Check official asset:** `python3 tests/verify-beta-1.4.1.py ResonaDeck-1.4.1.zip` (after maintainer attaches the beta). [Hardware validation](../FEATURE_STATUS_1.4.1.md) · [Release notes](../RELEASE_NOTES_1.4.1.md).
+- **Source caveat:** archived regression files under this repository are still primarily from published 1.2.1; the complete 1.4.1 development handoff is separate and the source needs synchronization.
+
+Historical test guidance follows.
+
+
 These are deterministic development checks. They do not replace Steam Deck hardware testing.
 
 - `verify-artwork-queue.cjs` — frontend artwork queue, retries, revision/cursor behavior and cache identity.
