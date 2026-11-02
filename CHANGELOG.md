@@ -1,5 +1,15 @@
 ## ResonaDeck 1.2.1 STABLE | 2026-10-18
 
+## 1.4.1 | Beta candidate (2026-11-02)
+
+- Surprise Me Keep Playing and Crossfade preferences save immediately and persist through restart; switching Keep Playing ON during playback requests queue replenishment immediately.
+- Rolling Keep Playing queue avoids the old 55-track stopping boundary; protection for temporary discovery failures, preserving finite sessions.
+- Sleep/wake recovery resumes Plex from the active position after a configurable delay; maintainer confirmed physical Steam Deck sleep/wake and Keep Playing persistence after reboot. **Automatic Plex playback after full reboot is not claimed.**
+- Premium account/server picker; Quick Access GTM Visualizers ON/OFF below Open Full ResonaDeck; Web Audio telemetry and audio-focus cooperation with GTM 4.1.2; existing crossfade preserved.
+- Beta ZIP integrity manifest and standalone check added. **Tracked 1.2.1 source code has not yet been synced** to the 1.4.1 runtime. Beta release/asset publication remains with maintainer.
+- [Notes](RELEASE_NOTES_1.4.1.md) · [Validation](FEATURE_STATUS_1.4.1.md) · [ZIP checksum](RELEASE_MANIFEST_1.4.1.md).
+
+
 - Add canonical `ValentineBSAA/ResonaDeck` GitHub repository metadata to make Direct Updater source matching more reliable.
 - Preserve the single-folder Decky installation ZIP, stable release naming and synchronized `1.2.1` package/manifest/frontend/backend identity.
 - Document optional Direct Updater updates alongside manual ZIP installation. Add a focused offline archive verification test.
