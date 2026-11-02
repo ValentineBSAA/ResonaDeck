@@ -1,5 +1,7 @@
 # Source Code & Release Integrity
 
+**Beta preparation status (2026-11-02):** The maintainer has verified the packaged **ResonaDeck 1.4.1** on Steam Deck. [Release notes](RELEASE_NOTES_1.4.1.md), [hardware validation](FEATURE_STATUS_1.4.1.md), and [installer SHA-256](RELEASE_MANIFEST_1.4.1.md) refer to the 1.4.1 ZIP. **Important:** The repository's tracked compiled frontend and backend are still the published 1.2.1 source snapshot; the exact 1.4.1 runtime code has not yet been synchronized here. The GitHub-generated source ZIP is not the Decky installer. The maintainer will upload the named beta ZIP asset separately.
+
 **Current stable release:** [ResonaDeck 1.2.1](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.2.1). The published release's SHA-256 matches the package built for this maintenance update.
 
 ## Official download and checksum
