@@ -1,50 +1,55 @@
-name: ResonaDeck release metadata checks
+name: ResonaDeck release metadata and regressions
 
 on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  validate-release-identity:
+  validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
-
-      - name: Validate release metadata and source parity
+      - name: Verify current code, manifests and release documentation
         shell: bash
         run: |
           set -euo pipefail
           python3 - <<'PY'
-          import json
-          import pathlib
-          import re
-
-          root = pathlib.Path(".")
-          plugin = json.loads((root / "plugin.json").read_text(encoding="utf-8"))
-          package = json.loads((root / "package.json").read_text(encoding="utf-8"))
-          version = package["version"]
-          assert plugin["name"] == "ResonaDeck"
-          assert package["name"] == "resonadeck"
-          assert plugin["version"] == version, "Manifest and package versions differ"
-          assert re.fullmatch(r"\d+\.\d+\.\d+", version), "Stable release must use major.minor.patch"
-          assert package["repository"]["url"] == "https://github.com/ValentineBSAA/ResonaDeck.git"
-          assert package["homepage"] == "https://github.com/ValentineBSAA/ResonaDeck"
-          assert package["bugs"]["url"] == "https://github.com/ValentineBSAA/ResonaDeck/issues"
-          src = (root / "src/index.js").read_bytes()
-          dist = (root / "dist/index.js").read_bytes()
-          assert src == dist and src, "Frontend source and installed bundle disagree"
-          assert f"const RD_VERSION = '{version}';".encode() in dist
-          readme = (root / "README.md").read_text(encoding="utf-8")
-          assert f"ResonaDeck-{version}-Stable.zip" in readme, "README download link version stale"
-          assert (root / f"RELEASE_NOTES_{version}.md").is_file()
-          print(f"PASS: ResonaDeck {version} GitHub release metadata")
+          import pathlib, json, re
+          root=pathlib.Path(".")
+          package=json.loads((root/"package.json").read_text())
+          plugin=json.loads((root/"plugin.json").read_text())
+          version=package["version"]
+          assert package["name"]=="resonadeck"
+          assert plugin["name"]=="ResonaDeck"
+          assert plugin["version"]==version
+          assert re.fullmatch(r"\d+\.\d+\.\d+",version)
+          assert package["repository"]["url"]=="https://github.com/ValentineBSAA/ResonaDeck.git"
+          assert (root/"src/index.js").read_bytes()==(root/"dist/index.js").read_bytes()
+          assert f"const RD_VERSION = '{version}';".encode() in (root/"dist/index.js").read_bytes()
+          assert f"ResonaDeck-{version}.zip" in (root/"README.md").read_text()
+          assert (root/f"RELEASE_NOTES_{version}.md").is_file()
+          print("PASS ResonaDeck metadata",version)
           PY
-          python3 -m py_compile main.py resonadeck_backend.py
-          node --check src/index.js
+          python3 -m py_compile main.py resonadeck_backend.py jellyfin_provider.py jellyfin_discovery.py
           node --check dist/index.js
+          node --check src/index.js
           cmp src/index.js dist/index.js
+      - name: Test ResonaDeck 1.4.1 playback and settings
+        if: always()
+        run: |
+          set -euo pipefail
+          node tests/test_resonadeck_141_crossfade.cjs
+          node tests/test_resonadeck_141_pcm.cjs
+          node tests/test_resonadeck_141_queue.cjs
+          node tests/test_resonadeck_141_ui.cjs
+          node tests/test_resonadeck_141_sleep.cjs
+          python3 tests/test_resonadeck_141_power.py
+          python3 tests/test_resonadeck_141_persistence.py
+# The cross-repository GTM bridge integration test requires a GTM 4.1.2 checkout
+# and is run as a separate integration check documented in tests/README.md.

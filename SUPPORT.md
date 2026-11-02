@@ -1,60 +1,23 @@
-# Support & Troubleshooting
+# ResonaDeck support and troubleshooting
 
-## First-time setup and updates
+The creator-tested beta candidate is **ResonaDeck 1.4.1**. The maintainer will upload its full plugin ZIP to [GitHub Releases](https://github.com/ValentineBSAA/ResonaDeck/releases). [1.2.1 stable](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.2.1) remains the last published stable release until that happens.
 
-Install the official [1.2.1 Stable ZIP](https://github.com/ValentineBSAA/ResonaDeck/releases/download/1.2.1/ResonaDeck-1.2.1-Stable.zip) using **Decky Settings → General → Developer Mode**, then **Developer → Install Plugin from ZIP**.
+## Install/update
+Open Decky Loader's **Settings → General → Developer Mode**, then **Developer → Install Plugin from ZIP**. Choose the **named `ResonaDeck-1.4.1.zip` release asset** after it is published. GitHub's automatic Source code archives are not installers. Keep your existing saved settings.
 
-Alternatively, use the independent [Decky Direct Updater](https://deckyup.nukeador.com/) and search for **`ValentineBSAA/ResonaDeck`**. Confirm the official source when prompted. Older 1.2.0 installations may require a one-time source confirmation. Updates are never silently installed.
+Direct Updater is an optional independent Decky add-on; search for `ValentineBSAA/ResonaDeck`. The user has not separately verified the 1.4.1 upgrade through Direct Updater.
 
-Connect to a Plex Media Server that is reachable from the Deck and grant your account access to the audio libraries you want to browse.
+## Common fixes
+- **No libraries:** verify Plex account permissions, reachable server and chosen libraries. Jellyfin support is included but has not been exhaustively hardware-verified in this beta.
+- **Music starts slowly:** check server transcoding and network availability; remote libraries may need buffering.
+- **Keep Playing resets to 20 tracks:** update to 1.4.1, enable Keep Playing in Surprise Me settings, close/reopen, then restart. The creator confirmed that selection survived a full restart.
+- **Keep Playing queue ends:** 1.4.1's rolling queue replenishes before the former 55-track endpoint; enabling it during playback requests an immediate refill, with fallback for temporary discovery failures.
+- **Crossfade preference:** Surprise Me provides Off/3/5/8/10 seconds. Preference persistence is covered by offline regression tests; 8-second playback overlap was confirmed on Deck during development.
+- **After sleep the player stays silent:** Full ResonaDeck → Account/Profile → Settings → Sleep & Wake; enable resume and set delay (5–60 seconds, default 12). It only auto-resumes a track that was playing before sleep. **Automatic Plex playback after a complete Deck reboot is not required or verified.**
+- **GTM visualizer toggle:** below **Open Full ResonaDeck** in Quick Access. OFF immediately stops external GTM visualizer data while Plex continues to play; GTM 4.1.2 is the paired version.
+- **Decky gets stuck on “Downloading any external binaries”:** the slim 1.4.1 installer does not require an external binary download; restart a stuck Decky installer before retrying. Do not erase saved settings.
 
-## Common questions
+## Reporting issues
+Use [GitHub Issues](https://github.com/ValentineBSAA/ResonaDeck/issues) with your SteamOS/Decky versions, which player controls you used, expected vs actual behavior, and steps to reproduce. **Never upload Plex tokens, private server addresses, or account credentials.**
 
-### Nothing appears in my library
-Confirm Plex connectivity and select the appropriate Music / Audiobook / Podcast / Other library sections. Reopen the plugin if you've just changed your Plex library permissions.
-
-### Playback is slow or buffers
-Check Plex server status, your network connection, and whether the server is transcoding the chosen media. A slow server can delay first playback.
-
-### Does ResonaDeck support music crossfade?
-Yes. In Surprise Me settings, select Off, 3, 5, 8, or 10 seconds. Automatic eight-second crossfades were confirmed on the creator's Steam Deck. Different Plex formats and network conditions can affect buffering. The XFADE status shows whether the incoming stream is buffering, ready, fading, or unable to transition. Crossfade is a music feature and should not overlap audiobook/podcast speech.
-
-### How do I reopen or close Surprise Me settings?
-Focus the active album artwork or idle turntable and press X. Press X again to close the settings panel. The artwork and fallback cover remain selectable.
-
-### Where is Quick Menu search?
-It was removed from v1.0.0 after testing showed the embedded controller search was too awkward. Use **Full Manager → Search**.
-
-### How do I add a track to my queue?
-Highlight a supported music item and press **X**. Select **Add to Queue** or **Play Next**. **Left/Right** changes columns; **Up/Down** changes rows. Use **B** to back out.
-
-### Why are my colors different from the screenshots?
-ResonaDeck chooses player colors based on artwork, and can coexist with Steam/CSS Loader themes. Exact appearance depends on the current track and theme.
-
-### What if controller focus gets stuck?
-Try **B** to close a drawer/menu, then reopen the page. If the problem is repeatable, file an issue with the exact screen, button sequence, SteamOS/Decky versions, and whether a CSS Loader theme is active.
-
-### Direct Updater doesn't recognize ResonaDeck
-
-Check that the source is **`ValentineBSAA/ResonaDeck`**. Use **Find source** in Direct Updater to verify the correct repository. If it cannot offer a release, download the official manual ZIP from [GitHub Releases](https://github.com/ValentineBSAA/ResonaDeck/releases/latest).
-
-### Will my Plex settings survive the updater?
-
-The 1.2.1 maintenance package doesn't change saved-settings code. However, preservation through an actual Direct Updater-based Steam Deck upgrade hasn't been verified. Back up important settings before upgrading.
-
-## Reporting bugs
-
-Please use [GitHub Issues](https://github.com/ValentineBSAA/ResonaDeck/issues) and include:
-
-- ResonaDeck version (currently **1.2.1**) and SteamOS/Decky versions
-- Installation method (Direct Updater or manual ZIP), and whether this was an upgrade
-- Quick Menu or Full Manager screen name
-- Expected behavior and actual behavior
-- Button sequence to reproduce
-- Logs or screenshots if helpful, **with private server details and tokens removed**
-
-This is a community project without guaranteed support response times.
-
-## Security and privacy
-
-Do **not** post Plex authentication tokens, private server URLs, passwords, or local account credentials in public issues or screenshots. ResonaDeck does not host or sell your media.
+[Release notes](RELEASE_NOTES_1.4.1.md) · [Validation](FEATURE_STATUS_1.4.1.md) · [Source integrity](SOURCE.md)
