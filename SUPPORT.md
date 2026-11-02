@@ -1,9 +1,9 @@
 # ResonaDeck support and troubleshooting
 
-The creator-tested beta candidate is **ResonaDeck 1.4.1**. The maintainer will upload its full plugin ZIP to [GitHub Releases](https://github.com/ValentineBSAA/ResonaDeck/releases). [1.2.1 stable](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.2.1) remains the last published stable release until that happens.
+The current [creator-tested beta is **ResonaDeck 1.4.1**](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.4.1), with the full installer ZIP published and checksum-verified. [1.2.1](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.2.1) remains the previous stable release.
 
 ## Install/update
-Open Decky Loader's **Settings → General → Developer Mode**, then **Developer → Install Plugin from ZIP**. Choose the **named `ResonaDeck-1.4.1.zip` release asset** after it is published. GitHub's automatic Source code archives are not installers. Keep your existing saved settings.
+Open Decky Loader's **Settings → General → Developer Mode**, then **Developer → Install Plugin from ZIP**. Choose the published **[ResonaDeck-1.4.1.zip](https://github.com/ValentineBSAA/ResonaDeck/releases/download/1.4.1/ResonaDeck-1.4.1.zip)** release asset. GitHub's automatic Source code archives are not installers. Keep your existing saved settings.
 
 Direct Updater is an optional independent Decky add-on; search for `ValentineBSAA/ResonaDeck`. The user has not separately verified the 1.4.1 upgrade through Direct Updater.
 

@@ -17,4 +17,4 @@
 
 Exact SteamOS and Decky Loader builds were not recorded. No universal compatibility, precise wake timing or uninterrupted infinite-playback guarantee is claimed.
 
-**Release status:** 1.4.1 is prepared as a beta candidate; maintainer will upload the ZIP and publish the GitHub release separately.
+**Release status:** [Published 1.4.1 beta](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.4.1); uploaded ZIP digest matches the final tested package.

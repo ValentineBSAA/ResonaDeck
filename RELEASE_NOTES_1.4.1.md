@@ -1,6 +1,6 @@
 # ResonaDeck 1.4.1 | Beta release notes
 
-**Status:** Beta candidate, accepted on a physical Steam Deck. The GitHub beta release and ZIP asset will be published separately by the maintainer; **1.2.1 remains the last published stable release** until then.
+**Status:** [Published 1.4.1 beta](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.4.1), accepted on a physical Steam Deck. **1.2.1 remains the previous stable release.**
 
 ## What's new since 1.2.1
 
@@ -20,4 +20,4 @@ The maintainer confirmed that **ResonaDeck resumes Plex music after actual sleep
 
 Automated tests previously covered preference restart/restore, queue replenishment past track 130 including simulated lookup failures, manually paused sleep sessions, wake timers, eight-second crossfade, Web Audio output recovery and the GTM telemetry handshake. See [validation notes](FEATURE_STATUS_1.4.1.md).
 
-When the maintainer publishes the beta, install the **named `ResonaDeck-1.4.1.zip` release asset** through Decky Loader. GitHub's generated source archive is not the plugin installer. Report issues through GitHub Issues; suggestions do not guarantee implementation.
+Install the published **[ResonaDeck-1.4.1.zip](https://github.com/ValentineBSAA/ResonaDeck/releases/download/1.4.1/ResonaDeck-1.4.1.zip)** through Decky Loader. GitHub's generated source archive is not the plugin installer. Report issues through GitHub Issues; suggestions do not guarantee implementation.

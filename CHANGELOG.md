@@ -4,7 +4,7 @@
 - Rolling Keep Playing queue avoids the old 55-track stopping boundary; protection for temporary discovery failures, preserving finite sessions.
 - Sleep/wake recovery resumes Plex from the active position after a configurable delay; maintainer confirmed physical Steam Deck sleep/wake and Keep Playing persistence after reboot. **Automatic Plex playback after full reboot is not claimed.**
 - Premium account/server picker; Quick Access GTM Visualizers ON/OFF below Open Full ResonaDeck; Web Audio telemetry and audio-focus cooperation with GTM 4.1.2; existing crossfade preserved.
-- Beta ZIP integrity manifest and standalone check added. The 1.4.1 compiled frontend and Python runtime are synchronized to the tested ZIP. Beta release/asset publication remains with maintainer.
+- Beta ZIP integrity manifest and standalone check added. The 1.4.1 compiled frontend and Python runtime are synchronized to the tested ZIP. The checksum-matching 1.4.1 GitHub prerelease and ZIP are now published.
 - [Notes](RELEASE_NOTES_1.4.1.md) · [Validation](FEATURE_STATUS_1.4.1.md) · [ZIP checksum](RELEASE_MANIFEST_1.4.1.md).
 
 ## ResonaDeck 1.2.1 STABLE | 2026-10-18
