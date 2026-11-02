@@ -3,6 +3,9 @@
 # 🎧 ResonaDeck
 ### Your Plex audio library, right where you play.
 
+> **Upcoming beta candidate: ResonaDeck 1.4.1.** The maintainer has verified **Plex resumes after Steam Deck sleep/wake** and **Keep Playing remains selected after a full restart**. Its improved queue replenishment, saved Surprise Me/Crossfade preferences, opt-in GTM visualizer control, 12-second wake delay, and existing crossfade are detailed in [1.4.1 release notes](RELEASE_NOTES_1.4.1.md) and [hardware validation](FEATURE_STATUS_1.4.1.md). **Automatic Plex playback after a full restart is not claimed.** The beta ZIP/release will be uploaded and published separately by the maintainer. [1.2.1](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.2.1) remains the last published stable release.
+
+
 **Premium, controller-first Plex audio for Steam Deck.**  
 Music · Audiobooks · Podcasts · More Audio
 
