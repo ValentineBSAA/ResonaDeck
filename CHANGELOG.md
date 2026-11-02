@@ -1,5 +1,3 @@
-## ResonaDeck 1.2.1 STABLE | 2026-10-18
-
 ## 1.4.1 | Beta candidate (2026-11-02)
 
 - Surprise Me Keep Playing and Crossfade preferences save immediately and persist through restart; switching Keep Playing ON during playback requests queue replenishment immediately.
@@ -9,6 +7,7 @@
 - Beta ZIP integrity manifest and standalone check added. **Tracked 1.2.1 source code has not yet been synced** to the 1.4.1 runtime. Beta release/asset publication remains with maintainer.
 - [Notes](RELEASE_NOTES_1.4.1.md) · [Validation](FEATURE_STATUS_1.4.1.md) · [ZIP checksum](RELEASE_MANIFEST_1.4.1.md).
 
+## ResonaDeck 1.2.1 STABLE | 2026-10-18
 
 - Add canonical `ValentineBSAA/ResonaDeck` GitHub repository metadata to make Direct Updater source matching more reliable.
 - Preserve the single-folder Decky installation ZIP, stable release naming and synchronized `1.2.1` package/manifest/frontend/backend identity.
