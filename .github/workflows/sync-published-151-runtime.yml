@@ -1,0 +1,87 @@
+name: Sync published 1.5.1 runtime exactly
+on:
+  push:
+    branches:
+      - release-prep/1.5.1
+    paths:
+      - '.github/workflows/sync-published-151-runtime.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: published-runtime-1.5.1
+  cancel-in-progress: false
+jobs:
+  sync-published-release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Download and authenticate the public installer
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 4 --retry-delay 3 --output "$RUNNER_TEMP/ResonaDeck-1.5.1.zip" \
+            "https://github.com/ValentineBSAA/ResonaDeck/releases/download/1.5.1/ResonaDeck-1.5.1.zip"
+          echo "ab6b862a27ed6354fd7b4ad0a3d2e93934b22f18720c741d1bd7f06d090b4400  $RUNNER_TEMP/ResonaDeck-1.5.1.zip" | sha256sum --check
+          export INSTALLER="$RUNNER_TEMP/ResonaDeck-1.5.1.zip"
+          python3 - <<'PY'
+          import os, pathlib,zipfile,json
+          root=pathlib.Path('.')
+          install=pathlib.Path(os.environ['INSTALLER'])
+          expected_root='ResonaDeck/'
+          explicit=set(["main.py","dist/index.js","src/index.js","package.json","plugin.json","resonadeck_backend.py","jellyfin_provider.py","jellyfin_discovery.py","THIRD-PARTY-NOTICES.md"])
+          folders=tuple(["assets/","mutagen/","third_party/"])
+          changed=[]
+          with zipfile.ZipFile(install) as z:
+              assert z.testzip() is None
+              assert z.read(expected_root+'plugin.json') and z.read(expected_root+'package.json')
+              meta=json.loads(z.read(expected_root+'plugin.json'))
+              pkg=json.loads(z.read(expected_root+'package.json'))
+              assert meta['version']==pkg['version']=='1.5.1'
+              for name in z.namelist():
+                  if not name.startswith(expected_root) or name.endswith('/'):
+                      continue
+                  rel=name[len(expected_root):]
+                  if rel in explicit or rel.startswith(folders):
+                      target=root/rel
+                      target.parent.mkdir(parents=True,exist_ok=True)
+                      data=z.read(name)
+                      target.write_bytes(data)
+                      changed.append(rel)
+              (root/'src/index.js').parent.mkdir(exist_ok=True)
+              (root/'src/index.js').write_bytes(z.read(expected_root+'dist/index.js'))
+              changed.append('src/index.js')
+              assert (root/'dist/index.js').read_bytes()==z.read(expected_root+'dist/index.js')
+          print('Synced',len(changed),'tracked runtime files from verified release ZIP')
+          PY
+      - name: Validate copied runtime before committing
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check dist/index.js
+          python3 - <<'PY'
+          import pathlib,ast,json,zipfile,os
+          assert json.loads(pathlib.Path('plugin.json').read_text())['version']=='1.5.1'
+          assert json.loads(pathlib.Path('package.json').read_text())['version']=='1.5.1'
+          for file in ['main.py', 'resonadeck_backend.py', 'jellyfin_provider.py', 'jellyfin_discovery.py']:
+              ast.parse(pathlib.Path(file).read_text(encoding='utf-8'),filename=file)
+          assert pathlib.Path('src/index.js').read_bytes()==pathlib.Path('dist/index.js').read_bytes()
+          print('Validated published release runtime 1.5.1')
+          PY
+      - name: Commit verified runtime to release preparation branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- "main.py" "dist/index.js" "src/index.js" "package.json" "plugin.json" "resonadeck_backend.py" "jellyfin_provider.py" "jellyfin_discovery.py" "THIRD-PARTY-NOTICES.md" "assets/" "mutagen/" "third_party/"
+          if git diff --cached --quiet; then
+            echo "No runtime differences; published files already match"
+          else
+            git commit -m "release: synchronize exact published 1.5.1 plugin runtime"
+            git push origin "HEAD:release-prep/1.5.1"
+          fi
