@@ -1,7 +1,7 @@
 {
   "name": "resonadeck",
-  "version": "1.4.1",
-  "description": "ResonaDeck 1.4.1: Plex/Jellyfin sleep/wake auto-resume, Keep Playing, crossfade, premium interface and GTM visualizers.",
+  "version": "1.4.9",
+  "description": "ResonaDeck 1.4.9: Jellyfin keyboard-safe top editor, premium Quick Access sign-in, Plex playback and GTM bridge preserved.",
   "type": "module",
   "author": "Valentine",
   "license": "GPL-3.0-only",

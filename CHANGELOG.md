@@ -1,3 +1,12 @@
+## 1.4.9 | Stable public release (November 5, 2026)
+
+- Jellyfin sign-in moved to the keyboard-safe Full Manager editor with a visible top-positioned text field and glass styling.
+- Better Plex/Jellyfin source icons, controller navigation, Settings/Account controls and community developer credit.
+- Keep Playing can build an Up Next queue after a single selected music track.
+- Two-way live GTM visualizer state and Plex buffer diagnostics preserved.
+
+See [release notes](RELEASE_NOTES_1.4.9.md) for details and limitations. The published [1.4.9 release](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.4.9) contains the verified named installer ZIP.
+
 ## 1.4.1 | Beta candidate (2026-11-02)
 
 - Surprise Me Keep Playing and Crossfade preferences save immediately and persist through restart; switching Keep Playing ON during playback requests queue replenishment immediately.

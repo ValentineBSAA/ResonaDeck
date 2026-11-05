@@ -1,21 +1,17 @@
-# ResonaDeck 1.4.1 • Source and integrity
+# ResonaDeck 1.4.9 • Source and integrity
 
-**Published beta:** [1.4.1](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.4.1). **Previous stable:** [1.2.1](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.2.1). The published beta asset matches the locally verified ZIP.
+**Current stable release:** [ResonaDeck 1.4.9](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.4.9), published November 5, 2026. The earlier [1.4.1 beta](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.4.1) is preserved for historical reference; [1.2.1](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.2.1) remains an older stable milestone.
 
-GitHub's main-branch installed runtime files were synchronized from the **exact ResonaDeck-1.4.1.zip**:
-- [Compiled frontend](dist/index.js) and [matching JS source snapshot](src/index.js)
-- [Decky entrypoint](main.py), [Plex backend](resonadeck_backend.py), [Jellyfin provider](jellyfin_provider.py), [Jellyfin discovery](jellyfin_discovery.py)
-- [Package metadata](package.json), [Decky manifest](plugin.json) and [1.4.1 regression tests](tests/).
+**Verified installable asset:** [ResonaDeck-1.4.9.zip](https://github.com/ValentineBSAA/ResonaDeck/releases/download/1.4.9/ResonaDeck-1.4.9.zip) (1,779,300 bytes).
 
-Selected Git blob hashes (verified against ZIP bytes):
-- dist/index.js and src/index.js: `c93a2b09f53bdcede9cbf63ebff9d44366f2c085`
-- resonadeck_backend.py: `2fbe984219179bccfff91888bfd714ab92d0c1a6`
-- main.py: `2b8f7513aa47497b2ba1593435423b5649fddc4b`
-- package.json: `5837312dd15ad9b1a7c0ec7eb8978c22dab4da05`
-- plugin.json: `1bd319545bfcc7b19ebf48527c424f49a949c516`
+**SHA-256:** `73b2a120edc3048b15836bc326a083394e369b47257c545c91293ddbc8eb1b0d`.
 
-**Installable ZIP SHA-256:** `f865f9a8dcc5c167b0e15eb785492428a135c313abdd1a2c491254acb051500d` (6,350,824 bytes).
+The repository's release runtime is synchronized from the **exact published ZIP**, including `dist/index.js` and identical `src/index.js` snapshots, `main.py`, `resonadeck_backend.py`, Jellyfin backends, package metadata, source-selection artwork and the required local assets. The repository includes a compiled frontend snapshot, not the original fully reproducible React/TypeScript source tree.
 
-Historical [1.2.1 release](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.2.1) remains available. GitHub's automatically generated “Source code” ZIP is **not** an installable Decky plugin. Download the [published 1.4.1 asset](https://github.com/ValentineBSAA/ResonaDeck/releases/download/1.4.1/ResonaDeck-1.4.1.zip).
+The ZIP includes bundled third-party libraries for distribution. **Always use the specifically named release ZIP**, not GitHub's automatically generated source archive, to install through Decky Loader.
 
-The repository includes a compiled frontend snapshot, not the original fully reproducible TypeScript/React source project. License: [GPL-3.0-only](LICENSE) and third-party [notices](THIRD-PARTY-NOTICES.md).
+## Verification scope
+
+The maintainer physically confirmed controller navigation and Steam keyboard visibility during Jellyfin sign-in, and previously confirmed the GTM/ResonaDeck visualizer bridge. Known streaming/buffering interruptions are diagnostic observations, not guaranteed corrected under all network conditions. See [1.4.9 release notes](RELEASE_NOTES_1.4.9.md) and [earlier 1.4.1 hardware notes](FEATURE_STATUS_1.4.1.md).
+
+License: [GPL-3.0-only](LICENSE); third-party notices: [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
