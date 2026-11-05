@@ -3,13 +3,13 @@
 # 🎧 ResonaDeck
 ### Premium Plex & Jellyfin audio in Steam Deck Gaming Mode
 
-**1.4.9 • Stable release • Physically tested on Steam Deck**
+**1.5.1 • Stable release • Physically tested on Steam Deck**
 
-[⬇ Download ResonaDeck 1.4.9](https://github.com/ValentineBSAA/ResonaDeck/releases/download/1.4.9/ResonaDeck-1.4.9.zip) · [Release notes](RELEASE_NOTES_1.4.9.md) · [Previous hardware results](FEATURE_STATUS_1.4.1.md) · [Source integrity](SOURCE.md)
+[⬇ Download ResonaDeck 1.5.1](https://github.com/ValentineBSAA/ResonaDeck/releases/download/1.5.1/ResonaDeck-1.5.1.zip) · [Release notes](RELEASE_NOTES_1.5.1.md) · [Previous hardware results](FEATURE_STATUS_1.4.1.md) · [Source integrity](SOURCE.md)
 
 </div>
 
-> **Release status:** [1.4.9 is the current stable GitHub release](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.4.9). [1.4.1](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.4.1) is an earlier beta. Install the **named 1.4.9 ZIP asset**, not GitHub's automatic source archive.
+> **Release status:** [1.5.1 is the current stable GitHub release](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.5.1). [1.4.9](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.4.9) is the previous stable release. Install the **named 1.5.1 ZIP asset**, not GitHub's automatic source archive.
 
 Music · Audiobooks · Podcasts · More Audio · Plex, with Jellyfin integration included.
 
@@ -21,7 +21,7 @@ Music · Audiobooks · Podcasts · More Audio · Plex, with Jellyfin integration
 | **Surprise Me + Keep Playing** | Endless music discovery with rolling queue replenishment, including when selecting a single music track, rather than stopping at a 55-track boundary. Temporary discovery failures can reuse known music. |
 | **Persistent choices** | Keep Playing and Crossfade choices save independently, so the menu no longer falls back to 20 tracks on restart. |
 | **Immediate queue refill** | Enabling Keep Playing during existing music playback requests more tracks right away; it does not start an idle player. |
-| **Crossfade** | Off / 3 / 5 / **8** / 10-second options; the eight-second fade was verified during earlier Steam Deck development. |
+| **Crossfade and long tracks** | Off / 3 / 5 / **8** / 10-second fade settings; corrected multi-hour timing and a live countdown with hours, minutes and seconds (`2h 59m 08s`). |
 | **Sleep & Wake recovery** | Optional auto-resume of a previously playing Plex track after wake, **12-second default delay**, adjustable 5–60 seconds. A manually paused track stays paused. |
 | **GTM 4.5.8 visualizers** | Music-frequency bridge and **bidirectional live visualizer ON/OFF state** with compatible GTM versions; either plugin can change the live state. |
 | **Premium provider selector** | Premium Plex/Jellyfin source artwork and source-switching; Jellyfin sign-in uses the keyboard-safe Full Manager editor. |
@@ -39,25 +39,26 @@ ResonaDeck and GTM coordinate audio ownership, so GTM Home Ambient should yield 
 - **PASS (4.5.8 integration):** GTM and ResonaDeck can both control the live visualizer ON/OFF state.
 - **Diagnostic-only:** Plex buffering interruptions can be recorded; they are not claimed to be universally fixed.
 
-Details: [1.4.9 release notes](RELEASE_NOTES_1.4.9.md) and [historical 1.4.1 testing](FEATURE_STATUS_1.4.1.md).
+Details: [1.5.1 release notes](RELEASE_NOTES_1.5.1.md) and [historical 1.4.1 testing](FEATURE_STATUS_1.4.1.md).
 
-## What's new in 1.4.9
+## What's new in 1.5.1
 
-- Premium Plex/Jellyfin source icons and glass-style Account controls.
-- Controller-friendly Jellyfin sign-in through Full Manager, with the active input visible above Steam's native keyboard.
-- Quick Access sign-in notice routes to Full Manager, and the Nothing Playing footer is hidden during sign-in.
-- Single-track Keep Playing queue continuation and synchronized GTM visualizer controls.
+- **Multi-hour audio reliability:** Plex duration values now use explicit seconds or milliseconds, rather than guessing from their magnitude. The two-hour crossfade cutoff is gone.
+- **Premature-end protection:** if a lengthy stream stops unexpectedly near the beginning, ResonaDeck tries to recover the same track rather than silently skipping it.
+- **Precise crossfade countdown:** Quick Access, Full Manager and timing diagnostics show `3h 00m 00s`, `2h 59m 08s`, `3m 08s` or `8s`, as appropriate.
+- **Hardware verification:** the maintainer confirmed three-hour playback and the 1.5.1 experience on a physical Steam Deck.
+- **Everything else preserved:** Plex/Jellyfin sign-in, Keep Playing, crossfade overlap selection and Game Theme Music 4.5.8 visualizer synchronization.
 
-[Read the complete 1.4.9 changelog](CHANGELOG.md) · [Release checksum](RELEASE_ASSET_SHA256_1.4.9.txt)
+[Complete 1.5.1 release notes](RELEASE_NOTES_1.5.1.md) · [Changelog](CHANGELOG.md) · [ZIP SHA-256](RELEASE_ASSET_SHA256_1.5.1.txt)
 
 ## Installation & setup
-Download **[ResonaDeck-1.4.9.zip](https://github.com/ValentineBSAA/ResonaDeck/releases/download/1.4.9/ResonaDeck-1.4.9.zip)** from the published release. Install through Decky Loader's manual ZIP installer. Keep existing settings. Sign in to Plex, choose your library, and open **Full ResonaDeck**.
+Download **[ResonaDeck-1.5.1.zip](https://github.com/ValentineBSAA/ResonaDeck/releases/download/1.5.1/ResonaDeck-1.5.1.zip)** from the published release. Install through Decky Loader's manual ZIP installer. Keep existing settings. Sign in to Plex, choose your library, and open **Full ResonaDeck**.
 
 - **Surprise Me:** choose **Keep Playing** and optionally an 8-second crossfade; choices should persist when reopened and after restart.
 - **Sleep protection:** **Full ResonaDeck → Account/Profile → Settings → Sleep & Wake**; wake delay defaults to twelve seconds.
 - **GTM sharing:** Quick Access → **GTM Visualizers** in the music controls (when compatible GTM is installed). OFF stops visualizer data without pausing Plex.
 - **Up Next:** enabling Keep Playing during current music should immediately ask for more tracks.
 
-[Full screenshot gallery](SCREENSHOTS.md) · [Support](SUPPORT.md) · [Changelog](CHANGELOG.md) · [1.4.9 release notes](RELEASE_NOTES_1.4.9.md)
+[Full screenshot gallery](SCREENSHOTS.md) · [Support](SUPPORT.md) · [Changelog](CHANGELOG.md) · [1.5.1 release notes](RELEASE_NOTES_1.5.1.md)
 
 This repository contains the installed compiled JavaScript bundle and Python sources, not an original fully reproducible frontend project. It does **not** include copyrighted media. Maintained by Valentine with real Steam Deck testing and maintainer-directed AI-assisted development.
