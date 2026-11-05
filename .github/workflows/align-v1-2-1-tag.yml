@@ -1,6 +1,6 @@
 # Historical workflow archived during 1.4.9 release preparation.
 # Do not rewrite older tags or release descriptions from new source.
-name: Archived: ResonaDeck 1.2.1 tag alignment
+name: "Archived: ResonaDeck 1.2.1 tag alignment"
 on:
   workflow_dispatch:
 permissions:
