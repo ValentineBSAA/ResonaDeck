@@ -1,3 +1,5 @@
+> **Release preparation:** ResonaDeck 1.4.9 is a tested candidate with a prepared Decky installer. See [1.4.9 release notes](RELEASE_NOTES_1.4.9.md) and [asset checksum](RELEASE_ASSET_SHA256_1.4.9.txt). Existing public releases remain unchanged **until the 1.4.9 runtime and ZIP asset are published**.
+
 <div align="center">
 
 # 🎧 ResonaDeck
