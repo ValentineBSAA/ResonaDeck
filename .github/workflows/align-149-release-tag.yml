@@ -1,4 +1,4 @@
-# One-time lease-guarded correction of a release tag created before source synchronization.
+# Lease-guarded correction of a release tag following source and documentation synchronization.
 # The published installer ZIP is immutable and is NEVER modified by this workflow.
 name: Align 1.4.9 source tag with verified runtime
 on:
@@ -40,7 +40,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          expected_old="c74fcc6d88647cefa2c4c94e0f5f653d93900c90"
+          expected_old="78cc6eec388dcef9dd1e9e23314dc2b729598b5f"
           current="$(git ls-remote --tags origin "refs/tags/1.4.9" | awk '{print $1}')"
           if [[ "$current" == "$GITHUB_SHA" ]]; then
             echo "1.4.9 already points to this verified commit"
