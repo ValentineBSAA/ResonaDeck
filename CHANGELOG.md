@@ -1,3 +1,18 @@
+## 1.5.1 | Stable release (November 5, 2026)
+
+- **Precise crossfade countdown:** show hours, minutes and seconds at once for multi-hour waits (for example, `2h 59m 08s` then `2h 59m 07s`), with zero-padded long components.
+- Use the same time formatter in Quick Access, Full Manager and crossfade diagnostics; actual fade overlap preferences remain 3, 5, 8 or 10 seconds.
+- **Long-track playback reliability (carried forward from 1.5.0):** correct Plex seconds-versus-milliseconds conversion, remove the two-hour scheduling cutoff and recover a prematurely ended stream without silently skipping.
+- The maintainer confirmed the previously failing **three-hour track** now plays on physical Steam Deck hardware and accepted 1.5.1 as stable.
+- Preserve Plex/Jellyfin source handling, Keep Playing, keyboard-safe sign-in and the Game Theme Music visualizer bridge.
+
+[Release notes](RELEASE_NOTES_1.5.1.md) · [Public stable release](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.5.1) · [SHA-256](RELEASE_ASSET_SHA256_1.5.1.txt)
+
+### Private testing milestone: 1.5.0 (not a separate GitHub stable release)
+
+- Introduced the long-track duration parsing and premature-end protection now included in 1.5.1.
+- Early long-wait counters omitted the seconds component. Version 1.5.1 corrects the display.
+
 ## 1.4.9 | Stable public release (November 5, 2026)
 
 - Jellyfin sign-in moved to the keyboard-safe Full Manager editor with a visible top-positioned text field and glass styling.
