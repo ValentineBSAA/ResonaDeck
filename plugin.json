@@ -8,9 +8,9 @@
       "audio",
       "media"
     ],
-    "description": "ResonaDeck 1.4.1: sleep/wake audio recovery, eight-second crossfade, Keep Playing, and GTM visualizers.",
+    "description": "ResonaDeck 1.4.9: premium Jellyfin sign-in and keyboard-safe Full Manager editing.",
     "image": "assets/resonadeck-icon.webp"
   },
-  "description": "ResonaDeck 1.4.1: delayed Plex wake recovery, endless Keep Playing, crossfade, premium Plex/Jellyfin and GTM 4.1.2 integration.",
-  "version": "1.4.1"
+  "description": "ResonaDeck 1.4.9: Jellyfin keyboard-safe top editor, premium Quick Access sign-in, Plex playback and GTM bridge preserved.",
+  "version": "1.4.9"
 }
