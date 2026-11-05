@@ -1,8 +1,8 @@
 # 📸 ResonaDeck · Screenshot Gallery
 
-**[← Back to ResonaDeck](README.md)** · **[Download 1.2.1 Stable](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.2.1)** · **[1.2.0 release notes](RELEASE_NOTES_1.2.0.md)**
+**[← Back to ResonaDeck](README.md)** · **[Download 1.4.9 Stable](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.4.9)** · **[1.2.0 release notes](RELEASE_NOTES_1.2.0.md)**
 
-These **13 real Steam Deck captures** still represent the 1.2.1 interface, which has no visual redesign. They are intentionally organized by the release that introduced the interface being shown: **4 newer 1.2.0 screenshots** and **9 preserved 1.0.0 screenshots**. The original images are not obsolete simply because the audio engine gained features. Artwork, colors and CSS Loader accents depend on each person's Plex library and Steam theme.
+These **13 real Steam Deck captures are historical images of the 1.2.0–1.2.1 interface**. ResonaDeck 1.4.9 has newer Jellyfin sign-in and glass-control styling; these older screenshots must not be mistaken for current 1.4.9 captures. They are intentionally organized by the release that introduced the interface being shown: **4 newer 1.2.0 screenshots** and **9 preserved 1.0.0 screenshots**. The original images are not obsolete simply because the audio engine gained features. Artwork, colors and CSS Loader accents depend on each person's Plex library and Steam theme.
 
 ## ✨ New in 1.2.0 · Surprise Me and crossfade
 
@@ -94,4 +94,4 @@ These nine original screenshots remain intentionally available as historical rel
 
 > The 1.2.0 images are committed individually under `docs/screenshots/v1.2.0/`. The nine 1.0.0 images remain linked to their existing original GitHub attachments. No screenshots ZIP is needed to browse the gallery. The media shown belongs to a personal Plex library; ResonaDeck does not distribute music or cover art.
 
-**[Download ResonaDeck 1.2.1 Stable](https://github.com/ValentineBSAA/ResonaDeck/releases/download/1.2.1/ResonaDeck-1.2.1-Stable.zip)**
+**[Download ResonaDeck 1.4.9 Stable](https://github.com/ValentineBSAA/ResonaDeck/releases/download/1.4.9/ResonaDeck-1.4.9.zip)**
