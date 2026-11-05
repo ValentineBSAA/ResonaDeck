@@ -1,8 +1,8 @@
 # ResonaDeck 1.4.9 | Jellyfin Sign-In, Keep Playing & GTM Sync
 
 **Developer:** Valentine  
-**Release type:** Proposed public release  
-**Target asset:** `ResonaDeck-1.4.9.zip`
+**Release type:** Stable public release · Published November 5, 2026  
+**Published asset:** `ResonaDeck-1.4.9.zip`
 
 The 1.4.2–1.4.9 update series brings music-source usability, stronger controller navigation, Jellyfin authentication polish and consistent GTM visualizer controls.
 
@@ -20,6 +20,10 @@ The 1.4.2–1.4.9 update series brings music-source usability, stronger controll
 - Plex buffering diagnostics do not guarantee all short audio dropouts have been eliminated.
 - ResonaDeck runs without GTM. Compatible GTM releases can share visualizer status and control.
 - Steam controls its native keyboard appearance.
+
+## Published release
+
+[Download ResonaDeck 1.4.9](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.4.9) · [SHA-256 checksum](RELEASE_ASSET_SHA256_1.4.9.txt) · [GTM 4.5.8](https://github.com/ValentineBSAA/Game-Theme-Music/releases/tag/V4.5.8)
 
 ## Installation
 Download the named **ResonaDeck-1.4.9.zip** asset under GitHub Releases. GitHub's auto-generated source-code ZIP is not the prepared Decky plugin installer.
