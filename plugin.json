@@ -8,9 +8,9 @@
       "audio",
       "media"
     ],
-    "description": "ResonaDeck 1.4.9: premium Jellyfin sign-in and keyboard-safe Full Manager editing.",
+    "description": "ResonaDeck 1.5.1: precise multi-hour crossfade countdowns and resilient long-track playback.",
     "image": "assets/resonadeck-icon.webp"
   },
-  "description": "ResonaDeck 1.4.9: Jellyfin keyboard-safe top editor, premium Quick Access sign-in, Plex playback and GTM bridge preserved.",
-  "version": "1.4.9"
+  "description": "ResonaDeck 1.5.1: precise hours/minutes/seconds crossfade countdowns, Plex and Jellyfin audio, and long-track playback protection.",
+  "version": "1.5.1"
 }

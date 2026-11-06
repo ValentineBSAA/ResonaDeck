@@ -1,7 +1,7 @@
 {
   "name": "resonadeck",
-  "version": "1.4.9",
-  "description": "ResonaDeck 1.4.9: Jellyfin keyboard-safe top editor, premium Quick Access sign-in, Plex playback and GTM bridge preserved.",
+  "version": "1.5.1",
+  "description": "ResonaDeck 1.5.1: precise hours/minutes/seconds crossfade countdowns, Plex and Jellyfin audio, and long-track playback protection.",
   "type": "module",
   "author": "Valentine",
   "license": "GPL-3.0-only",
