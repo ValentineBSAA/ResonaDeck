@@ -1,3 +1,5 @@
+> **Historical build note:** This document describes an early 0.8.4 development candidate, not the current release. For ResonaDeck 1.5.7, see [release notes](RELEASE_NOTES_1.5.7.md) and [source integrity](SOURCE.md).
+
 # ResonaDeck 0.8.4 DEV — Playback Recovery + Live Artwork Binding + GTM Audio Focus
 
 Hardware-unverified. Built from the 0.8.2 hardware evidence on the locked 0.7 GTM Shell / Eli Media Core lineage.
