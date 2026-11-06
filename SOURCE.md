@@ -1,22 +1,19 @@
-# ResonaDeck 1.5.1 • Source and release integrity
+# ResonaDeck 1.5.7 | Source and release integrity
 
-**Current stable:** [ResonaDeck 1.5.1](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.5.1), published November 5, 2026.
+**Current stable:** [ResonaDeck 1.5.7](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.5.7), published November 6, 2026.  
+**Installable ZIP:** [ResonaDeck-1.5.7.zip](https://github.com/ValentineBSAA/ResonaDeck/releases/download/1.5.7/ResonaDeck-1.5.7.zip) (**1,789,639 bytes**).  
+**SHA-256:** `55f24398e5461cda6de732935a15fc11d9f47da550ba03b43aa4bac34975d03f`.
 
-**Installable ZIP:** [ResonaDeck-1.5.1.zip](https://github.com/ValentineBSAA/ResonaDeck/releases/download/1.5.1/ResonaDeck-1.5.1.zip) (1,780,736 bytes).
+The hash matches **GitHub's published release-asset digest** and the locally packaged file. See [checksum manifest](RELEASE_ASSET_SHA256_1.5.7.txt).
 
-**SHA-256:** `ab6b862a27ed6354fd7b4ad0a3d2e93934b22f18720c741d1bd7f06d090b4400`.
+## Release ZIP vs GitHub source tree
 
-The published ZIP's checksum was compared with the creator's tested 1.5.1 package. The repository runtime is synchronized from that **exact uploaded archive**: `dist/index.js`, a matching `src/index.js` compiled snapshot, `main.py`, `resonadeck_backend.py`, Jellyfin provider/discovery, `plugin.json`, `package.json`, and relevant artwork. Archive integrity, JavaScript syntax and Python parsing were checked.
+**The published 1.5.7 ZIP is the supported installer**, not GitHub's auto-generated Source code ZIP. The repository contains a compiled frontend snapshot and Python sources, but **main-branch runtime files currently correspond to an older release (1.5.1)**. Updating these documentation pages does not automatically synchronize `dist/index.js`, backend modules or plugin metadata to the 1.5.7 ZIP. Do not claim the default-branch files reproduce the newer published installer until a separate source-sync and parity verification is performed.
 
-This repository contains compiled frontend code, not a fully reproducible original React/TypeScript project. Bundled third-party Python components live in the published installer. To install via Decky Loader, use the specifically named **ResonaDeck-1.5.1.zip**, **not** GitHub's automatic "Source code" archive.
+The repository does not provide a fully reproducible original React/TypeScript frontend project. Third-party Python components in the release ZIP may not be present in a GitHub source archive.
 
-## Tested scope and remaining limitations
+## Maintainer verification and limitations
 
-- The previously failing three-hour audio track now plays correctly on a physical Steam Deck. The maintainer accepted 1.5.1 after verifying the new countdown behavior.
-- Multi-hour duration handling and crossfade display changes received targeted checks. This does not guarantee every Plex codec or stream will be interruption-free.
-- GTM 4.5.8 visualizer integration, Keep Playing, and Jellyfin input fixes are preserved.
-- The former stable [1.4.9 release](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.4.9), [1.4.1 beta](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.4.1) and historical releases remain available and unchanged.
+The physical Steam Deck tests confirmed restored Quick Menu styling, expected visualizer visibility and a working frequency-reactive GTM link **after a manual OFF/ON refresh**. Audio priority with GTM Store Music also worked. The automatic visualizer audio-capture first-connection is not universally verified. The previous three-hour Plex track fix and precision crossfade counter were established in earlier 1.5.1 testing, preserved in 1.5.7.
 
-[1.5.1 release notes](RELEASE_NOTES_1.5.1.md) · [Changelog](CHANGELOG.md) · [Checksum manifest](RELEASE_ASSET_SHA256_1.5.1.txt) · [Support](SUPPORT.md).
-
-License: [GPL-3.0-only](LICENSE). Third-party license acknowledgments: [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
+[Release notes](RELEASE_NOTES_1.5.7.md) · [Hardware test record](FEATURE_STATUS_1.5.7.md) · [Support](SUPPORT.md) · [Changelog](CHANGELOG.md) · [License](LICENSE) · [Third-party notices](THIRD-PARTY-NOTICES.md)
