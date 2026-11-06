@@ -1,0 +1,56 @@
+{
+  "name": "resonadeck-windows",
+  "version": "0.1.0-preview",
+  "private": true,
+  "description": "ResonaDeck desktop shell for Windows",
+  "main": "main.cjs",
+  "license": "GPL-3.0-only",
+  "scripts": {
+    "build:ui": "esbuild renderer-entry.jsx --bundle --platform=browser --format=iife --target=chrome124 --outfile=renderer.bundle.js",
+    "dev": "npm run build:ui && electron .",
+    "package:win": "npm run build:ui && electron-builder --win nsis --x64",
+    "check": "node tests/smoke.cjs"
+  },
+  "dependencies": {
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "electron": "^38.2.0",
+    "electron-builder": "^26.0.12",
+    "esbuild": "^0.25.12"
+  },
+  "build": {
+    "appId": "io.github.valentinebsaa.resonadeck.windows",
+    "productName": "ResonaDeck for Windows",
+    "asar": true,
+    "files": [
+      "main.cjs",
+      "preload.cjs",
+      "index.html",
+      "styles.css",
+      "renderer.bundle.js",
+      "icon.ico",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "backend-dist/ResonaDeckBackend",
+        "to": "backend/ResonaDeckBackend"
+      }
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    },
+    "directories": {
+      "output": "release"
+    }
+  }
+}

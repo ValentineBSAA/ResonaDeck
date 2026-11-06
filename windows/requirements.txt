@@ -1,0 +1,5 @@
+aiohttp>=3.10,<4
+certifi>=2024.8
+cryptography>=43
+pyinstaller>=6.11
+Pillow>=11
