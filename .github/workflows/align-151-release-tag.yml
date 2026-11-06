@@ -1,0 +1,54 @@
+# One-time, checksum-guarded synchronization of a published release tag with its verified source.
+# The uploaded installer asset is never modified, and historical release tags are untouched.
+name: Align ResonaDeck 1.5.1 release tag to verified source
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/align-151-release-tag.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  align-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Check exact published archive matches source files
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 4 --retry-delay 3 --output "$RUNNER_TEMP/ResonaDeck-1.5.1.zip" \
+            "https://github.com/ValentineBSAA/ResonaDeck/releases/download/1.5.1/ResonaDeck-1.5.1.zip"
+          echo "ab6b862a27ed6354fd7b4ad0a3d2e93934b22f18720c741d1bd7f06d090b4400  $RUNNER_TEMP/ResonaDeck-1.5.1.zip" | sha256sum -c -
+          export INSTALLER="$RUNNER_TEMP/ResonaDeck-1.5.1.zip"
+          python3 - <<'PY'
+          import json,os,pathlib,zipfile
+          with zipfile.ZipFile(os.environ['INSTALLER']) as z:
+              assert z.testzip() is None
+              for path in ["dist/index.js","main.py","plugin.json","package.json","resonadeck_backend.py","jellyfin_provider.py","jellyfin_discovery.py"]:
+                  assert pathlib.Path(path).read_bytes() == z.read("ResonaDeck/"+path), "Source mismatch: "+path
+              assert pathlib.Path("src/index.js").read_bytes() == z.read("ResonaDeck/dist/index.js")
+          assert json.loads(pathlib.Path("plugin.json").read_text())["version"]=="1.5.1"
+          assert json.loads(pathlib.Path("package.json").read_text())["version"]=="1.5.1"
+          print("Source matches exact published 1.5.1 ZIP.")
+          PY
+      - name: Move original tag only if its current SHA is unchanged
+        shell: bash
+        run: |
+          set -euo pipefail
+          previous_sha="f92c3e814d010b53bc75ca9367764b029d1a2024"
+          observed="$(git ls-remote --tags origin "refs/tags/1.5.1" | awk '{print $1}')"
+          if [[ "$observed" == "$GITHUB_SHA" ]]; then
+            echo "1.5.1 is already aligned with source"
+            exit 0
+          fi
+          if [[ "$observed" != "$previous_sha" ]]; then
+            echo "::error::Tag moved independently; expected $previous_sha but observed $observed. Refusing to update."
+            exit 1
+          fi
+          git push --force-with-lease="refs/tags/1.5.1:$previous_sha" origin "HEAD:refs/tags/1.5.1"
+          echo "Aligned 1.5.1 tag to source commit $GITHUB_SHA"
