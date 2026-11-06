@@ -1,3 +1,20 @@
+## 1.5.7 | Stable public release (November 6, 2026)
+
+- Improved Quick Menu initialization by caching theme colors, narrowing expensive theme observations and reducing redundant background polling.
+- Fixed an intermediate stylesheet-scope regression that left album artwork oversized, controls out of place and Quick Menu panels incorrectly styled. Maintainer verified the restored appearance on Steam Deck.
+- Improved hot-update cleanup for power monitoring and music-reactive bridge resources.
+- Improved pairing with **GTM 4.6.7**: saved ON preferences aren't replayed as fresh startup commands; visualizers stay hidden without eligible music, appear with playback when enabled, and can be disabled without stopping Plex.
+- **Music reactivity:** the maintainer observed real frequency response after toggling ResonaDeck GTM Visualizers OFF/ON. Full automatic first-connect reliability on all setups is not claimed; troubleshooting is documented.
+- Removed Cash App button, icon and external link from the plugin package.
+- Preserved Plex/Jellyfin, long-track playback repairs, crossfade, Keep Playing, sleep/wake and GTM audio priority.
+- Focused syntax/archive checks passed during packaging. Wider SteamOS and media formats are not universally verified.
+
+[Published release](https://github.com/ValentineBSAA/ResonaDeck/releases/tag/1.5.7) · [Full notes](RELEASE_NOTES_1.5.7.md) · [Hardware status](FEATURE_STATUS_1.5.7.md) · [SHA-256](RELEASE_ASSET_SHA256_1.5.7.txt)
+
+### Earlier 1.5.2–1.5.6 internal maintenance builds
+
+These versions refined Quick Menu performance and the GTM visualizer bridge. One intermediate build had a stylesheet-scope regression, subsequently restored. The final public installer consolidates the confirmed fixes in **1.5.7**.
+
 ## 1.5.1 | Stable release (November 5, 2026)
 
 - **Precise crossfade countdown:** show hours, minutes and seconds at once for multi-hour waits (for example, `2h 59m 08s` then `2h 59m 07s`), with zero-padded long components.
