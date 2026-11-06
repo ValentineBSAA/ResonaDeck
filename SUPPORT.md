@@ -27,7 +27,7 @@ Open Decky Loader's **Settings → General → Developer Mode**, then **Develope
 Direct Updater is an optional independent Decky add-on; search for `ValentineBSAA/ResonaDeck`. A direct updater's behavior depends on the updater and Decky version; the official 1.5.7 release ZIP remains the verified installation asset.
 
 ## Common fixes
-- **No libraries:** verify Plex account permissions, reachable server and chosen libraries. Jellyfin support is included but has not been exhaustively hardware-verified in this beta.
+- **No libraries:** verify Plex account permissions, reachable server and chosen libraries. Jellyfin support is included, although every provider/device combination has not been exhaustively hardware-verified.
 - **Music starts slowly:** check server transcoding and network availability; remote libraries may need buffering.
 - **Keep Playing resets to 20 tracks:** update to 1.5.7, enable Keep Playing in Surprise Me settings, close/reopen, then restart. The creator confirmed that selection survived a full restart.
 - **Keep Playing queue ends:** ResonaDeck's rolling queue replenishes before the former 55-track endpoint; enabling it during playback requests an immediate refill, with fallback for temporary discovery failures.
@@ -40,4 +40,4 @@ Direct Updater is an optional independent Decky add-on; search for `ValentineBSA
 ## Reporting issues
 Use [GitHub Issues](https://github.com/ValentineBSAA/ResonaDeck/issues) with your SteamOS/Decky versions, which player controls you used, expected vs actual behavior, and steps to reproduce. **Never upload Plex tokens, private server addresses, or account credentials.**
 
-[Release notes](RELEASE_NOTES_1.5.7.md) · [Validation](FEATURE_STATUS_1.4.1.md) · [Source integrity](SOURCE.md)
+[Release notes](RELEASE_NOTES_1.5.7.md) · [Current validation](FEATURE_STATUS_1.5.7.md) · [Source integrity](SOURCE.md)
