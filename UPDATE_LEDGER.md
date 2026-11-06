@@ -1,3 +1,5 @@
+> **Historical development ledger:** This records early 0.9.x experiments. For the current supported 1.5.7 release, see [release notes](RELEASE_NOTES_1.5.7.md), [testing](FEATURE_STATUS_1.5.7.md), and [changelog](CHANGELOG.md).
+
 ## 0.9.29 DEV (2026-10-12)
 See QUALITY_OF_LIFE_0.9.29.md and VALIDATION_0.9.29_DEV.md for scope and verification.
 
