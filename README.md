@@ -61,4 +61,20 @@ Download **[ResonaDeck-1.5.1.zip](https://github.com/ValentineBSAA/ResonaDeck/re
 
 [Full screenshot gallery](SCREENSHOTS.md) · [Support](SUPPORT.md) · [Changelog](CHANGELOG.md) · [1.5.1 release notes](RELEASE_NOTES_1.5.1.md)
 
+## ❤️ A little note from me
+
+I originally made ResonaDeck because I wanted a proper way to listen to my Plex music on the Steam Deck. I kept noticing little things I wanted to fix or improve, and somehow that small idea turned into a whole music player with Jellyfin, crossfade, discovery, and a lot more. I've genuinely enjoyed making it.
+
+If ResonaDeck is something you enjoy using, and you'd like to help me keep working on it, I've added an optional Cash App donation link below. **Please don't feel like you have to donate.** ResonaDeck stays free, with no locked features or special treatment for donations. Downloading it, telling somebody about it, or helping me find a bug already means a lot.
+
+I'm just one developer who keeps finding things I want to make better. Thank you for giving ResonaDeck a place on your Steam Deck. ❤️
+
+<p align="center">
+  <a href="https://cash.app/$jilvalentinebsaa" title="Optional Cash App donation to support ResonaDeck development"><img src="assets/donate-support.webp" alt="Green Donate and Support badge for Valentine's Cash App" width="150"></a>
+  <br>
+  <strong><a href="https://cash.app/$jilvalentinebsaa">Support my development on Cash App · $jilvalentinebsaa</a></strong>
+  <br>
+  <sub>Always optional. The music stays free. ❤️</sub>
+</p>
+
 This repository contains the installed compiled JavaScript bundle and Python sources, not an original fully reproducible frontend project. It does **not** include copyrighted media. Maintained by Valentine with real Steam Deck testing and maintainer-directed AI-assisted development.
