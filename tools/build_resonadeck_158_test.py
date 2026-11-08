@@ -128,10 +128,15 @@ def work(root: Path, source: Path):
         code=path.read_text(encoding='utf-8')
         code=replace_once(code, 'function ReadyQamV7({auth,onProfile}){',
                           PLAYER_CONNECT_JS+'\nfunction ReadyQamV7({auth,onProfile}){',str(path)+': component')
-        code=replace_once(code,
-             '     h(QamNowV7),\n     h(QamBrowserV7),',
-             '     h(QamNowV7),\n     h(PlayerConnectV158),\n     h(QamBrowserV7),',
-             str(path)+': quick access')
+        # Only patch the Ready QAM component, not another player's appearance elsewhere.
+        start_ready=code.index('function ReadyQamV7({auth,onProfile}){')
+        end_ready=code.index('/* 0.9.46:',start_ready)
+        if start_ready < 0 or end_ready < 0:
+            raise RuntimeError(str(path)+': could not isolate Ready QAM for Player Connect.')
+        ready=code[start_ready:end_ready]
+        ready=replace_once(ready,'h(QamNowV7),',
+            'h(QamNowV7),\n     h(PlayerConnectV158),',str(path)+': Player Connect placement')
+        code=code[:start_ready]+ready+code[end_ready:]
         # Make repeated QAM opens instant after a verified first-session ready state.
         # Background refresh remains active; no media or GTM playback code is changed.
         code=replace_once(code,
