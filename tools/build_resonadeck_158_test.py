@@ -122,7 +122,10 @@ def work(root: Path, source: Path):
         '    async def begin_plex_auth(self):', 'backend RPC proxies')
     main.write_text(main_text.replace('ResonaDeck 0.9.30 Decky bootstrap.', 'ResonaDeck 1.5.8 TEST Decky bootstrap.'),encoding='utf-8')
 
-    for path in [root/'dist'/'index.js',root/'src'/'index.js']:
+    frontend_paths=[root/'dist'/'index.js']
+    if (root/'src'/'index.js').exists():
+        frontend_paths.append(root/'src'/'index.js')
+    for path in frontend_paths:
         if not path.is_file():
             raise RuntimeError(f'Missing compiled frontend {path}.')
         code=path.read_text(encoding='utf-8')
