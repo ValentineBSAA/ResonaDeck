@@ -143,18 +143,26 @@ def work(root: Path, source: Path):
              "const [stage,setStage]=R.useState('loading'),[auth,setAuth]=R.useState(null),",
              "const [stage,setStage]=R.useState(()=>runtimeHost().__rd158QamReady?'ready':'loading'),[auth,setAuth]=R.useState(()=>runtimeHost().__rd158QamAuth||null),",
              str(path)+': warm state')
-        code=replace_once(code,
-             "setStartupError('');setStage('loading');try{const pong=await startupCall('ping');",
-             "setStartupError('');if(!runtimeHost().__rd158QamReady)setStage('loading');try{const pong=await startupCall('ping');",
-             str(path)+': no blocking redraw')
-        code=replace_once(code,
-             "setAuth(a);if(!a?.authenticated){setStage('auth');return;}",
-             "setAuth(a);runtimeHost().__rd158QamAuth=a;if(!a?.authenticated){runtimeHost().__rd158QamReady=false;setStage('auth');return;}",
-             str(path)+': auth cache')
-        code=replace_once(code,
-             "window.dispatchEvent(new Event(RD_THEME_EVENT));setStage('ready');",
-             "window.dispatchEvent(new Event(RD_THEME_EVENT));runtimeHost().__rd158QamReady=true;setStage('ready');",
-             str(path)+': ready cache')
+        start_qam=code.index('function QAMV7(){')
+        end_qam=code.index('function ProfileRoute()',start_qam)
+        if start_qam < 0 or end_qam < 0:
+            raise RuntimeError(str(path)+': could not isolate QAM startup.')
+        qam=code[start_qam:end_qam]
+        # Guard any existing Loading transition during background revalidation.
+        if "setStage('loading');" in qam:
+            qam=qam.replace("setStage('loading');",
+                  "if(!runtimeHost().__rd158QamReady)setStage('loading');",1)
+        if "setAuth(a);" in qam:
+            qam=qam.replace("setAuth(a);",
+                  "setAuth(a);runtimeHost().__rd158QamAuth=a;",1)
+        if "setStage('ready');" not in qam:
+            raise RuntimeError(str(path)+': missing readiness transition; cannot enable warm cache')
+        qam=qam.replace("setStage('ready');",
+              "runtimeHost().__rd158QamReady=true;setStage('ready');",1)
+        if "setStage('server');" in qam:
+            qam=qam.replace("setStage('server');",
+                  "runtimeHost().__rd158QamReady=false;setStage('server');",1)
+        code=code[:start_qam]+qam+code[end_qam:]
         # Do not perform extra remote discovery until user explicitly expands panel.
         code=code.replace("const RD_VERSION = '1.5.7';", "const RD_VERSION = '1.5.8 TEST';", 1)
         path.write_text(code,encoding='utf-8')
