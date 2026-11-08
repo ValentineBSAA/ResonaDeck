@@ -61,6 +61,9 @@ jobs:
       - name: Create dedicated installable test ZIP
         run: |
           set -euo pipefail
+          # CI compilation creates Python bytecode for the runner. Do not
+          # ship runner-specific caches in a Steam Deck installer.
+          find extracted -type d -name __pycache__ -prune -exec rm -rf {} +
           cd extracted
           zip -qr ../ResonaDeck-1.5.8-TEST.zip .
           cd ..
