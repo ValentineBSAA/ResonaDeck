@@ -1,0 +1,72 @@
+name: ResonaDeck 1.5.8 TEST installer
+on:
+  push:
+    branches:
+      - test/resonadeck-1.5.8-player-connect
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-158-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download the verified published 1.5.7 stable installer
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 3 --retry-delay 2 \
+            -o original-1.5.7.zip \
+            "https://github.com/ValentineBSAA/ResonaDeck/releases/download/1.5.7/ResonaDeck-1.5.7.zip"
+          echo "55f24398e5461cda6de732935a15fc11d9f47da550ba03b43aa4bac34975d03f  original-1.5.7.zip" | sha256sum -c -
+          unzip -tq original-1.5.7.zip
+          mkdir extracted
+          unzip -q original-1.5.7.zip -d extracted
+      - name: Apply TEST overlay to stable installer without modifying stable release
+        run: |
+          set -euo pipefail
+          python tools/build_resonadeck_158_test.py extracted .
+      - name: Verify Python, JS syntax and test metadata
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import json, py_compile, subprocess
+          root=Path('extracted')
+          if not (root/'plugin.json').exists():
+              root=next(p for p in root.iterdir() if (p/'plugin.json').exists())
+          p=json.loads((root/'plugin.json').read_text())
+          assert p['version']=='1.5.8-test.1', p
+          assert (root/'resonadeck_player_connect.py').exists()
+          for name in ['main.py','resonadeck_backend.py','resonadeck_player_connect.py']:
+              py_compile.compile(str(root/name), doraise=True)
+          for js in ['src/index.js','dist/index.js']:
+              result=subprocess.run(['node','--check',str(root/js)],capture_output=True,text=True)
+              if result.returncode:
+                  print(result.stderr)
+                  raise SystemExit(f'JavaScript syntax validation failed: {js}')
+              content=(root/js).read_text()
+              assert 'function PlayerConnectV158()' in content
+              assert 'h(PlayerConnectV158)' in content
+              assert "__rd158QamReady" in content
+          assert (root/'src/index.js').read_bytes()==(root/'dist/index.js').read_bytes()
+          print('PASS: metadata, Python parsing, JavaScript parsing and frontend parity')
+          PY
+      - name: Create dedicated installable test ZIP
+        run: |
+          set -euo pipefail
+          cd extracted
+          zip -qr ../ResonaDeck-1.5.8-TEST.zip .
+          cd ..
+          unzip -tq ResonaDeck-1.5.8-TEST.zip
+          sha256sum ResonaDeck-1.5.8-TEST.zip | tee RESONADECK_158_TEST_SHA256.txt
+      - name: Upload test installer and checksum
+        uses: actions/upload-artifact@v4
+        with:
+          name: ResonaDeck-1.5.8-TEST
+          path: |
+            ResonaDeck-1.5.8-TEST.zip
+            RESONADECK_158_TEST_SHA256.txt
+          retention-days: 14
