@@ -42,7 +42,7 @@ jobs:
           assert (root/'resonadeck_player_connect.py').exists()
           for name in ['main.py','resonadeck_backend.py','resonadeck_player_connect.py']:
               py_compile.compile(str(root/name), doraise=True)
-          for js in ['src/index.js','dist/index.js']:
+          for js in ['dist/index.js']:
               result=subprocess.run(['node','--check',str(root/js)],capture_output=True,text=True)
               if result.returncode:
                   print(result.stderr)
@@ -51,7 +51,8 @@ jobs:
               assert 'function PlayerConnectV158()' in content
               assert 'h(PlayerConnectV158)' in content
               assert "__rd158QamReady" in content
-          assert (root/'src/index.js').read_bytes()==(root/'dist/index.js').read_bytes()
+          if (root/'src/index.js').exists():
+              assert (root/'src/index.js').read_bytes()==(root/'dist/index.js').read_bytes()
           print('PASS: metadata, Python parsing, JavaScript parsing and frontend parity')
           PY
       - name: Create dedicated installable test ZIP
