@@ -32,7 +32,7 @@ function PlayerConnectV158(){
     if(!id||sending)return;
     setSending(true);setStatus('Contacting remote player…');
     try{
-      const key=String(snap?.current?.ratingKey||snap?.current?.key||'').replace(/^\\/library\\/metadata\\//,'');
+      const key=String(snap?.current?.ratingKey||snap?.current?.key||'').replace(/^\/library\/metadata\//,'');
       const response=await call('player_connect_command',id,action,action==='sendTrack'?key:'');
       setStatus(response?.success?(
         action==='probe'?'Player responded. Remote controls are ready to test.':
@@ -112,13 +112,13 @@ def work(root: Path, source: Path):
     main_text=main.read_text(encoding='utf-8')
     main_text=replace_once(main_text,
         '            impl_cls = getattr(module, "Plugin")',
-        '            impl_cls = getattr(module, "Plugin")\\n'
-        '            from resonadeck_player_connect import install as _rd158_install\\n'
+        '            impl_cls = getattr(module, "Plugin")\n'
+        '            from resonadeck_player_connect import install as _rd158_install\n'
         '            _rd158_install(impl_cls)', 'backend install')
     main_text=replace_once(main_text,
         '    async def begin_plex_auth(self):',
-        '    async def get_player_connect_devices(self, force: bool = False): return await self._forward("get_player_connect_devices", force)\\n'
-        '    async def player_connect_command(self, player_id: str, action: str, rating_key: str = ""): return await self._forward("player_connect_command", player_id, action, rating_key)\\n'
+        '    async def get_player_connect_devices(self, force: bool = False): return await self._forward("get_player_connect_devices", force)\n'
+        '    async def player_connect_command(self, player_id: str, action: str, rating_key: str = ""): return await self._forward("player_connect_command", player_id, action, rating_key)\n'
         '    async def begin_plex_auth(self):', 'backend RPC proxies')
     main.write_text(main_text.replace('ResonaDeck 0.9.30 Decky bootstrap.', 'ResonaDeck 1.5.8 TEST Decky bootstrap.'),encoding='utf-8')
 
@@ -127,10 +127,10 @@ def work(root: Path, source: Path):
             raise RuntimeError(f'Missing compiled frontend {path}.')
         code=path.read_text(encoding='utf-8')
         code=replace_once(code, 'function ReadyQamV7({auth,onProfile}){',
-                          PLAYER_CONNECT_JS+'\\nfunction ReadyQamV7({auth,onProfile}){',str(path)+': component')
+                          PLAYER_CONNECT_JS+'\nfunction ReadyQamV7({auth,onProfile}){',str(path)+': component')
         code=replace_once(code,
-             '     h(QamNowV7),\\n     h(QamBrowserV7),',
-             '     h(QamNowV7),\\n     h(PlayerConnectV158),\\n     h(QamBrowserV7),',
+             '     h(QamNowV7),\n     h(QamBrowserV7),',
+             '     h(QamNowV7),\n     h(PlayerConnectV158),\n     h(QamBrowserV7),',
              str(path)+': quick access')
         # Make repeated QAM opens instant after a verified first-session ready state.
         # Background refresh remains active; no media or GTM playback code is changed.
@@ -158,13 +158,13 @@ def work(root: Path, source: Path):
     meta['description']='ResonaDeck 1.5.8 TEST: experimental LAN Player Connect and warm Quick Menu.'
     if isinstance(meta.get('publish'),dict):
         meta['publish']['description']=meta['description']
-    (root/'plugin.json').write_text(json.dumps(meta,indent=2)+'\\n',encoding='utf-8')
+    (root/'plugin.json').write_text(json.dumps(meta,indent=2)+'\n',encoding='utf-8')
     package=root/'package.json'
     if package.is_file():
         p=json.loads(package.read_text(encoding='utf-8'))
         p['version']=VERSION
         p['description']=meta['description']
-        package.write_text(json.dumps(p,indent=2)+'\\n',encoding='utf-8')
+        package.write_text(json.dumps(p,indent=2)+'\n',encoding='utf-8')
     (root/'TEST_1.5.8_README.md').write_text((source/'docs'/'RESONADECK_158_TEST_PLAN.md').read_text(encoding='utf-8'),encoding='utf-8')
     print('Patched published ResonaDeck 1.5.7 installer -> 1.5.8 TEST (not stable).')
 
