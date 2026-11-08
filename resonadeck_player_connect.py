@@ -23,7 +23,12 @@ def _safe_connection(uri):
     try:
         parsed = urlsplit(str(uri))
         ip = ipaddress.ip_address(parsed.hostname or "")
-        if parsed.scheme != "http" or ip.version != 4 or not ip.is_private:
+        # Strict RFC1918 host check: ipaddress.is_private also includes special
+        # non-routable ranges that must never be usable as command targets.
+        allowed = (ipaddress.ip_network("10.0.0.0/8"),
+                   ipaddress.ip_network("172.16.0.0/12"),
+                   ipaddress.ip_network("192.168.0.0/16"))
+        if parsed.scheme != "http" or ip.version != 4 or not any(ip in n for n in allowed):
             return None
         if ip.is_loopback or ip.is_link_local or ip.is_multicast or ip.is_unspecified:
             return None
