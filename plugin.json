@@ -8,9 +8,9 @@
       "audio",
       "media"
     ],
-    "description": "ResonaDeck 1.5.1: precise multi-hour crossfade countdowns and resilient long-track playback.",
+    "description": "ResonaDeck 1.5.7 stable: Plex/Jellyfin audio, responsive Quick Menu, artwork and GTM visualizer integration. Player Connect planned for 1.5.8 TEST.",
     "image": "assets/resonadeck-icon.webp"
   },
-  "description": "ResonaDeck 1.5.1: precise hours/minutes/seconds crossfade countdowns, Plex and Jellyfin audio, and long-track playback protection.",
-  "version": "1.5.1"
+  "description": "ResonaDeck 1.5.7 stable: Plex and Jellyfin music, audiobooks and podcasts; controller-friendly Quick Menu, crossfade and GTM visualizers.",
+  "version": "1.5.7"
 }
