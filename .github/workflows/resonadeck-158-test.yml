@@ -55,6 +55,9 @@ jobs:
               assert (root/'src/index.js').read_bytes()==(root/'dist/index.js').read_bytes()
           print('PASS: metadata, Python parsing, JavaScript parsing and frontend parity')
           PY
+      - name: Test discovery guards and command safety
+        run: |
+          python -m unittest -v tests/test_player_connect_158.py
       - name: Create dedicated installable test ZIP
         run: |
           set -euo pipefail
