@@ -8,7 +8,7 @@
       "audio",
       "media"
     ],
-    "description": "ResonaDeck 1.5.7 stable: Plex/Jellyfin audio, responsive Quick Menu, artwork and GTM visualizer integration. Player Connect planned for 1.5.8 TEST.",
+    "description": "ResonaDeck 1.5.7 stable: Plex/Jellyfin audio, Quick Menu, crossfade, artwork and GTM visualizers.",
     "image": "assets/resonadeck-icon.webp"
   },
   "description": "ResonaDeck 1.5.7 stable: Plex and Jellyfin music, audiobooks and podcasts; controller-friendly Quick Menu, crossfade and GTM visualizers.",
